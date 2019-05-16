@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
+ * 测试集成MyBatis是否成功
  * @Date 2019-05-16
  * @Author lifei
  */
