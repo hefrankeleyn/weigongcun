@@ -1,0 +1,23 @@
+spring:
+  profiles:
+    active: development
+  # 关闭Spring Boot艺术字
+  main:
+    banner-mode: "off"
+
+
+---
+spring:
+  profiles: development
+  datasource:
+    url: jdbc:mysql://localhost:3306/edm_db?useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE
+    username: edm
+    password: edmpass
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+  # 开发环境下将缓存关闭
+  thymeleaf:
+    cache: false
+---

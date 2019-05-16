@@ -1,0 +1,69 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: lifei
+      changes:
+        - createTable:
+            tableName: edmers
+            columns:
+              - column:
+                  name: eid
+                  type: bigserial
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: username
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: department
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: edm_usable_magnitude
+            columns:
+              - column:
+                  name: target
+                  type: varchar(300)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: magnitude
+                  type: long
+                  constraints:
+                    nullable: false
+              - column:
+                  name: dt
+                  type: date
+                  constraints:
+                    nullable: false
+        - insert:
+            tableName: edmers
+            columns:
+              - column:
+                  name: username
+                  value: edm
+              - column:
+                  name: password
+                  value: $2a$10$z0WVGwrlOiZ1WuFxpqa2T.byuiP2zylh2KCz1wGL9DeHdZUOPhVL2
+              - column:
+                  name: email
+                  value: shuju@wo.cn
+              - column:
+                  name: department
+                  value: 数据组
+
