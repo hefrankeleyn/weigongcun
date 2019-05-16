@@ -13,7 +13,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class EdmerServiceImpl implements EdmerService {
 
-    @Autowired
+    /**
+     * 将 属性required 设置 false， Spring会尝试执行自动装配，
+     * 如果没有匹配到bean，Spring将bean处于未装配状态，但此时
+     * 未装配属性的状态有可能会出现NullPointException
+     */
+    @Autowired(required = false)
     private EdmerMapper edmerMapper;
 
     @Override
