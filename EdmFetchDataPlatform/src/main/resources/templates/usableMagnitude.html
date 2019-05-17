@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>所有可发数据量</h2>
+<div th:unless="${#lists.isEmpty(edmUsableMagnitudeList)}">
+    <table th:each="edmUsableMagnitude : ${edmUsableMagnitudeList}">
+        <tr>
+            <th class="target_name" th:text="${edmUsableMagnitude.getTarget()}"></th>
+            <th class="magnitude" th:text="${edmUsableMagnitude.getMagnitude()}"></th>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

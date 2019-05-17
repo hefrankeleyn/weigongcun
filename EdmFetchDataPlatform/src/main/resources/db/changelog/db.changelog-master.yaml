@@ -28,6 +28,7 @@ databaseChangeLog:
                   type: varchar(100)
                   constraints:
                     nullable: false
+                    unique: true
               - column:
                   name: department
                   type: varchar(200)
@@ -51,6 +52,28 @@ databaseChangeLog:
                   type: date
                   constraints:
                     nullable: false
+        - createTable:
+            tableName: edmer_roles
+            columns:
+              - column:
+                  name: rid
+                  type: bigserial
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: role_name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: eid
+                  type: bigserial
+                  constraints:
+                    nullable: false
+                    references: edmers(eid)
+                    foreignKeyName: fk_eid
         - insert:
             tableName: edmers
             columns:
@@ -66,4 +89,13 @@ databaseChangeLog:
               - column:
                   name: department
                   value: 数据组
+        - insert:
+            tableName: edmer_roles
+            columns:
+              - column:
+                  name: role_name
+                  value: ROLE_EDM
+              - column:
+                  name: eid
+                  value: 1
 

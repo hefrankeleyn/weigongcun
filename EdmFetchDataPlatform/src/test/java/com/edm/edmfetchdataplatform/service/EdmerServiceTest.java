@@ -1,6 +1,7 @@
 package com.edm.edmfetchdataplatform.service;
 
 import com.edm.edmfetchdataplatform.domain.Edmer;
+import com.edm.edmfetchdataplatform.domain.UserDetailsLogin;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,5 +30,14 @@ public class EdmerServiceTest {
     public void findEdmByEidTest(){
         Edmer edmer = edmerService.findEdmerByEid(1l);
         System.out.println(edmer);
+    }
+
+    /**
+     * 测试
+     */
+    @Test
+    public void findEdmByUserNameTest(){
+        UserDetailsLogin userDetailsLogin = edmerService.findUserDetailsByUserName("edm");
+        System.out.println(userDetailsLogin);
     }
 }

@@ -1,6 +1,7 @@
 package com.edm.edmfetchdataplatform.service.impl;
 
 import com.edm.edmfetchdataplatform.domain.Edmer;
+import com.edm.edmfetchdataplatform.domain.UserDetailsLogin;
 import com.edm.edmfetchdataplatform.mapper.EdmerMapper;
 import com.edm.edmfetchdataplatform.service.EdmerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,5 +25,23 @@ public class EdmerServiceImpl implements EdmerService {
     @Override
     public Edmer findEdmerByEid(Long eid) {
         return edmerMapper.findEdmerByEid(eid);
+    }
+
+    @Override
+    public UserDetailsLogin findUserDetailsByUserName(String username) {
+
+        Edmer edmer = edmerMapper.findEdmerByUserName(username);
+        return new UserDetailsLogin(edmer);
+    }
+
+    /**
+     * 根据邮箱查询
+     * @param email
+     * @return
+     */
+    @Override
+    public UserDetailsLogin findUserDetailsByEmail(String email) {
+        Edmer edmer = edmerMapper.findEdmerByEmail(email);
+        return new UserDetailsLogin(edmer);
     }
 }

@@ -1,6 +1,7 @@
 package com.edm.edmfetchdataplatform.domain;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * 用户信息
@@ -15,6 +16,7 @@ public class Edmer {
     private String password;
     private String email;
     private String department;
+    private List<Role> roles;
 
     public Long getEid() {
         return eid;
@@ -56,6 +58,14 @@ public class Edmer {
         this.department = department;
     }
 
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
     @Override
     public String toString() {
         return "Edmer{" +
@@ -64,6 +74,7 @@ public class Edmer {
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", department='" + department + '\'' +
+                ", roles=" + roles +
                 '}';
     }
 }
