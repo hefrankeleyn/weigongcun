@@ -18,6 +18,9 @@ public class EdmUsableMagnitude {
     // 日期
     private Date dt;
 
+    // 目标的名称描述
+    private String description;
+
     public String getTarget() {
         return target;
     }
@@ -42,12 +45,21 @@ public class EdmUsableMagnitude {
         this.dt = dt;
     }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
     @Override
     public String toString() {
         return "EdmUsableMagnitude{" +
                 "target='" + target + '\'' +
                 ", magnitude=" + magnitude +
                 ", dt=" + dt +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

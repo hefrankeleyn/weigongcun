@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EDM Fetch Conditions</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/bootstrap/js/bootstrap.js}"></script>
+    <script th:src="@{/js/conditionForm.js}"></script>
+</head>
+
+<body>
+<div class="container">
+    <form th:action="@{/}" method="POST">
+        <div class="form-group">
+            <label for="dimension">选择用户维度：</label>
+            <select id="dimension" name="dimension" class="form-control">
+                <option th:each="edmTargetDescription : ${edmTargetDescriptions}" th:value="${edmTargetDescription.getTarget()}" th:text="${edmTargetDescription.getDescription()}">用户维度</option>
+            </select>
+        </div>
+        <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="provinceIf" name="provinceIf"></input>
+            <label class="custom-control-label" for="provinceIf">省份</label>
+        </div>
+        <div class="form-group">
+            <label for="provinceCodes">（win上按住ctrl或macOS上按住command键，选择多个）</label>
+            <select multiple id="provinceCodes" name="provinceCodes" class="form-control">
+                <option th:each="province : ${provinces}" th:value="${province.getProvincecode()}" th:text="${province.getProvincename()}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <div class="form-group form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="provinceOpt" id="provinceOpt0" value="0">
+                <label class="form-check-label" for="provinceOpt0">
+                    包含所选省份
+                </label>
+            </div>
+            <div class="form-group form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="provinceOpt" id="provinceOpt1" value="1" checked>
+                <label class="form-check-label" for="provinceOpt1">
+                    排除所选省份
+                </label>
+            </div>
+        </div>
+        <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="cityIf" name="cityIf"></input>
+            <label class="custom-control-label" for="cityIf">城市</label>
+        </div>
+        <div class="form-group">
+            <label for="oneProvince">选择城市（以出现的复选框为准）：</label>
+            <select id="oneProvince" class="form-control">
+                <option th:each="province : ${provinces}" th:value="${province.getProvincecode()}" th:text="${province.getProvincename()}">北京</option>
+            </select>
+          <!--<select multiple id="citycodes" class="form-control">
+                <option value="1283">珠海</option>
+                <option value="1165">汕尾</option>
+            </select>-->
+            <!--<div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" value="1283" name="cityCodes" id="citycodes1"
+                       checked>
+                <label class="form-check-label" for="citycodes1">珠海</label>
+            </div>-->
+        </div>
+        <div class="form-group">
+            <div class="form-group form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="cityOpt" id="cityOpt0" value="0" checked>
+                <label class="form-check-label" for="cityOpt0">
+                    包含所选城市
+                </label>
+            </div>
+            <div class="form-group form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="cityOpt" id="cityOpt1" value="1">
+                <label class="form-check-label" for="cityOpt1">
+                    排除所选城市
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="limitNum">提取的数据量:</label>
+            <input type="text" class="form-control" id="limitNum" name="limitNum">
+        </div>
+        <button type="submit" class="btn btn-primary">提交</button>
+    </form>
+
+</div>
+</body>
+
+</html>

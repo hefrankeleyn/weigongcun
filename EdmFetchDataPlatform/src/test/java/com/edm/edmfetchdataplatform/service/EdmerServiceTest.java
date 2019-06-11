@@ -37,6 +37,7 @@ public class EdmerServiceTest {
      */
     @Test
     public void findEdmByUserNameTest(){
+        
         UserDetailsLogin userDetailsLogin = edmerService.findUserDetailsByUserName("edm");
         System.out.println(userDetailsLogin);
     }

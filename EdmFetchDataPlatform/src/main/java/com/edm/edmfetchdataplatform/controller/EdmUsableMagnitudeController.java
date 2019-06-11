@@ -24,7 +24,7 @@ public class EdmUsableMagnitudeController {
 
     @RequestMapping(value = "/showCurrentDayEdmUsableMagnitudes", method = RequestMethod.GET)
     public String showCurrentDayEdmUsableMagnitudes(Model model){
-        List<EdmUsableMagnitude> edmUsableMagnitudes = edmUsableMagnitudeService.findCurrentDayEdmUsableMagnitudes();
+        List<EdmUsableMagnitude> edmUsableMagnitudes = edmUsableMagnitudeService.findTodayEdmUsableMagnitudesAndDescription();
         model.addAttribute(edmUsableMagnitudes);
         return "usableMagnitude";
     }

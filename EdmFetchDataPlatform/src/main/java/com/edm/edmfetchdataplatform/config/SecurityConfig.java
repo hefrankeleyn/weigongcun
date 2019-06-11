@@ -24,6 +24,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private EdmerService edmerService;
 
+    // remember me 的时效
+    private static final int TOKEN_VALIDITY_SECONDS = 7 * 24 * 60 * 60;
+
     @Bean
     public UserDetailsService userDetailsService(){
         return new UserDetailsService() {
@@ -42,7 +45,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                .failureUrl("/login?error=true");
+                .failureUrl("/login?error=true")
+             .and()    // 启用 rememberMe 功能
+                .rememberMe()
+                .tokenValiditySeconds(TOKEN_VALIDITY_SECONDS)
+                .key("edmerKey");
     }
 
     @Override

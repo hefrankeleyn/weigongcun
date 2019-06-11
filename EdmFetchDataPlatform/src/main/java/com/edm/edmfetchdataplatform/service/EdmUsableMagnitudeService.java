@@ -14,4 +14,5 @@ public interface EdmUsableMagnitudeService {
     List<EdmUsableMagnitude> findCurrentDayEdmUsableMagnitudes();
 
 
+    List<EdmUsableMagnitude> findTodayEdmUsableMagnitudesAndDescription();
 }

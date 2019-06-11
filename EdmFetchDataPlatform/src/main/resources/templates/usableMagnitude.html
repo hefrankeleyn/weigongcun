@@ -2,17 +2,35 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EDM</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/bootstrap/js/bootstrap.js}"></script>
 </head>
 <body>
-<h2>所有可发数据量</h2>
-<div th:unless="${#lists.isEmpty(edmUsableMagnitudeList)}">
-    <table th:each="edmUsableMagnitude : ${edmUsableMagnitudeList}">
+<div class="container">
+    <h2>EDM各维度的可提取的数据量</h2>
+    <table class="table table-striped" th:unless="${#lists.isEmpty(edmUsableMagnitudeList)}">
+        <thead>
         <tr>
-            <th class="target_name" th:text="${edmUsableMagnitude.getTarget()}"></th>
-            <th class="magnitude" th:text="${edmUsableMagnitude.getMagnitude()}"></th>
+            <th>维度标识</th>
+            <th>可发数据量</th>
+            <th>维度描述</th>
         </tr>
+        </thead>
+        <tbody>
+        <tr th:each="edmUsableMagnitude : ${edmUsableMagnitudeList}">
+            <td th:text="${edmUsableMagnitude.getTarget()}"></td>
+            <td th:text="${edmUsableMagnitude.getMagnitude()}"></td>
+            <td th:text="${edmUsableMagnitude.getDescription()}"></td>
+        </tr>
+        </tbody>
     </table>
+    <div th:if="${#lists.isEmpty(edmUsableMagnitudeList)}">
+        <h2>数据异常，请联系数据组: shuju@wo.cn</h2>
+    </div>
 </div>
 </body>
 </html>

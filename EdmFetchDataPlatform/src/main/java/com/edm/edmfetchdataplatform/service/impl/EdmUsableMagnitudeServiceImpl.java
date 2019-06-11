@@ -23,6 +23,15 @@ public class EdmUsableMagnitudeServiceImpl implements EdmUsableMagnitudeService 
     @Override
     public List<EdmUsableMagnitude> findCurrentDayEdmUsableMagnitudes() {
 
-        return edmUsableMagnitudeMapper.findEdmUsableMagnitudesByDt(DateTransitionUtil.toDateStr(new Date()));
+        List<EdmUsableMagnitude> edmUsableMagnitudes = edmUsableMagnitudeMapper.findEdmUsableMagnitudesByDt(DateTransitionUtil.toDateStr(new Date()));
+
+        return edmUsableMagnitudes;
     }
+
+    @Override
+    public List<EdmUsableMagnitude> findTodayEdmUsableMagnitudesAndDescription() {
+        return edmUsableMagnitudeMapper.findEdmUsableMagnitudesAndTargetDescriptionByDt(DateTransitionUtil.toDateStr(new Date()));
+    }
+
+
 }

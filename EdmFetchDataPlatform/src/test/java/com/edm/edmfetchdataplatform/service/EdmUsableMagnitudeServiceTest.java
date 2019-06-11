@@ -36,4 +36,12 @@ public class EdmUsableMagnitudeServiceTest {
             System.out.println(magnitude);
         }
     }
+    @Test
+    public void findTodayEdmMagnitudes(){
+        List<EdmUsableMagnitude> edmUsableMagnitudes = edmUsableMagnitudeService.findTodayEdmUsableMagnitudesAndDescription();
+        for (EdmUsableMagnitude ed :
+                edmUsableMagnitudes) {
+            System.out.println(ed);
+        }
+    }
 }

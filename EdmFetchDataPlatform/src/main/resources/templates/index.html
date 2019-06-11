@@ -2,14 +2,41 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EDM</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/bootstrap/js/bootstrap.js}"></script>
 </head>
 <body>
-<h1>Welcome to Edm Fetch Data Platform</h1>
-<div>
-    <div id="usable_magnitude">
-        <a th:href="@{/edmUsableMagnitudeController/showCurrentDayEdmUsableMagnitudes}">可发数据量展示</a>
-    </div>
+<div class="container">
+    <nav class="navbar bg-dark navbar-dark">
+        <!-- brank or logo -->
+        <a class="navbar-brand" th:href="@{/home}">首页</a>
+        <!-- Toggle/ Collasible button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- navbar link -->
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav">
+                <li class="nav-item ">
+                    <a class="nav-link" th:href="@{/edmUsableMagnitudeController/showCurrentDayEdmUsableMagnitudes}">可发数据量展示</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/edmFetchDataConditionController/showConditionView}">EDM提取</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!-- main content -->
+    <main role="main">
+        <div class="jumbotron">
+            <h1>欢迎来到 EDM 提数平台</h1>
+        </div>
+    </main>
 </div>
 </body>
 </html>

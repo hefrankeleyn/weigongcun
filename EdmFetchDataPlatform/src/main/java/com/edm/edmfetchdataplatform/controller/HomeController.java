@@ -1,6 +1,7 @@
 package com.edm.edmfetchdataplatform.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -26,7 +27,8 @@ public class HomeController {
      * @return
      */
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login(){
+    public String login(boolean error, Model model){
+        model.addAttribute("loginError", error);
         return "login";
     }
 }

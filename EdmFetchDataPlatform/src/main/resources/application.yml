@@ -14,6 +14,10 @@ spring:
     username: edm
     password: edmpass
     driver-class-name: com.mysql.cj.jdbc.Driver
+    # 自动加载sql文件
+    schema:
+       - classpath:sql/edm_zone.sql
+    initialization-mode: always
   jpa:
     hibernate:
       ddl-auto: none
@@ -21,3 +25,13 @@ spring:
   thymeleaf:
     cache: false
 ---
+spring:
+  profiles: production
+  datasource:
+    url: jdbc:mysql://172.16.11.4:3306/edm_db?useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE
+    username: hive
+    password: Passw0rd
+#    driver-class-name: com.mysql.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none

@@ -1,7 +1,6 @@
 package com.edm.edmfetchdataplatform.mapper;
 
 import com.edm.edmfetchdataplatform.domain.Edmer;
-import com.edm.edmfetchdataplatform.domain.Role;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

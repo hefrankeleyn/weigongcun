@@ -74,6 +74,64 @@ databaseChangeLog:
                     nullable: false
                     references: edmers(eid)
                     foreignKeyName: fk_eid
+        - createTable:
+            tableName: edm_target_description
+            columns:
+              - column:
+                  name: target
+                  type: varchar(300)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(300)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: edm_zone
+            columns:
+              - column:
+                  name: zoneid
+                  type: bigserial
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: provincecode
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: provincename
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: citycode
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cityname
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+        - sql:
+            dbms: mysql
+            sql: ALTER TABLE edmers CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
+        - sql:
+            dbms: mysql
+            sql: ALTER TABLE edm_usable_magnitude CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
+        - sql:
+            dbms: mysql
+            sql: ALTER TABLE edmer_roles CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
+        - sql:
+            dbms: mysql
+            sql: ALTER TABLE edm_target_description CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
+        - sql:
+            dbms: mysql
+            sql: ALTER TABLE edm_zone CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
         - insert:
             tableName: edmers
             columns:
@@ -98,4 +156,93 @@ databaseChangeLog:
               - column:
                   name: eid
                   value: 1
-
+        - insert:
+            tableName: edm_target_description
+            columns:
+              - column:
+                  name: target
+                  value: lg01
+              - column:
+                  name: description
+                  value: 中高级活跃用户一（连续六个月有邮短阅读（点击URL）行为用户）
+        - insert:
+            tableName: edm_target_description
+            columns:
+              - column:
+                  name: target
+                  value: lg02
+              - column:
+                  name: description
+                  value: 中高级活跃用户二（连续三个月有邮短阅读（点击URL）行为用户）
+        - insert:
+            tableName: edm_target_description
+            columns:
+              - column:
+                  name: target
+                  value: zc
+              - column:
+                  name: description
+                  value: 忠诚用户（近三个月有1次及以上邮箱登录行为的用户）
+        - insert:
+            tableName: edm_target_description
+            columns:
+              - column:
+                  name: target
+                  value: df01
+              - column:
+                  name: description
+                  value: 一般活跃用户一（近三个月活跃用户（涵盖各个用户层)）
+        - insert:
+            tableName: edm_target_description
+            columns:
+              - column:
+                  name: target
+                  value: df02
+              - column:
+                  name: description
+                  value: 一般活跃用户二（近六个月活跃用户（涵盖各个用户层)）
+        - insert:
+            tableName: edm_target_description
+            columns:
+              - column:
+                  name: target
+                  value: df03
+              - column:
+                  name: description
+                  value: 一般活跃用户三（近三个月有1-3次邮短阅读（点击URL)（涵盖各个用户层)）
+        - insert:
+            tableName: edm_target_description
+            columns:
+              - column:
+                  name: target
+                  value: new
+              - column:
+                  name: description
+                  value: 新用户：近三个月注册邮箱账号的用户
+        - insert:
+            tableName: edm_target_description
+            columns:
+              - column:
+                  name: target
+                  value: sl01
+              - column:
+                  name: description
+                  value: 沉默用户三（九个月以上没有活跃行为的用户（涵盖各用户层））
+        - insert:
+            tableName: edm_target_description
+            columns:
+              - column:
+                  name: target
+                  value: sl02
+              - column:
+                  name: description
+                  value: 沉默用户二（近九个月没有活跃行为的用户（涵盖各用户层））
+        - insert:
+            tableName: edm_target_description
+            columns:
+              - column:
+                  name: target
+                  value: sl03
+              - column:
+                  name: description
+                  value: 沉默用户一（近六个月没有活跃行为的用户（涵盖各用户层））
