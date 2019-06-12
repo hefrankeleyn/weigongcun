@@ -10,27 +10,8 @@
     <script th:src="@{/bootstrap/js/bootstrap.js}"></script>
 </head>
 <body>
+<div th:include="common/header :: header-navbar"></div>
 <div class="container">
-    <nav class="navbar bg-dark navbar-dark">
-        <!-- brank or logo -->
-        <a class="navbar-brand" th:href="@{/home}">首页</a>
-        <!-- Toggle/ Collasible button -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <!-- navbar link -->
-        <div class="collapse navbar-collapse" id="collapsibleNavbar">
-            <ul class="navbar-nav">
-                <li class="nav-item ">
-                    <a class="nav-link" th:href="@{/edmUsableMagnitudeController/showCurrentDayEdmUsableMagnitudes}">可发数据量展示</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/edmFetchDataConditionController/showConditionView}">EDM提取</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
     <!-- main content -->
     <main role="main">
         <div class="jumbotron">

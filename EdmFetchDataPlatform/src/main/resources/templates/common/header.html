@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="header-navbar">
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-dark flex-md-nowrap p-0" th:fragment="header-navbar">
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" th:href="@{/home}">EDM提数平台</a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <!--
+                <span class="sr-only">(current)</span> 是用于给屏读用户使用
+                <a class="nav-link" href="#">首页 <span class="sr-only">(current)</span></a>
+             -->
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" th:href="@{/home}">首页</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <!-- aria-haspopup 当点击的时候出现菜单或浮动元素；
+                        aria-expanded 表示展开的状态，true为展开;
+                        这些是无障碍网页应用的配置项，如果不考虑屏读人群，可以不配置
+                     -->
+                    <a class="nav-link dropdown-toggle" href="#" id="fetchData" role="button" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">提数</a>
+                    <div class="dropdown-menu" aria-labelledby="fetchData">
+                        <a class="dropdown-item" th:href="@{/edmUsableMagnitudeController/showCurrentDayEdmUsableMagnitudes}">可提取数据量展示</a>
+                        <a class="dropdown-item" th:href="@{/edmFetchDataConditionController/showConditionView}">申请提取EDM数据</a>
+                        <!-- <div class="dropdown-divider"></div> -->
+                    </div>
+                </li>
+            </ul>
+        </div>
+<!--        spring security 在开启 csrf 防护的情况下, /logout 必须以post的方式提交-->
+        <!--<ul class="navbar-nav px-3">
+            <li class="nav-item text-nowrap">
+                <a class="nav-link" th:href="@{/logout}">退出登录</a>
+            </li>
+        </ul>-->
+        <form th:action="@{/logout}" method="post" class="form-inline my-2 my-lg-0">
+            <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">退出登录</button>
+        </form>
+    </nav>
+</div>
+
+</body>
+
+</html>

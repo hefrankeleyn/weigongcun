@@ -10,6 +10,7 @@
     <script th:src="@{/bootstrap/js/bootstrap.js}"></script>
 </head>
 <body>
+<div th:include="common/header :: header-navbar"></div>
 <div class="container">
     <h2>EDM各维度的可提取的数据量</h2>
     <table class="table table-striped" th:unless="${#lists.isEmpty(edmUsableMagnitudeList)}">

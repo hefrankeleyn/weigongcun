@@ -49,7 +49,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
              .and()    // 启用 rememberMe 功能
                 .rememberMe()
                 .tokenValiditySeconds(TOKEN_VALIDITY_SECONDS)
-                .key("edmerKey");
+                .key("edmerKey")
+             .and()   // 启用 退出登录
+                .logout()
+                .logoutSuccessUrl("/");
     }
 
     @Override
