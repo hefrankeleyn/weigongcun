@@ -15,7 +15,7 @@
 <body>
 <div th:include="common/header :: header-navbar"></div>
 <div class="container">
-    <form th:action="@{/}" method="POST">
+    <form th:action="@{/edmFetchDataConditionController/applyFetchData}" method="POST">
         <div class="form-group">
             <label for="dimension">选择用户维度：</label>
             <select id="dimension" name="dimension" class="form-control">
@@ -23,7 +23,7 @@
             </select>
         </div>
         <div class="custom-control custom-switch">
-            <input type="checkbox" class="custom-control-input" id="provinceIf" name="provinceIf"></input>
+            <input type="checkbox" class="custom-control-input" id="provinceIf" name="provinceIf" value="1"></input>
             <label class="custom-control-label" for="provinceIf">省份</label>
         </div>
         <div class="form-group">
@@ -47,7 +47,7 @@
             </div>
         </div>
         <div class="custom-control custom-switch">
-            <input type="checkbox" class="custom-control-input" id="cityIf" name="cityIf"></input>
+            <input type="checkbox" class="custom-control-input" id="cityIf" name="cityIf" value="1"></input>
             <label class="custom-control-label" for="cityIf">城市</label>
         </div>
         <div class="form-group">
@@ -81,7 +81,8 @@
         </div>
         <div class="form-group">
             <label for="limitNum">提取的数据量:</label>
-            <input type="text" class="form-control" id="limitNum" name="limitNum">
+            <input type="text" class="form-control" id="limitNum" name="limitNum" required>
+            <div class="invalid-feedback">请输入大于零的数值</div>
         </div>
         <button type="submit" class="btn btn-primary">提交</button>
     </form>

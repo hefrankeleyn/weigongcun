@@ -1,5 +1,6 @@
 package com.edm.edmfetchdataplatform.controller;
 
+import com.edm.edmfetchdataplatform.domain.EdmFetchDataCondition;
 import com.edm.edmfetchdataplatform.domain.EdmTargetDescription;
 import com.edm.edmfetchdataplatform.domain.EdmZone;
 import com.edm.edmfetchdataplatform.domain.ResponseResult;
@@ -9,12 +10,12 @@ import com.edm.edmfetchdataplatform.service.EdmZoneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * @Date 2019-06-11
@@ -23,6 +24,8 @@ import java.util.List;
 @Controller
 @RequestMapping("/edmFetchDataConditionController")
 public class EdmFetchDataConditionController {
+
+    private static Logger logger = Logger.getLogger("com.edm.edmfetchdataplatform.controller.EdmFetchDataConditionController");
 
     @Autowired
     private EdmTargetDescriptionService edmTargetDescriptionService;
@@ -59,6 +62,18 @@ public class EdmFetchDataConditionController {
             return new ResponseResult(ResultStatus.SUCCESS, cities);
         }
         return new ResponseResult(ResultStatus.FAIL, cities);
+    }
+
+    /**
+     * 申请数据提取
+     * @param edmFetchDataCondition
+     * @return
+     */
+    @RequestMapping(value = "/applyFetchData", method = RequestMethod.POST)
+    public String applyFetchData(EdmFetchDataCondition edmFetchDataCondition){
+        logger.info(edmFetchDataCondition.toString());
+
+        return "redirect:/home";
     }
 
 

@@ -1,3 +1,7 @@
+/**
+ * author: Li Fei
+ * date: 2019-6-13
+ */
 $(document).ready(function () {
 
     init();
@@ -11,19 +15,46 @@ $(document).ready(function () {
         $("#provinceIf").unbind("click", addOrRemoveProvinceCodesDiv);
         $("#provinceIf").bind("click", addOrRemoveProvinceCodesDiv);
 
+        // 调用获取某一个城市的函数
+        createCitySelect();
         // 城市
         $("#cityIf").unbind("click", addOrRemoveCityCodesDiv);
         $("#cityIf").bind("click", addOrRemoveCityCodesDiv);
 
-        // 为 城市下拉复选框添加监听事件
-        // $("#citycodes option").unbind("click", createCityCheckBox);
-        // $("#citycodes option").bind("click", createCityCheckBox);
-
         // 为城市的省份选项添加 监听事件
         $(".form-group #oneProvince").unbind("change", createCitySelect);
         $(".form-group #oneProvince").bind("change", createCitySelect);
-        // 调用获取某一个城市的函数
-        createCitySelect();
+
+        // 开启表单验证
+        addFormValidationEvent();
+    }
+
+    /**
+     * 添加表单验证事件
+     */
+    function addFormValidationEvent() {
+        // 自定义验证规则
+        $(".form-group #limitNum").unbind("input propertychange",fetchDataFormValidation);
+        $(".form-group #limitNum").bind("input propertychange",fetchDataFormValidation);
+    }
+
+
+    /**
+     * 提数表单验证
+     */
+    function fetchDataFormValidation(){
+        var limitNum = $(".form-group #limitNum").val();
+        var numberIf = $.isNumeric(limitNum);
+        if(!numberIf  || limitNum<=0){
+            // $(".form-group #limitNum").css("border","1px solid #ced4");
+            $(".form-group #limitNum").addClass("is-invalid");
+            // 添加不可用标识
+            $("button[type='submit']").attr("disabled","disabled");
+        }else{
+            // 移除不可用标识
+            $("button[type='submit']").removeAttr("disabled");
+            $(".form-group #limitNum").removeClass("is-invalid");
+        }
     }
 
     /**
@@ -75,11 +106,12 @@ $(document).ready(function () {
         $(".form-group #oneProvince").after(selectHtml);
 
         var citycodesSelect = onProvince.children("#citycodes").children("option");
-        //为新添加S绑定监听事件
+        //为新添加Select绑定监听事件
         citycodesSelect.unbind("click", createCityCheckBox);
         citycodesSelect.bind("click", createCityCheckBox);
 
     }
+
 
     /**
      * 获取项目的url
@@ -163,6 +195,8 @@ $(document).ready(function () {
         if (ifChecked) {
             // select，将父元素显示
             $("#citycodes").parent().show();
+            // 添加 required 元素
+            $("#citycodes").attr("required","required");
 
             // radio 添加name属性，并将父元素显示
             $("input[id^='cityOpt'][type='radio']").attr("name", "cityOpt");
@@ -189,6 +223,8 @@ $(document).ready(function () {
             // select 添加name属性，并将父元素显示
             $("#provinceCodes").attr("name", "provinceCodes");
             $("#provinceCodes").parent().show();
+            // 添加 required 元素
+            $("#provinceCodes").attr("required","required");
 
             // radio 添加name属性，并将父元素显示
             $("input[id^='provinceOpt'][type='radio']").attr("name", "provinceOpt");
