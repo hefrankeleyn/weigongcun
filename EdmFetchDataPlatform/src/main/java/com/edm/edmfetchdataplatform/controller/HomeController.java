@@ -31,4 +31,5 @@ public class HomeController {
         model.addAttribute("loginError", error);
         return "login";
     }
+
 }

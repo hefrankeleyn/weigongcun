@@ -13,4 +13,11 @@ public interface EdmerService {
     UserDetailsLogin findUserDetailsByUserName(String username);
 
     UserDetailsLogin findUserDetailsByEmail(String email);
+
+    /**
+     * 根据邮箱查询用户
+     * @param email
+     * @return
+     */
+    Edmer findEdmerByEmail(String email);
 }

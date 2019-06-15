@@ -44,4 +44,9 @@ public class EdmerServiceImpl implements EdmerService {
         Edmer edmer = edmerMapper.findEdmerByEmail(email);
         return new UserDetailsLogin(edmer);
     }
+
+    @Override
+    public Edmer findEdmerByEmail(String email) {
+        return edmerMapper.findEdmerByEmail(email);
+    }
 }

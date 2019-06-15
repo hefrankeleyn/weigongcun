@@ -117,6 +117,61 @@ databaseChangeLog:
                   type: varchar(10)
                   constraints:
                     nullable: false
+        - createTable:
+            tableName: edm_conditions
+            columns:
+              - column:
+                  name: conid
+                  type: bigserial
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: dimension
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: province_if
+                  type: int
+                  constraints:
+                    nullable: true
+              - column:
+                  name: provincecodes
+                  type: varchar(500)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: province_opt
+                  type: int
+                  constraints:
+                    nullable: true
+              - column:
+                  name: city_if
+                  type: int
+                  constraints:
+                    nullable: true
+              - column:
+                  name: citycodes
+                  type: varchar(500)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: city_opt
+                  type: int
+                  constraints:
+                    nullable: true
+              - column:
+                  name: limitnum
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: eid
+                  type: bigserial
+                  constraints:
+                    nullable: false
         - sql:
             dbms: mysql
             sql: ALTER TABLE edmers CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
@@ -132,6 +187,9 @@ databaseChangeLog:
         - sql:
             dbms: mysql
             sql: ALTER TABLE edm_zone CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
+        - sql:
+            dbms: mysql
+            sql: ALTER TABLE edm_conditions CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
         - insert:
             tableName: edmers
             columns:

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <body>
 <div th:fragment="header-navbar">
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top bg-dark flex-md-nowrap p-0" th:fragment="header-navbar">
@@ -34,12 +35,13 @@
                 </li>
             </ul>
         </div>
-<!--        spring security 在开启 csrf 防护的情况下, /logout 必须以post的方式提交-->
-        <!--<ul class="navbar-nav px-3">
-            <li class="nav-item text-nowrap">
-                <a class="nav-link" th:href="@{/logout}">退出登录</a>
+        <ul class="navbar-nav px-3" sec:authorize="isAuthenticated()">
+            <li class="nav-item text-success">
+                <!-- 访问认证细节 -->
+                欢迎登陆：<span sec:authentication="name">User</span>
             </li>
-        </ul>-->
+        </ul>
+<!--        spring security 在开启 csrf 防护的情况下, /logout 必须以post的方式提交-->
         <form th:action="@{/logout}" method="post" class="form-inline my-2 my-lg-0">
             <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">退出登录</button>
         </form>

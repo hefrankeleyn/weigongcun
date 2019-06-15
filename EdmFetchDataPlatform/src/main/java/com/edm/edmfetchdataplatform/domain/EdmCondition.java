@@ -1,20 +1,18 @@
 package com.edm.edmfetchdataplatform.domain;
 
-
-import java.io.Serializable;
-import java.util.Arrays;
+import com.edm.edmfetchdataplatform.tools.MyArrayUtil;
 
 /**
- * EDM 的提数条件,用于和 页面 表单进行交互
- * @Date 2019-06-05
+ * 提数条件
+ * @Date 2019-06-15
  * @Author lifei
  */
-public class EdmFetchDataCondition implements Serializable {
+public class EdmCondition {
 
-    /**
-     * 用户维度
-     * 不能为空
-     */
+    // 主键, 自增
+    private Integer conId;
+
+    // 所要提取的用户维度
     private String dimension;
 
     /**
@@ -23,15 +21,17 @@ public class EdmFetchDataCondition implements Serializable {
      * 0 : 不拼接省份条件
      */
     private Integer provinceIf;
+
     /**
-     * 省份代码
+     * 省份代码,多个省份代码用逗号隔开
      */
-    private String[] provinceCodes;
+    private String provinceCodes;
 
     /**
      * 对省份条件的操作
-     * 0 : 包含所选省份
-     * 1 : 排除所选省份
+     * 0 : 包含所选省份  in ('')
+     * 1 : 排除所选省份  not in ('')
+     * null ： 不需要拼接此条件
      */
     private Integer provinceOpt;
 
@@ -43,16 +43,18 @@ public class EdmFetchDataCondition implements Serializable {
     private Integer cityIf;
 
     /**
-     * 城市代码
+     * 城市代码, 多个省份代码之间用逗号隔开
      */
-    private String[] cityCodes;
+    private String cityCodes;
 
     /**
      * 对城市条件的操作
      * 0： 包含所选城市
      * 1： 排除所选城市
+     *  null 不需要拼接此条件
      */
     private Integer cityOpt;
+
 
     /**
      * 所要提取的数据量
@@ -60,9 +62,37 @@ public class EdmFetchDataCondition implements Serializable {
      */
     private Integer limitNum;
 
-    public EdmFetchDataCondition() {
+
+    /**
+     * 每一个提数提条件对应一个用户
+     */
+    private Edmer edmer;
+
+
+    public EdmCondition() {
         this.provinceIf = 0;
         this.cityIf = 0;
+    }
+
+    public EdmCondition(EdmFetchDataCondition condition, Edmer edmer){
+        this.dimension = condition.getDimension();
+        this.provinceIf = condition.getProvinceIf()==null? 0: condition.getProvinceIf();
+        this.provinceCodes = MyArrayUtil.arrayToStr(condition.getProvinceCodes());
+        this.provinceOpt = condition.getProvinceOpt();
+        this.cityIf = condition.getCityIf()==null? 0: condition.getCityIf();
+        this.cityCodes = MyArrayUtil.arrayToStr(condition.getCityCodes());
+        this.cityOpt = condition.getCityOpt();
+        this.limitNum = condition.getLimitNum()==null || condition.getLimitNum() <0 ? 0: condition.getLimitNum();
+
+        this.edmer = edmer;
+    }
+
+    public Integer getConId() {
+        return conId;
+    }
+
+    public void setConId(Integer conId) {
+        this.conId = conId;
     }
 
     public String getDimension() {
@@ -81,11 +111,11 @@ public class EdmFetchDataCondition implements Serializable {
         this.provinceIf = provinceIf;
     }
 
-    public String[] getProvinceCodes() {
+    public String getProvinceCodes() {
         return provinceCodes;
     }
 
-    public void setProvinceCodes(String[] provinceCodes) {
+    public void setProvinceCodes(String provinceCodes) {
         this.provinceCodes = provinceCodes;
     }
 
@@ -105,11 +135,11 @@ public class EdmFetchDataCondition implements Serializable {
         this.cityIf = cityIf;
     }
 
-    public String[] getCityCodes() {
+    public String getCityCodes() {
         return cityCodes;
     }
 
-    public void setCityCodes(String[] cityCodes) {
+    public void setCityCodes(String cityCodes) {
         this.cityCodes = cityCodes;
     }
 
@@ -129,18 +159,11 @@ public class EdmFetchDataCondition implements Serializable {
         this.limitNum = limitNum;
     }
 
+    public Edmer getEdmer() {
+        return edmer;
+    }
 
-    @Override
-    public String toString() {
-        return "EdmFetchDataCondition{" +
-                "dimension='" + dimension + '\'' +
-                ", provinceIf=" + provinceIf +
-                ", provinceCodes=" + Arrays.toString(provinceCodes) +
-                ", provinceOpt=" + provinceOpt +
-                ", cityIf=" + cityIf +
-                ", cityCodes=" + Arrays.toString(cityCodes) +
-                ", cityOpt=" + cityOpt +
-                ", limitNum=" + limitNum +
-                '}';
+    public void setEdmer(Edmer edmer) {
+        this.edmer = edmer;
     }
 }

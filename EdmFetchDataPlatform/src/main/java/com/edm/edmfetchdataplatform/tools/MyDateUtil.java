@@ -7,7 +7,7 @@ import java.util.Date;
  * @Date 2019-05-16
  * @Author lifei
  */
-public class DateTransitionUtil {
+public class MyDateUtil {
 
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
 
