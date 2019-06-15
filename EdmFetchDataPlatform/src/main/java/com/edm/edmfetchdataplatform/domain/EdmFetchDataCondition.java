@@ -1,6 +1,8 @@
 package com.edm.edmfetchdataplatform.domain;
 
 
+import com.edm.edmfetchdataplatform.tools.MyArrayUtil;
+
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -63,6 +65,17 @@ public class EdmFetchDataCondition implements Serializable {
     public EdmFetchDataCondition() {
         this.provinceIf = 0;
         this.cityIf = 0;
+    }
+
+    public EdmFetchDataCondition(EdmCondition edmCondition){
+        this.dimension = edmCondition.getDimension();
+        this.provinceIf = edmCondition.getProvinceIf();
+        this.provinceCodes = MyArrayUtil.strToArray(edmCondition.getProvinceCodes());
+        this.provinceOpt = edmCondition.getProvinceOpt();
+        this.cityIf = edmCondition.getCityIf();
+        this.cityCodes = MyArrayUtil.strToArray(edmCondition.getCityCodes());
+        this.cityOpt = edmCondition.getCityOpt();
+        this.limitNum = edmCondition.getLimitNum();
     }
 
     public String getDimension() {

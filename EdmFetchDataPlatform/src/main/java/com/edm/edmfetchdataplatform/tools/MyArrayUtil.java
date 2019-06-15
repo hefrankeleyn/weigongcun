@@ -20,4 +20,18 @@ public class MyArrayUtil {
         }
         return sb.toString();
     }
+
+    /**
+     * 将字符串变成数组
+     * @param str
+     * @return
+     */
+    public static String[] strToArray(String str){
+        if(str == null){
+            return new String[0];
+        }else {
+            String[] array = str.split(",");
+            return array;
+        }
+    }
 }

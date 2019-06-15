@@ -166,4 +166,20 @@ public class EdmCondition {
     public void setEdmer(Edmer edmer) {
         this.edmer = edmer;
     }
+
+    @Override
+    public String toString() {
+        return "EdmCondition{" +
+                "conId=" + conId +
+                ", dimension='" + dimension + '\'' +
+                ", provinceIf=" + provinceIf +
+                ", provinceCodes='" + provinceCodes + '\'' +
+                ", provinceOpt=" + provinceOpt +
+                ", cityIf=" + cityIf +
+                ", cityCodes='" + cityCodes + '\'' +
+                ", cityOpt=" + cityOpt +
+                ", limitNum=" + limitNum +
+                ", edmer=" + edmer +
+                '}';
+    }
 }
