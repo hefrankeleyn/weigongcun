@@ -15,8 +15,6 @@ $(document).ready(function () {
         $("#provinceIf").unbind("click", addOrRemoveProvinceCodesDiv);
         $("#provinceIf").bind("click", addOrRemoveProvinceCodesDiv);
 
-        // 调用获取某一个城市的函数
-        createCitySelect();
         // 城市
         $("#cityIf").unbind("click", addOrRemoveCityCodesDiv);
         $("#cityIf").bind("click", addOrRemoveCityCodesDiv);
@@ -104,6 +102,8 @@ $(document).ready(function () {
             selectHtml.append(optionHtml);
         });
         $(".form-group #oneProvince").after(selectHtml);
+        // 添加 required 元素
+        $(".form-group #citycodes").attr("required","required");
 
         var citycodesSelect = onProvince.children("#citycodes").children("option");
         //为新添加Select绑定监听事件
@@ -194,20 +194,26 @@ $(document).ready(function () {
         var ifChecked = $("#cityIf").prop("checked");
         if (ifChecked) {
             // select，将父元素显示
-            $("#citycodes").parent().show();
-            // 添加 required 元素
-            $("#citycodes").attr("required","required");
+            $("#oneProvince").parent().show();
+
+            // 调用获取某一个城市的函数
+            createCitySelect();
 
             // radio 添加name属性，并将父元素显示
             $("input[id^='cityOpt'][type='radio']").attr("name", "cityOpt");
             $("input[id^='cityOpt'][type='radio']").parent().parent().show();
         } else if (!ifChecked) {
             // select 移除name属性，并且将父元素进行隐藏
-            $("#citycodes").parent().hide();
+            $(".form-group #oneProvince").parent().hide();
             //删除所有的城市复选框
             var formChecks = $(".form-group #oneProvince").parent().children(".form-check");
             if(formChecks.length>0){
                 $(formChecks).remove();
+            }
+            // 移除城市下拉列表
+            var citycodesSelect = $(".form-group #oneProvince").parent().children("#citycodes");
+            if(citycodesSelect.length>0){
+                $(citycodesSelect).remove();
             }
             // radio 移除name属性，并将父元素隐藏
             $("input[id^='cityOpt'][type='radio']").removeAttr("name");
@@ -233,6 +239,7 @@ $(document).ready(function () {
             // select 移除name属性，并且将父元素进行隐藏
             $("#provinceCodes").removeAttr("name");
             $("#provinceCodes").parent().hide();
+            $("#provinceCodes").removeAttr("required");
 
             // radio 移除name属性，并将父元素隐藏
             $("input[id^='provinceOpt'][type='radio']").removeAttr("name");

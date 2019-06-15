@@ -83,7 +83,16 @@ public class EdmFetchDataConditionController {
         Edmer edmer = edmerService.findEdmerByEmail(userEmail);
         // 保存请求
         edmConditionService.saveEdmCondition(edmFetchDataCondition, edmer);
-        return "redirect:/home";
+        return "redirect:/edmFetchDataConditionController/conditionSubmitSuccess";
+    }
+
+    /**
+     * 成功添加申请项展示页面
+     * @return
+     */
+    @RequestMapping(value = "/conditionSubmitSuccess", method = RequestMethod.GET)
+    public String conditionSubmitSuccess(){
+        return "conditionSubmitHit";
     }
 
 
