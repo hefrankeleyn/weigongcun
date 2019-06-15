@@ -13,6 +13,8 @@ import java.util.Arrays;
  */
 public class EdmFetchDataCondition implements Serializable {
 
+    // 主键, 自增
+    private Integer conId;
     /**
      * 用户维度
      * 不能为空
@@ -62,12 +64,18 @@ public class EdmFetchDataCondition implements Serializable {
      */
     private Integer limitNum;
 
+    /**
+     * 每一个提数提条件对应一个用户
+     */
+    private Edmer edmer;
+
     public EdmFetchDataCondition() {
         this.provinceIf = 0;
         this.cityIf = 0;
     }
 
     public EdmFetchDataCondition(EdmCondition edmCondition){
+        this.conId = edmCondition.getConId();
         this.dimension = edmCondition.getDimension();
         this.provinceIf = edmCondition.getProvinceIf();
         this.provinceCodes = MyArrayUtil.strToArray(edmCondition.getProvinceCodes());
@@ -76,6 +84,15 @@ public class EdmFetchDataCondition implements Serializable {
         this.cityCodes = MyArrayUtil.strToArray(edmCondition.getCityCodes());
         this.cityOpt = edmCondition.getCityOpt();
         this.limitNum = edmCondition.getLimitNum();
+        this.edmer = edmCondition.getEdmer();
+    }
+
+    public Integer getConId() {
+        return conId;
+    }
+
+    public void setConId(Integer conId) {
+        this.conId = conId;
     }
 
     public String getDimension() {
@@ -142,11 +159,19 @@ public class EdmFetchDataCondition implements Serializable {
         this.limitNum = limitNum;
     }
 
+    public Edmer getEdmer() {
+        return edmer;
+    }
+
+    public void setEdmer(Edmer edmer) {
+        this.edmer = edmer;
+    }
 
     @Override
     public String toString() {
         return "EdmFetchDataCondition{" +
-                "dimension='" + dimension + '\'' +
+                "conId=" + conId +
+                ", dimension='" + dimension + '\'' +
                 ", provinceIf=" + provinceIf +
                 ", provinceCodes=" + Arrays.toString(provinceCodes) +
                 ", provinceOpt=" + provinceOpt +
@@ -154,6 +179,7 @@ public class EdmFetchDataCondition implements Serializable {
                 ", cityCodes=" + Arrays.toString(cityCodes) +
                 ", cityOpt=" + cityOpt +
                 ", limitNum=" + limitNum +
+                ", edmer=" + edmer +
                 '}';
     }
 }

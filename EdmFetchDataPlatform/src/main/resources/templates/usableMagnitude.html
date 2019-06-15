@@ -23,11 +23,11 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="edmUsableMagnitude : ${edmUsableMagnitudeList}">
-            <td th:text="${edmUsableMagnitude.getTarget()}"></td>
-            <td th:text="${edmUsableMagnitude.getMagnitude()}"></td>
-            <td th:text="${edmUsableMagnitude.getDescription()}"></td>
-        </tr>
+            <tr th:each="edmUsableMagnitude : ${edmUsableMagnitudeList}">
+                <td th:text="${edmUsableMagnitude.getTarget()}"></td>
+                <td th:text="${edmUsableMagnitude.getMagnitude()}"></td>
+                <td th:text="${edmUsableMagnitude.getDescription()}"></td>
+            </tr>
         </tbody>
     </table>
     <div th:if="${#lists.isEmpty(edmUsableMagnitudeList)}">

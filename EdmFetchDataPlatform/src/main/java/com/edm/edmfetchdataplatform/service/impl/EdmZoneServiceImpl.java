@@ -28,4 +28,20 @@ public class EdmZoneServiceImpl implements EdmZoneService {
     public List<EdmZone> findCitiesByProvinceCode(String provincecode) {
         return edmZoneMapper.findCitysByProvinceCode(provincecode);
     }
+
+    @Override
+    public String[] findProvinceNamesByProvinceCodes(String[] provinceCodes) {
+        if(provinceCodes == null || provinceCodes.length == 0){
+            return null;
+        }
+        return edmZoneMapper.findProvinceNameByProvinceCodes(provinceCodes);
+    }
+
+    @Override
+    public String[] findCityNamesByCityCodes(String[] cityCodes) {
+        if(cityCodes == null || cityCodes.length == 0){
+            return null;
+        }
+        return edmZoneMapper.findCityNameByCityCodes(cityCodes);
+    }
 }

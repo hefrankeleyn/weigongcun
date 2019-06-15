@@ -92,9 +92,21 @@ public class EdmFetchDataConditionController {
      */
     @RequestMapping(value = "/conditionSubmitSuccess", method = RequestMethod.GET)
     public String conditionSubmitSuccess(){
-        return "conditionSubmitHit";
+        return "conditionSubmitHint";
     }
 
 
+    /**
+     * 查询当前登陆用户的待提交项
+     * @return
+     */
+    @RequestMapping(value = "/findUserEdmPrepareList", method = RequestMethod.GET)
+    public String findUserEdmPrepareList(Authentication authentication,Model model){
+        // 获取用户名的邮箱
+        String userEmail = authentication.getName();
+        List<EdmCondition> edmConditions = edmConditionService.findEdmFetchDataConditionsByUserEmail(userEmail);
+        model.addAttribute("edmConditions", edmConditions);
+        return "edmPrepareList";
+    }
 
 }

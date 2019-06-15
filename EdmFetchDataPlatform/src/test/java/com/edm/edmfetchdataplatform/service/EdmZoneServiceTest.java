@@ -35,4 +35,24 @@ public class EdmZoneServiceTest {
             System.out.println(city);
         }
     }
+
+    @Test
+    public void findProvinceNamesByProvinceCodes(){
+        String[] provinceCodes = new String[]{"100","200"};
+        String[] provinceNames = edmZoneService.findProvinceNamesByProvinceCodes(provinceCodes);
+        for (String provinceName :
+                provinceNames) {
+            System.out.println(provinceName);
+        }
+    }
+
+    @Test
+    public void findCityNamesByCityCodes(){
+        String[] cityCodes = new String[]{"1011","1010"};
+        String[] cityNames = edmZoneService.findCityNamesByCityCodes(cityCodes);
+        for (String cityName :
+                cityNames) {
+            System.out.println(cityName);
+        }
+    }
 }

@@ -35,4 +35,11 @@ public class EdmTargetDescriptionTest {
         }
     }
 
+    @Test
+    public void findDescriptionByTarget(){
+        String description = edmTargetDescriptionService.findDescriptionByTarget("lg01");
+        System.out.println(description);
+
+    }
+
 }

@@ -18,4 +18,19 @@ public interface EdmZoneService {
      * @return
      */
     List<EdmZone> findCitiesByProvinceCode(String provincecode);
+
+    /**
+     * 根据省份代码查询省份名称
+     * @param provinceCodes
+     * @return
+     */
+    String[] findProvinceNamesByProvinceCodes(String[] provinceCodes);
+
+    /**
+     * 根据城市代码查询城市名称
+     * @param cityCodes
+     * @return
+     */
+    String[] findCityNamesByCityCodes(String[] cityCodes);
+
 }

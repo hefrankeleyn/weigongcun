@@ -21,7 +21,7 @@
         <h1>成功添加申请项到“待申请清单”！</h1>
         <p class="lead">接下来，可以点击“继续添加”回到 “申请提取EDM数据” 页面，或者点击“查看待申请清单”查看完整的申请项列表。</p>
         <a class="btn btn-lg btn-primary" th:href="@{/edmFetchDataConditionController/showConditionView}" role="button">« 继续添加</a>
-        <a class="btn btn-lg btn-primary" href="#" role="button">查看待申请清单 »</a>
+        <a class="btn btn-lg btn-primary" th:href="@{/edmFetchDataConditionController/findUserEdmPrepareList}" role="button">查看待申请清单 »</a>
     </div>
 </div>
 </body>

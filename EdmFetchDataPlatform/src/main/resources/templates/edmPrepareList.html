@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EDM</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/bootstrap/js/bootstrap.js}"></script>
+</head>
+
+<body>
+<div th:include="common/header :: header-navbar"></div>
+<div class="container">
+    <div th:if="${#lists.isEmpty(edmConditions)}">
+        <h2>待申请清单为空~</h2>
+    </div>
+    <div class="m-1" th:unless="${#lists.isEmpty(edmConditions)}">
+        <form th:action="@{#}" method="post">
+            <button class="btn btn-success" type="submit" disabled>创建提数申请</button>
+        </form>
+    </div>
+    <table style="table-layout:fixed" class="table table-bordered table-hover table-striped table-condensed"
+           th:unless="${#lists.isEmpty(edmConditions)}">
+        <thead>
+        <tr>
+            <th scope="col">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" id="allCids">
+                    <label class="custom-control-label" for="allCids">全选</label>
+                </div>
+            </th>
+            <th scope="col">用户维度</th>
+            <th scope="col">省份:包含/排除</th>
+            <th scope="col">省份</th>
+            <th scope="col">城市:包含/排除</th>
+            <th scope="col">城市</th>
+            <th scope="col">数据量</th>
+            <th scope="col">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="edmCondition,edmConditionState : ${edmConditions}">
+            <td>
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" th:id="${edmCondition.getConId()}">
+                    <label class="custom-control-label" th:for="${edmCondition.getConId()}"
+                           th:text="${edmConditionState.count}">状态变量： count</label>
+                </div>
+            </td>
+            <td th:text="${edmCondition.getDescription()}">中高级活跃用户一（连续六个月有邮短阅读（点击URL）行为用户）</td>
+            <td th:text="${edmCondition.getProvinceOpt()}">包含</td>
+            <td th:text="${edmCondition.getProvinceNames()}">北京、天津</td>
+            <td th:text="${edmCondition.getCityOpt()}">排除</td>
+            <td th:text="${edmCondition.getCityNames()}">珠海、厦门</td>
+            <td th:text="${edmCondition.getLimitNum()}">1000</td>
+            <td>
+                <div>
+                    <button type="button" class="btn btn-sm btn-danger">删除</button>
+                    <button type="button" class="btn btn-sm btn-danger">修改</button>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+
+</html>

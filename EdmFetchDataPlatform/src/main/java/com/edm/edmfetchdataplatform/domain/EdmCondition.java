@@ -15,6 +15,9 @@ public class EdmCondition {
     // 所要提取的用户维度
     private String dimension;
 
+    // 用户维度描述
+    private String description;
+
     /**
      * 是否拼接省份条件
      * 1 : 拼接省份条件
@@ -26,6 +29,11 @@ public class EdmCondition {
      * 省份代码,多个省份代码用逗号隔开
      */
     private String provinceCodes;
+
+    /**
+     * 省份名称
+     */
+    private String provinceNames;
 
     /**
      * 对省份条件的操作
@@ -47,6 +55,10 @@ public class EdmCondition {
      */
     private String cityCodes;
 
+    /**
+     * 城市名称
+     */
+    private String cityNames;
     /**
      * 对城市条件的操作
      * 0： 包含所选城市
@@ -165,6 +177,30 @@ public class EdmCondition {
 
     public void setEdmer(Edmer edmer) {
         this.edmer = edmer;
+    }
+
+    public String getProvinceNames() {
+        return provinceNames;
+    }
+
+    public void setProvinceNames(String provinceNames) {
+        this.provinceNames = provinceNames;
+    }
+
+    public String getCityNames() {
+        return cityNames;
+    }
+
+    public void setCityNames(String cityNames) {
+        this.cityNames = cityNames;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override

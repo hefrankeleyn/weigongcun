@@ -12,5 +12,9 @@ public interface EdmConditionService {
 
     void saveEdmCondition(EdmFetchDataCondition edmFetchDataCondition, Edmer edmer);
 
-    List<EdmFetchDataCondition> findEdmFetchDataConditionsByEid(Long eid);
+    void savEdmCondition(EdmFetchDataCondition edmFetchDataCondition, String userEmail);
+
+    List<EdmCondition> findEdmFetchDataConditionsByEid(Long eid);
+
+    List<EdmCondition> findEdmFetchDataConditionsByUserEmail(String userEmail);
 }
