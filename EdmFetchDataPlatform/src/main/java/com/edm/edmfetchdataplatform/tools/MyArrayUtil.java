@@ -7,8 +7,8 @@ package com.edm.edmfetchdataplatform.tools;
 public class MyArrayUtil {
 
     public static String arrayToStr(String[] array){
-        if(array == null){
-            return "";
+        if(array == null || array.length == 0){
+            return null;
         }
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < array.length; i++) {
@@ -27,8 +27,8 @@ public class MyArrayUtil {
      * @return
      */
     public static String[] strToArray(String str){
-        if(str == null){
-            return new String[0];
+        if(str == null || str.trim().equals("")){
+            return null;
         }else {
             String[] array = str.split(",");
             return array;

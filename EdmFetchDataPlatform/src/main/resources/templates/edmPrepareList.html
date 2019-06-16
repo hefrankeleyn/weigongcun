@@ -10,6 +10,9 @@
     <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.css}">
     <script th:src="@{/js/jquery.min.js}"></script>
     <script th:src="@{/bootstrap/js/bootstrap.js}"></script>
+
+<!--   自定义的js-->
+    <script th:src="@{/js/edmPrepareList.js}"></script>
 </head>
 
 <body>
@@ -19,8 +22,8 @@
         <h2>待申请清单为空~</h2>
     </div>
     <div class="m-1" th:unless="${#lists.isEmpty(edmConditions)}">
-        <form th:action="@{#}" method="post">
-            <button class="btn btn-success" type="submit" disabled>创建提数申请</button>
+        <form th:action="@{#}" method="post" id="edmApplyForm">
+            <button class="btn btn-success" type="submit">创建提数申请</button>
         </form>
     </div>
     <table style="table-layout:fixed" class="table table-bordered table-hover table-striped table-condensed"
@@ -46,21 +49,21 @@
         <tr th:each="edmCondition,edmConditionState : ${edmConditions}">
             <td>
                 <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" th:id="${edmCondition.getConId()}">
+                    <input type="checkbox" class="custom-control-input" th:id="${edmCondition.getConId()}" name="conId">
                     <label class="custom-control-label" th:for="${edmCondition.getConId()}"
                            th:text="${edmConditionState.count}">状态变量： count</label>
                 </div>
             </td>
             <td th:text="${edmCondition.getDescription()}">中高级活跃用户一（连续六个月有邮短阅读（点击URL）行为用户）</td>
-            <td th:text="${edmCondition.getProvinceOpt()}">包含</td>
-            <td th:text="${edmCondition.getProvinceNames()}">北京、天津</td>
-            <td th:text="${edmCondition.getCityOpt()}">排除</td>
-            <td th:text="${edmCondition.getCityNames()}">珠海、厦门</td>
+            <td th:text="${edmCondition.getProvinceOpt() == null}? '-' : (${edmCondition.getProvinceOpt() == 0}? '包含' : '排除')">包含</td>
+            <td th:text="${edmCondition.getProvinceNames() == null}? '-': ${edmCondition.getProvinceNames()}">北京、天津</td>
+            <td th:text="${edmCondition.getCityOpt() == null}? '-' : (${edmCondition.getCityOpt() == 0}? '包含' : '排除')">排除</td>
+            <td th:text="${edmCondition.getCityNames() == null}? '-': ${edmCondition.getCityNames()}">珠海、厦门</td>
             <td th:text="${edmCondition.getLimitNum()}">1000</td>
             <td>
                 <div>
-                    <button type="button" class="btn btn-sm btn-danger">删除</button>
-                    <button type="button" class="btn btn-sm btn-danger">修改</button>
+                    <button type="button" class="btn btn-sm btn-danger" disabled>删除</button>
+                    <button type="button" class="btn btn-sm btn-danger" disabled>修改</button>
                 </div>
             </td>
         </tr>
