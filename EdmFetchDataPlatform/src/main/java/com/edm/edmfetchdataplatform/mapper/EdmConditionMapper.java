@@ -39,4 +39,31 @@ public interface EdmConditionMapper {
     @Select("select conid,dimension,province_if,provincecodes,province_opt,city_if,citycodes," +
             "city_opt,limitnum from edm_conditions where eid=#{eid}")
     List<EdmCondition> findEdmConditionsByEid(@Param("eid") Long eid);
+
+
+    /**
+     * 查询多个 EdmCondition
+     * @param conId
+     * @return
+     */
+    @Results(value = {@Result(column = "conid", property = "conId"),
+            @Result(column = "dimension", property = "dimension"),
+            @Result(column = "province_if", property = "provinceIf"),
+            @Result(column = "provincecodes", property = "provinceCodes"),
+            @Result(column = "province_opt", property = "provinceOpt"),
+            @Result(column = "city_if", property = "cityIf"),
+            @Result(column = "citycodes", property = "cityCodes"),
+            @Result(column = "city_opt", property = "cityOpt"),
+            @Result(column = "limitnum", property = "limitNum"),
+            @Result(property = "edmer", column = "eid", javaType = List.class,
+                    many = @Many(select = "com.edm.edmfetchdataplatform.mapper.EdmerMapper.findEdmerByEid"))})
+    @Select({"<script>",
+            "select conid,dimension,province_if,provincecodes,province_opt,city_if,citycodes,city_opt,limitnum ",
+             "from edm_conditions where 1=1 and eid=#{eid} and conid in ",
+            "<foreach item='item' index='index' collection='list' open='(' separator=',' close=')'>",
+            "#{item}",
+            "</foreach>",
+            "</script>"
+            })
+    List<EdmCondition> findEdmConditionsByConId(@Param("list") Integer[] conId, @Param("eid") Long eid);
 }

@@ -1,7 +1,6 @@
 package com.edm.edmfetchdataplatform.service;
 
 import com.edm.edmfetchdataplatform.domain.EdmCondition;
-import com.edm.edmfetchdataplatform.domain.EdmFetchDataCondition;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,5 +33,16 @@ public class EdmConditionServiceTest {
              edmConditions) {
             System.out.println(edmCondition);
         }
+    }
+
+    @Test
+    public void findEdmConditonsByConIdAndEid(){
+        Integer[] conIds = new Integer[]{1,2,3};
+        List<EdmCondition> edmConditions = edmConditionService.findEdmConditionsByConId(conIds, 1l);
+        for (EdmCondition edmCondition :
+                edmConditions) {
+            System.out.println(edmCondition);
+        }
+
     }
 }

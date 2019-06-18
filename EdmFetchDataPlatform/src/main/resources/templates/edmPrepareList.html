@@ -22,7 +22,7 @@
         <h2>待申请清单为空~</h2>
     </div>
     <div class="m-1" th:unless="${#lists.isEmpty(edmConditions)}">
-        <form th:action="@{#}" method="post" id="edmApplyForm">
+        <form th:action="@{/edmFetchDataConditionController/showApplyView}" method="post" id="edmApplyForm">
             <button class="btn btn-success" type="submit">创建提数申请</button>
         </form>
     </div>

@@ -29,4 +29,15 @@ public class EdmTargetDescriptionServiceImpl implements EdmTargetDescriptionServ
         }
         return edmTargetDescriptionMapper.findEdmDimensionDescriptionByTarget(target);
     }
+
+
+    @Override
+    public List<EdmTargetDescription> findEdmTargetDescriptionsByTargets(String[] targets) {
+        if (targets == null || targets.length == 0){
+            return null;
+        }
+        return edmTargetDescriptionMapper.findEdmTargetDescriptionsByTarget(targets);
+    }
+
+
 }

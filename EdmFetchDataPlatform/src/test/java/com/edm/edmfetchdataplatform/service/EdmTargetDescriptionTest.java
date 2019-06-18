@@ -42,4 +42,14 @@ public class EdmTargetDescriptionTest {
 
     }
 
+    @Test
+    public void findDescriptionsByTargets(){
+        String[] targets = new String[]{"lg01","lg02"};
+        List<EdmTargetDescription> edmTargetDescriptions = edmTargetDescriptionService.findEdmTargetDescriptionsByTargets(targets);
+        for (EdmTargetDescription edmTargetDescription :
+                edmTargetDescriptions) {
+            System.out.println(edmTargetDescription);
+        }
+    }
+
 }

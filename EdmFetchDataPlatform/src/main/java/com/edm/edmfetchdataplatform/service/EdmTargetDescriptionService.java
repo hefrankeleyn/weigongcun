@@ -19,4 +19,6 @@ public interface EdmTargetDescriptionService {
      */
     String findDescriptionByTarget(String target);
 
+    List<EdmTargetDescription> findEdmTargetDescriptionsByTargets(String[] targets);
+
 }

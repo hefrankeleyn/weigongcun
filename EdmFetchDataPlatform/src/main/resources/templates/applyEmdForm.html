@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/bootstrap/js/bootstrap.js}"></script>
+    <!-- js 自定义 -->
+    <script th:src="@{/js/applyEmdForm.js}"></script>
+</head>
+
+<body>
+<div class="container">
+    <h2>邮箱事业部群发流转单</h2>
+    <form th:action="@{/edmFetchDataConditionController/edmApplySubmit}" method="post" th:if="${edmApplyOrder!=null}" th:object="${edmApplyOrder}">
+        <div class="form-group">
+            <div class="row">
+                <div class="col">
+                    <label for="edmerDepartment">组别：</label>
+                    <input type="text" class="form-control" id="edmerDepartment" name="edmerDepartment" th:value="*{edmerDepartment}">
+                </div>
+                <div class="col">
+                    <label for="edmUserName">申请人：</label>
+                    <input type="text" class="form-control" id="edmUserName" name="edmUserName" th:value="*{edmUserName}">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col">
+                    <label for="quanFaTypeStates">群发类型及群发方式:</label>
+                    <select multiple id="quanFaTypeStates" name="quanFaTypeStates" class="form-control">
+                        <option value="1">收入</option>
+                        <option value="2">拉活</option>
+                        <option value="3">维系</option>
+                        <option value="4">账单-邮</option>
+                        <option value="5">短</option>
+                        <option value="6">邮+短</option>
+                        <option value="7">PUSH</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label for="qunFaSubjectAndContext">群发主题及短信内容：</label>
+                    <textarea class="form-control" id="qunFaSubjectAndContext"
+                              rows="3"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col">
+                    <label for="paiQiYiXiang">排期意向：</label>
+                    <input type="text" class="form-control" id="paiQiYiXiang" name="paiQiYiXiang"
+                           value="2018/10/11">
+                </div>
+                <div class="col">
+                    <label for="targetSendProvince">目标群发省:</label>
+                    <textarea class="form-control" id="targetSendProvince" name="targetSendProvince"
+                              rows="3" th:text="*{targetSendProvince}"></textarea>
+                </div>
+                <div class="col">
+                    <label for="userConditions">用户数据要求：</label>
+                    <textarea class="form-control" id="userConditions" name="userConditions"
+                              rows="3" th:text="*{userConditions}"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="row">
+                <div class="col">
+                    <label for="sendNum">发送量：</label>
+                    <input type="text" class="form-control" id="sendNum" name="sendNum" th:value="*{sendNum}">
+                </div>
+                <div class="col">
+                    <label for="sendRoles">投递通道：</label>
+                    <select multiple id="sendRoles" name="sendRoles" class="form-control">
+                        <option value="462">462</option>
+                        <option value="516">516</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label for="howSupplementStatus">目标用户不足时如何处理：</label>
+                    <select id="howSupplementStatus" name="howSupplementStatus" class="form-control">
+                        <option value="1">其他</option>
+                        <option value="2">不补充</option>
+                        <option value="3">以沉默用户补充</option>
+                        <option value="4">以其他省同属性用户补充</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="messageContext">短信内容：</label>
+            <textarea class="form-control" id="messageContext" name="messageContext"
+                      rows="3"></textarea>
+        </div>
+        <div class="form-group">
+            <div class="btn-group mb-1" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-info" id="addFiles">添加附件</button>
+            </div>
+            <!-- <div class="custom-file mt-1">
+                <input type="file" class="custom-file-input" id="edmFilesTwo" name="edmFiles">
+                <label class="custom-file-label" for="edmFilesTwo">附件1</label>
+            </div>
+            <div class="custom-file mt-1">
+                <input type="file" class="custom-file-input" id="edmFilesTwo" name="edmFiles">
+                <label class="custom-file-label" for="edmFilesTwo">附件1</label>
+            </div> -->
+        </div>
+        <button type="submit" class="btn btn-primary" id="submitButton">提交申请，转给申请组组长，进行初步审核</button>
+    </form>
+</div>
+</body>
+
+</html>

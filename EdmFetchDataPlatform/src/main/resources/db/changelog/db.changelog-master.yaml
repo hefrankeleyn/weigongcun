@@ -249,7 +249,7 @@ databaseChangeLog:
                   value: df01
               - column:
                   name: description
-                  value: 一般活跃用户一（近三个月活跃用户（涵盖各个用户层)）
+                  value: 一般活跃用户一（近三个月活跃用户，涵盖各个用户层)
         - insert:
             tableName: edm_target_description
             columns:
@@ -258,7 +258,7 @@ databaseChangeLog:
                   value: df02
               - column:
                   name: description
-                  value: 一般活跃用户二（近六个月活跃用户（涵盖各个用户层)）
+                  value: 一般活跃用户二（近六个月活跃用户，涵盖各个用户层)
         - insert:
             tableName: edm_target_description
             columns:
@@ -267,7 +267,7 @@ databaseChangeLog:
                   value: df03
               - column:
                   name: description
-                  value: 一般活跃用户三（近三个月有1-3次邮短阅读（点击URL)（涵盖各个用户层)）
+                  value: 一般活跃用户三（近三个月有1-3次邮短阅读（点击URL），涵盖各个用户层)
         - insert:
             tableName: edm_target_description
             columns:
@@ -285,7 +285,7 @@ databaseChangeLog:
                   value: sl01
               - column:
                   name: description
-                  value: 沉默用户三（九个月以上没有活跃行为的用户（涵盖各用户层））
+                  value: 沉默用户三（九个月以上没有活跃行为的用户，涵盖各用户层)
         - insert:
             tableName: edm_target_description
             columns:
@@ -294,7 +294,7 @@ databaseChangeLog:
                   value: sl02
               - column:
                   name: description
-                  value: 沉默用户二（近九个月没有活跃行为的用户（涵盖各用户层））
+                  value: 沉默用户二（近九个月没有活跃行为的用户，涵盖各用户层)
         - insert:
             tableName: edm_target_description
             columns:
@@ -303,4 +303,4 @@ databaseChangeLog:
                   value: sl03
               - column:
                   name: description
-                  value: 沉默用户一（近六个月没有活跃行为的用户（涵盖各用户层））
+                  value: 沉默用户一（近六个月没有活跃行为的用户，涵盖各用户层）

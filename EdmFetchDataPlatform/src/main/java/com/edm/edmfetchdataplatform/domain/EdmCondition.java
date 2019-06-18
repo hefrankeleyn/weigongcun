@@ -37,8 +37,8 @@ public class EdmCondition {
 
     /**
      * 对省份条件的操作
-     * 0 : 包含所选省份  in ('')
-     * 1 : 排除所选省份  not in ('')
+     * 1 : 包含所选省份  in ('')
+     * 0 : 排除所选省份  not in ('')
      * null ： 不需要拼接此条件
      */
     private Integer provinceOpt;

@@ -70,21 +70,30 @@ public class EdmConditionServiceImpl implements EdmConditionService {
         if(edmConditions == null || edmConditions.isEmpty()){
             return null;
         }else {
-            // 查询省份名称 和 城市名称
-            for (EdmCondition edmCondition:
-                 edmConditions) {
-                String[] provinceNames = edmZoneService.findProvinceNamesByProvinceCodes(MyArrayUtil.strToArray(edmCondition.getProvinceCodes()));
-                edmCondition.setProvinceNames(MyArrayUtil.arrayToStr(provinceNames));
-
-                //查询城市名称
-                String[] cityNames = edmZoneService.findCityNamesByCityCodes(MyArrayUtil.strToArray(edmCondition.getCityCodes()));
-                edmCondition.setCityNames(MyArrayUtil.arrayToStr(cityNames));
-
-                // 查询维度名称
-                String description = edmTargetDescriptionService.findDescriptionByTarget(edmCondition.getDimension());
-                edmCondition.setDescription(description);
-            }
+            // 补充省份和城市信息
+            setProvinceAndCityInfo(edmConditions);
             return edmConditions;
+        }
+    }
+
+    /**
+     * 设置省份和城市信息
+     * @param edmConditions
+     */
+    private void setProvinceAndCityInfo(List<EdmCondition> edmConditions){
+        // 查询省份名称 和 城市名称
+        for (EdmCondition edmCondition:
+                edmConditions) {
+            String[] provinceNames = edmZoneService.findProvinceNamesByProvinceCodes(MyArrayUtil.strToArray(edmCondition.getProvinceCodes()));
+            edmCondition.setProvinceNames(MyArrayUtil.arrayToStr(provinceNames));
+
+            //查询城市名称
+            String[] cityNames = edmZoneService.findCityNamesByCityCodes(MyArrayUtil.strToArray(edmCondition.getCityCodes()));
+            edmCondition.setCityNames(MyArrayUtil.arrayToStr(cityNames));
+
+            // 查询维度名称
+            String description = edmTargetDescriptionService.findDescriptionByTarget(edmCondition.getDimension());
+            edmCondition.setDescription(description);
         }
     }
 
@@ -92,5 +101,17 @@ public class EdmConditionServiceImpl implements EdmConditionService {
     public List<EdmCondition> findEdmFetchDataConditionsByUserEmail(String userEmail) {
         Edmer edmer = edmerService.findEdmerByEmail(userEmail);
         return findEdmFetchDataConditionsByEid(edmer.getEid());
+    }
+
+    @Override
+    public List<EdmCondition> findEdmConditionsByConId(Integer[] conIds, Long eid) {
+        if(conIds== null || conIds.length==0){
+            return null;
+        }else {
+            List<EdmCondition> edmConditions = edmConditionMapper.findEdmConditionsByConId(conIds, eid);
+            // 补充省份和城市信息
+            setProvinceAndCityInfo(edmConditions);
+            return edmConditions;
+        }
     }
 }

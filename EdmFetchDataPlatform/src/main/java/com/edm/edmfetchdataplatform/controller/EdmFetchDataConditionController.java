@@ -2,10 +2,7 @@ package com.edm.edmfetchdataplatform.controller;
 
 import com.edm.edmfetchdataplatform.domain.*;
 import com.edm.edmfetchdataplatform.domain.status.ResultStatus;
-import com.edm.edmfetchdataplatform.service.EdmConditionService;
-import com.edm.edmfetchdataplatform.service.EdmTargetDescriptionService;
-import com.edm.edmfetchdataplatform.service.EdmZoneService;
-import com.edm.edmfetchdataplatform.service.EdmerService;
+import com.edm.edmfetchdataplatform.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -38,6 +35,9 @@ public class EdmFetchDataConditionController {
 
     @Autowired
     private EdmConditionService edmConditionService;
+
+    @Autowired
+    private EdmApplyOrderService edmApplyOrderService;
 
     /**
      * 展示提数条件页面
@@ -107,6 +107,32 @@ public class EdmFetchDataConditionController {
         List<EdmCondition> edmConditions = edmConditionService.findEdmFetchDataConditionsByUserEmail(userEmail);
         model.addAttribute("edmConditions", edmConditions);
         return "edmPrepareList";
+    }
+
+    /**
+     * 展示申请页面
+     * @return
+     */
+    @RequestMapping(value = "/showApplyView", method = RequestMethod.POST)
+    public String showApplyView(Authentication authentication,Integer[] conId, Model model){
+        // 获取用户名的邮箱
+        String userEmail = authentication.getName();
+
+        EdmApplyOrder edmApplyOrder = edmApplyOrderService.orderInit(conId, userEmail);
+        // 将初始化订单数据放到模型中
+        model.addAttribute("edmApplyOrder", edmApplyOrder);
+        return "applyEmdForm";
+    }
+
+    /**
+     * 提交申请页面
+     * @param edmApplyOrder
+     * @return
+     */
+    @RequestMapping(value = "/edmApplySubmit", method = RequestMethod.POST)
+    public String edmApplySubmit(EdmApplyOrder edmApplyOrder){
+        logger.info(edmApplyOrder.toString());
+        return "";
     }
 
 }
