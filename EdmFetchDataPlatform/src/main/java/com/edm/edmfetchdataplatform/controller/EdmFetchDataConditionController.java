@@ -132,17 +132,12 @@ public class EdmFetchDataConditionController {
      * @return
      */
     @RequestMapping(value = "/edmApplySubmit", method = RequestMethod.POST)
-    public String edmApplySubmit(@RequestPart("edmFiles") MultipartFile[] edmFiles, EdmApplyOrder edmApplyOrder){
-        if (edmFiles == null || edmFiles.length == 0){
-            System.out.println("file is empty");
-        }else {
-            for (MultipartFile file :
-                    edmFiles) {
-                String originalFilename = file.getOriginalFilename();
-                System.out.println(originalFilename);
-            }
-        }
-        logger.info(edmApplyOrder.toString());
+    public String edmApplySubmit(Authentication authentication,@RequestPart("edmFiles") MultipartFile[] edmFiles, EdmApplyOrder edmApplyOrder){
+
+        // 获取用户名的邮箱
+        String userEmail = authentication.getName();
+
+        edmApplyOrderService.saveEdmApplyOrder(userEmail, edmFiles, edmApplyOrder);
         return "redirect:/home";
     }
 

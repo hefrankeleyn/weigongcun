@@ -20,9 +20,17 @@
     <h2>邮箱事业部群发流转单</h2>
     <form th:action="@{/edmFetchDataConditionController/edmApplySubmit}" method="post" enctype="multipart/form-data"
           th:if="${edmApplyOrder!=null}"
-          th:object="${edmApplyOrder}" class="needs-validation" >
+          th:object="${edmApplyOrder}" class="needs-validation">
+        <div class="form-group">
+            <label for="orderName">群发流转单名称：</label>
+            <input type="text" class="form-control" id="orderName" name="orderName" placeholder="例如：沃油箱·流量查询01期"
+                   required>
+        </div>
         <div class="form-group">
             <div class="row">
+                <div class="col" hidden>
+                    <input type="text" class="form-control" id="eid" name="eid" th:value="*{eid}" hidden>
+                </div>
                 <div class="col">
                     <label for="edmerDepartment">组别：</label>
                     <input type="text" class="form-control" id="edmerDepartment" name="edmerDepartment"
@@ -38,8 +46,8 @@
         <div class="form-group">
             <div class="row">
                 <div class="col">
-                    <label for="quanFaTypeStates">群发类型及群发方式:</label>
-                    <select multiple id="quanFaTypeStates" name="quanFaTypeStates" class="form-control" required>
+                    <label for="qunFaTypeStates">群发类型及群发方式:</label>
+                    <select multiple id="qunFaTypeStates" name="qunFaTypeStates" class="form-control" required>
                         <option value="1">收入</option>
                         <option value="2">拉活</option>
                         <option value="3">维系</option>
@@ -56,9 +64,10 @@
                 </div>
             </div>
         </div>
-<!--        添加隐藏的项目项id-->
+        <!--        添加隐藏的项目项id-->
         <div class="form-group" hidden="hidden" th:if="${edmApplyOrder.conIds != null}">
-           <input  type="text" class="form-control" th:each="conId : ${edmApplyOrder.conIds}" name="conIds" th:value="${conId}" hidden="hidden" readonly>
+            <input type="text" class="form-control" th:each="conId : ${edmApplyOrder.conIds}" name="conIds"
+                   th:value="${conId}" hidden="hidden" readonly>
         </div>
         <div class="form-group">
             <div class="row">
@@ -86,8 +95,8 @@
                     <input type="text" class="form-control" id="sendNum" name="sendNum" th:value="*{sendNum}">
                 </div>
                 <div class="col">
-                    <label for="sendRoles">投递通道：</label>
-                    <select multiple id="sendRoles" name="sendRoles" class="form-control" required>
+                    <label for="channels">投递通道：</label>
+                    <select multiple id="channels" name="channels" class="form-control" required>
                         <option value="462">462</option>
                         <option value="516">516</option>
                     </select>

@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 /**
- * EDM 申请单
+ * EDM 申请 流转单
  * @Date 2019-06-17
  * @Author lifei
  */
@@ -18,6 +18,15 @@ public class EdmApplyOrder {
      * 申请编号
      */
     private String oid;
+
+    /**
+     * 流转单的名称
+     */
+    private String orderName;
+    /**
+     * 流转单的发起人 id
+     */
+    private Long eid;
 
     /**
      * 申请单的组别
@@ -36,8 +45,8 @@ public class EdmApplyOrder {
     /**
      *  群发类型及群发方式
      */
-    private String quanFaTypeDescription;
-    private Integer[] quanFaTypeStates;
+    private String qunFaTypeDescription;
+    private Integer[] qunFaTypeStates;
 
     /**
      * 群发主题及短信内容
@@ -67,8 +76,8 @@ public class EdmApplyOrder {
     /**
      * 投递通道
      */
-    private String[] sendRoles;
-    private String rolesSend;
+    private String[] channels;
+    private String channelSends;
 
     /**
      * 目标用户不足时如何处理,标识
@@ -82,16 +91,6 @@ public class EdmApplyOrder {
     private String messageContext;
 
     /**
-     * 附件
-     */
-    private String[] edmFilesName;
-
-    /**
-     * 附件路径
-     */
-    private String[] edmFilesPath;
-
-    /**
      * 申请项的Id
      */
     private Integer[] conIds;
@@ -101,46 +100,62 @@ public class EdmApplyOrder {
      */
     private Integer orderState;
 
-    public String getQuanFaTypeDescription() {
-        return quanFaTypeDescription;
+    public String getOrderName() {
+        return orderName;
     }
 
-    public void setQuanFaTypeDescription(String quanFaTypeDescription) {
-        this.quanFaTypeDescription = quanFaTypeDescription;
+    public void setOrderName(String orderName) {
+        this.orderName = orderName;
+    }
+
+    public Long getEid() {
+        return eid;
+    }
+
+    public void setEid(Long eid) {
+        this.eid = eid;
+    }
+
+    public String getQunFaTypeDescription() {
+        return qunFaTypeDescription;
+    }
+
+    public void setQunFaTypeDescription(String qunFaTypeDescription) {
+        this.qunFaTypeDescription = qunFaTypeDescription;
 
     }
 
-    public Integer[] getQuanFaTypeStates() {
-        return quanFaTypeStates;
+    public Integer[] getQunFaTypeStates() {
+        return qunFaTypeStates;
     }
 
-    public String[] getSendRoles() {
-        return sendRoles;
+    public String[] getChannels() {
+        return channels;
     }
 
-    public void setSendRoles(String[] sendRoles) {
-        this.sendRoles = sendRoles;
+    public void setChannels(String[] channels) {
+        this.channels = channels;
         // 写到rolesSend中
-        setRolesSend(MyArrayUtil.arrayToStr(sendRoles));
+        setChannelSends(MyArrayUtil.arrayToStr(channels));
     }
 
-    public String getRolesSend() {
-        return rolesSend;
+    public String getChannelSends() {
+        return channelSends;
     }
 
-    public void setRolesSend(String rolesSend) {
-        this.rolesSend = rolesSend;
+    public void setChannelSends(String channelSends) {
+        this.channelSends = channelSends;
     }
 
-    public void setQuanFaTypeStates(Integer[] quanFaTypeStates) {
-        this.quanFaTypeStates = quanFaTypeStates;
+    public void setQunFaTypeStates(Integer[] qunFaTypeStates) {
+        this.qunFaTypeStates = qunFaTypeStates;
         // 设置群发类型
-        if (quanFaTypeStates !=null && quanFaTypeStates.length>0){
+        if (qunFaTypeStates !=null && qunFaTypeStates.length>0){
             StringBuilder sb = new StringBuilder();
-            for (int i=0; i<quanFaTypeStates.length; i++) {
-                sb.append(QunFaTypeFactory.fetchQunFaTypeByTypeState(quanFaTypeStates[i]));
+            for (int i = 0; i< qunFaTypeStates.length; i++) {
+                sb.append(QunFaTypeFactory.fetchQunFaTypeByTypeState(qunFaTypeStates[i]));
             }
-            setQuanFaTypeDescription(sb.toString());
+            setQunFaTypeDescription(sb.toString());
         }
     }
 
@@ -243,22 +258,6 @@ public class EdmApplyOrder {
         this.messageContext = messageContext;
     }
 
-    public String[] getEdmFilesName() {
-        return edmFilesName;
-    }
-
-    public void setEdmFilesName(String[] edmFilesName) {
-        this.edmFilesName = edmFilesName;
-    }
-
-    public String[] getEdmFilesPath() {
-        return edmFilesPath;
-    }
-
-    public void setEdmFilesPath(String[] edmFilesPath) {
-        this.edmFilesPath = edmFilesPath;
-    }
-
     public Integer getOrderState() {
         return orderState;
     }
@@ -279,23 +278,23 @@ public class EdmApplyOrder {
     public String toString() {
         return "EdmApplyOrder{" +
                 "oid='" + oid + '\'' +
+                ", orderName='" + orderName + '\'' +
+                ", eid=" + eid +
                 ", edmerDepartment='" + edmerDepartment + '\'' +
                 ", edmUserName='" + edmUserName + '\'' +
                 ", applyDate=" + applyDate +
-                ", quanFaTypeDescription='" + quanFaTypeDescription + '\'' +
-                ", quanFaTypeStates=" + Arrays.toString(quanFaTypeStates) +
+                ", qunFaTypeDescription='" + qunFaTypeDescription + '\'' +
+                ", qunFaTypeStates=" + Arrays.toString(qunFaTypeStates) +
                 ", qunFaSubjectAndContext='" + qunFaSubjectAndContext + '\'' +
                 ", paiQiYiXiang='" + paiQiYiXiang + '\'' +
                 ", targetSendProvince='" + targetSendProvince + '\'' +
                 ", userConditions='" + userConditions + '\'' +
                 ", sendNum=" + sendNum +
-                ", sendRoles=" + Arrays.toString(sendRoles) +
-                ", rolesSend='" + rolesSend + '\'' +
+                ", channels=" + Arrays.toString(channels) +
+                ", channelSends='" + channelSends + '\'' +
                 ", howSupplementStatus=" + howSupplementStatus +
                 ", howSupplement='" + howSupplement + '\'' +
                 ", messageContext='" + messageContext + '\'' +
-                ", edmFilesName=" + Arrays.toString(edmFilesName) +
-                ", edmFilesPath=" + Arrays.toString(edmFilesPath) +
                 ", conIds=" + Arrays.toString(conIds) +
                 ", orderState=" + orderState +
                 '}';

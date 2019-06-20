@@ -1,28 +1,36 @@
 package com.edm.edmfetchdataplatform.service.impl;
 
-import com.edm.edmfetchdataplatform.domain.EdmApplyOrder;
-import com.edm.edmfetchdataplatform.domain.EdmCondition;
-import com.edm.edmfetchdataplatform.domain.EdmTargetDescription;
-import com.edm.edmfetchdataplatform.domain.Edmer;
+import com.edm.edmfetchdataplatform.config.DataConfig;
+import com.edm.edmfetchdataplatform.domain.*;
+import com.edm.edmfetchdataplatform.domain.status.ExamineProgressState;
 import com.edm.edmfetchdataplatform.domain.status.IncludeState;
-import com.edm.edmfetchdataplatform.service.EdmApplyOrderService;
-import com.edm.edmfetchdataplatform.service.EdmConditionService;
-import com.edm.edmfetchdataplatform.service.EdmTargetDescriptionService;
-import com.edm.edmfetchdataplatform.service.EdmerService;
+import com.edm.edmfetchdataplatform.mapper.EdmApplyOrderMapper;
+import com.edm.edmfetchdataplatform.service.*;
+import com.edm.edmfetchdataplatform.tools.MyDateUtil;
+import com.edm.edmfetchdataplatform.tools.MyIdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
+ * 流转单 service
+ *
  * @Date 2019-06-18
  * @Author lifei
  */
 @Service
 public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
 
+    private Logger logger = Logger.getLogger("com.edm.edmfetchdataplatform.service.impl.EdmApplyOrderServiceImpl");
 
     @Autowired
     private EdmConditionService edmConditionService;
@@ -33,6 +41,16 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
     @Autowired
     private EdmTargetDescriptionService edmTargetDescriptionService;
 
+    @Autowired
+    private DataConfig dataConfig;
+
+
+    @Autowired
+    private EdmApplyFileService edmApplyFileService;
+
+    @Autowired(required = false)
+    private EdmApplyOrderMapper edmApplyOrderMapper;
+
     /**
      * 对申请的订单进行初始化
      *
@@ -40,6 +58,7 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
      * @return
      */
     @Override
+    @Transactional
     public EdmApplyOrder orderInit(Integer[] conId, String email) {
         // 获取用户
         Edmer edmer = edmerService.findEdmerByEmail(email);
@@ -51,6 +70,138 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
     }
 
     /**
+     * 保存流转单
+     *
+     * @param edmerEmail
+     * @param edmFiles
+     * @param edmApplyOrder
+     */
+    @Override
+    @Transactional
+    public void saveEdmApplyOrder(String edmerEmail, MultipartFile[] edmFiles, EdmApplyOrder edmApplyOrder) {
+        // 获取用户
+        Edmer edmer = edmerService.findEdmerByEmail(edmerEmail);
+        // 创建 UUID， 流转单的主键
+        String oid = MyIdGenerator.createUUID();
+        // 保存流转单、保存流转单id与申请项的id
+        edmApplyOrder.setOid(oid);
+        // 流转单的状态， 添加准备审批的状态
+        edmApplyOrder.setOrderState(ExamineProgressState.READY_EXAMINE.getStatus());
+        // 流转但的时间 保存
+        edmApplyOrder.setApplyDate(new Date());
+        // 保存订单
+        edmApplyOrderMapper.saveEdmApplyOrder(edmApplyOrder);
+        // 保存订单项和订单之间的关系
+        Integer[] conIds = edmApplyOrder.getConIds();
+        if (conIds != null && conIds.length > 0) {
+            EdmApplyOrderAndItemRelation[] edmApplyOrderAndItemRelations = new EdmApplyOrderAndItemRelation[conIds.length];
+            for (int i = 0; i < edmApplyOrderAndItemRelations.length; i++) {
+                edmApplyOrderAndItemRelations[i] = new EdmApplyOrderAndItemRelation(oid, conIds[i]);
+            }
+            // 保存和订单项之间的关系
+            saveEdmApplyOrderAndItemRelations(edmApplyOrderAndItemRelations);
+        }
+
+        // 判断附件是否存在，并保存附件
+        try {
+            upLoadFileAndSaveEdmApplyFiles(edmFiles, oid);
+        } catch (IOException e) {
+            logger.info("文件上传失败。");
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * 保存流转单和单个申请项之间的关系
+     * @param edmApplyOrderAndItemRelation
+     */
+    @Override
+    @Transactional
+    public void saveEdmApplyOrderAndItemRelation(EdmApplyOrderAndItemRelation edmApplyOrderAndItemRelation) {
+        if (edmApplyOrderAndItemRelation !=null){
+            edmApplyOrderMapper.saveEdmOrderAndItem(edmApplyOrderAndItemRelation);
+        }
+    }
+
+    /**
+     * 保存流转单和多个申请项之间的关系
+     * @param edmApplyOrderAndItemRelations
+     */
+    @Override
+    @Transactional
+    public void saveEdmApplyOrderAndItemRelations(EdmApplyOrderAndItemRelation[] edmApplyOrderAndItemRelations) {
+        if (edmApplyOrderAndItemRelations !=null && edmApplyOrderAndItemRelations.length>0){
+            for (EdmApplyOrderAndItemRelation edmApplyOrderAndItemRelation :
+                    edmApplyOrderAndItemRelations) {
+                edmApplyOrderMapper.saveEdmOrderAndItem(edmApplyOrderAndItemRelation);
+            }
+        }
+    }
+
+    /**
+     * 上传文件，并保存edmApplyFile
+     *
+     * @param edmFiles
+     * @param oid
+     */
+    private void upLoadFileAndSaveEdmApplyFiles(MultipartFile[] edmFiles, String oid) throws IOException {
+        // 上传文件的根目录
+        String rootPath = dataConfig.getUpLoadPath();
+        logger.info(rootPath);
+
+        if (edmFiles != null && edmFiles.length > 0) {
+            EdmApplyFile[] edmApplyFiles = new EdmApplyFile[edmFiles.length];
+
+            for (int i = 0; i < edmFiles.length; i++) {
+                String originalFilename = edmFiles[i].getOriginalFilename();
+                String filePath = createUpLoadFilePath(rootPath);
+                String fileName = createUpLoadFileName(originalFilename);
+                edmApplyFiles[i] = new EdmApplyFile(fileName, filePath, originalFilename, oid);
+
+                // 上传附件
+                edmFiles[i].transferTo(new File(filePath + File.separator + fileName));
+            }
+
+            edmApplyFileService.saveEdmApplyFiles(edmApplyFiles);
+
+        } else {
+            logger.info("edmFiles is empty");
+        }
+    }
+
+    /**
+     * 根据真实的文件名创建 唯一的文件名
+     *
+     * @param realFileName
+     * @return
+     */
+    private String createUpLoadFileName(String realFileName) {
+        String datetimeStr = MyDateUtil.currentDatetimeStr();
+        double random = Math.random();
+        int r = (int) (random * 1000);
+        String fileName = datetimeStr + "-" + r + realFileName.substring(realFileName.lastIndexOf("."));
+        return fileName;
+    }
+
+    /**
+     * 根据根目录创建 完整的上传目录
+     *
+     * @param rootPath
+     * @return
+     */
+    private String createUpLoadFilePath(String rootPath) {
+        String yearStr = MyDateUtil.currentYearStr();
+        String filePath = rootPath + File.separator + yearStr;
+        File file = new File(rootPath + File.separator + yearStr);
+        if (!file.exists()) {
+            boolean mkdirs = file.mkdirs();
+        }
+        return filePath;
+    }
+
+
+    /**
      * 对EdmApplyOrder 进行初始化
      *
      * @param edmConditions
@@ -58,7 +209,7 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
      */
     private EdmApplyOrder initEdmApplyOrder(List<EdmCondition> edmConditions, Edmer edmer) {
 
-        if (edmConditions == null || edmConditions.size() == 0){
+        if (edmConditions == null || edmConditions.size() == 0) {
             return null;
         }
         // 创建 edmApplyOrder
@@ -83,7 +234,8 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
             targetDescription.put(edmTargetDescriptions.get(i).getTarget(), edmTargetDescriptions.get(i).getDescription());
         }
 
-
+        // 拼接 eid
+        edmApplyOrder.setEid(edmer.getEid());
         // 拼接组别、和用户名
         edmApplyOrder.setEdmerDepartment(edmer.getDepartment());
         edmApplyOrder.setEdmUserName(edmer.getUsername());

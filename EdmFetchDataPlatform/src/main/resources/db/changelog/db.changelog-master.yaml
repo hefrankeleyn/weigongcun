@@ -172,6 +172,125 @@ databaseChangeLog:
                   type: bigserial
                   constraints:
                     nullable: false
+        - createTable:
+            tableName: edm_apply_examine_order
+            columns:
+              - column:
+                  name: oid
+                  type: varchar(200)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: order_name
+                  type: varchar(200)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: eid
+                  type: bigserial
+                  constraints:
+                    nullable: false
+              - column:
+                  name: apply_date
+                  type: date
+                  constraints:
+                    nullable: true
+              - column:
+                  name: qunfa_type_description
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: qunfa_subject_and_context
+                  type: varchar(500)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: paiqi_yixiang
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: target_send_province
+                  type: varchar(500)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: user_conditions
+                  type: varchar(2000)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: send_num
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: channel_sends
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: how_supplement
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: message_context
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: order_state
+                  type: int
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: edm_order_and_item
+            columns:
+              - column:
+                  name: oid
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: conid
+                  type: bigserial
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: edm_apply_files
+            columns:
+              - column:
+                  name: fid
+                  type: bigserial
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: filename
+                  type: varchar(500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: filepath
+                  type: varchar(500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: originalfilename
+                  type: varchar(500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: oid
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+
         - sql:
             dbms: mysql
             sql: ALTER TABLE edmers CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
@@ -190,6 +309,16 @@ databaseChangeLog:
         - sql:
             dbms: mysql
             sql: ALTER TABLE edm_conditions CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
+        - sql:
+            dbms: mysql
+            sql: ALTER TABLE edm_apply_examine_order CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
+        - sql:
+            dbms: mysql
+            sql: ALTER TABLE edm_order_and_item CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
+        - sql:
+            dbms: mysql
+            sql: ALTER TABLE edm_apply_files CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
+
         - insert:
             tableName: edmers
             columns:

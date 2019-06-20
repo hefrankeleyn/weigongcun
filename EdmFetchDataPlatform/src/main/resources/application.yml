@@ -17,7 +17,7 @@ spring:
     # 自动加载sql文件
     schema:
        - classpath:sql/edm_zone.sql
-#    initialization-mode: always
+    initialization-mode: always
   jpa:
     hibernate:
       ddl-auto: none
