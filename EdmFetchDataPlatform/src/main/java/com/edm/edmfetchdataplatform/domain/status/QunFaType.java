@@ -7,13 +7,13 @@ package com.edm.edmfetchdataplatform.domain.status;
  */
 public enum QunFaType {
 
-    SHOU_RU(0, "收入"),
-    LA_HUO(1, "拉活"),
-    WEI_XI(2, "维系"),
-    ZHANGDAN_EMAIL(3, "账单-邮"),
-    ZHANGDAN_DUAN(4, "短"),
-    EMAIL_AND_DUAN(5, "邮+短"),
-    PUSH(6, "PUSH")
+    SHOU_RU(1, "收入"),
+    LA_HUO(2, "拉活"),
+    WEI_XI(3, "维系"),
+    ZHANGDAN_EMAIL(4, "账单-邮"),
+    ZHANGDAN_DUAN(5, "短"),
+    EMAIL_AND_DUAN(6, "邮+短"),
+    PUSH(7, "PUSH")
     ;
 
 

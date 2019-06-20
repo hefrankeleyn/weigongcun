@@ -92,6 +92,11 @@ public class EdmApplyOrder {
     private String[] edmFilesPath;
 
     /**
+     * 申请项的Id
+     */
+    private Integer[] conIds;
+
+    /**
      * 订单的状态
      */
     private Integer orderState;
@@ -262,6 +267,14 @@ public class EdmApplyOrder {
         this.orderState = orderState;
     }
 
+    public Integer[] getConIds() {
+        return conIds;
+    }
+
+    public void setConIds(Integer[] conIds) {
+        this.conIds = conIds;
+    }
+
     @Override
     public String toString() {
         return "EdmApplyOrder{" +
@@ -283,6 +296,7 @@ public class EdmApplyOrder {
                 ", messageContext='" + messageContext + '\'' +
                 ", edmFilesName=" + Arrays.toString(edmFilesName) +
                 ", edmFilesPath=" + Arrays.toString(edmFilesPath) +
+                ", conIds=" + Arrays.toString(conIds) +
                 ", orderState=" + orderState +
                 '}';
     }

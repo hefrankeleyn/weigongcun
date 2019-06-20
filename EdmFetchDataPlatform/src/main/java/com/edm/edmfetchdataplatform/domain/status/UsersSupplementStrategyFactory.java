@@ -13,11 +13,11 @@ public class UsersSupplementStrategyFactory {
      * @return
      */
     public static String generateStrategyDescriptionByState(Integer strategyState){
-        if (strategyState == 0){
+        if (strategyState == UsersSupplementStrategy.OTHER.getStrategyState()){
             return UsersSupplementStrategy.OTHER.getStrategyDescription();
-        } else if (strategyState == 1){
+        } else if (strategyState == UsersSupplementStrategy.NO_SUPPLEMENT.getStrategyState()){
             return UsersSupplementStrategy.NO_SUPPLEMENT.getStrategyDescription();
-        } else if (strategyState == 2){
+        } else if (strategyState == UsersSupplementStrategy.SUPPLEMENT_SILENCE.getStrategyState()){
             return UsersSupplementStrategy.SUPPLEMENT_SILENCE.getStrategyDescription();
         } else {
             return UsersSupplementStrategy.SUPPLEMENT_OTHER_PROVINCE.getStrategyDescription();

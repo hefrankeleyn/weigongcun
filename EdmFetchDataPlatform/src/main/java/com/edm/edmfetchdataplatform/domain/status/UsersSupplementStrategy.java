@@ -7,10 +7,10 @@ package com.edm.edmfetchdataplatform.domain.status;
  */
 public enum  UsersSupplementStrategy {
 
-    OTHER(0, "其他"),
-    NO_SUPPLEMENT(1, "不补充"),
-    SUPPLEMENT_SILENCE(2, "以沉默用户补充"),
-    SUPPLEMENT_OTHER_PROVINCE(3, "以其他省同属性用户补充"),
+    OTHER(1, "其他"),
+    NO_SUPPLEMENT(2, "不补充"),
+    SUPPLEMENT_SILENCE(3, "以沉默用户补充"),
+    SUPPLEMENT_OTHER_PROVINCE(4, "以其他省同属性用户补充"),
     ;
 
     private Integer strategyState;

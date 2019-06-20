@@ -8,6 +8,30 @@ $(document).ready(function () {
         // 监听添加附件按钮按钮
         $(".form-group .btn-group #addFiles").unbind("click", addFileInput);
         $(".form-group .btn-group #addFiles").bind("click", addFileInput);
+
+        // 将表单上若干个项目置为仅仅可读
+        readonlySetter();
+    }
+    /**
+     *  将表单上若干个项目置为不可用
+     */
+    function readonlySetter(){
+        // 将组别和姓名置为不可用
+        $(".form-group #edmerDepartment").prop("readonly",true);
+        $(".form-group #edmUserName").prop("readonly",true);
+        // 将目标群发省 置为不可用
+        $(".form-group #targetSendProvince").prop("readonly",true);
+        // 将 户数据要求 置为不可用
+        $(".form-group #userConditions").prop("readonly",true);
+        // 将发送量置为不可用
+        $(".form-group #sendNum").prop("readonly",true);
+        // 将 不足时如何补充除了 “不可用” 之外的其他项置为 disabled
+        var options = $(".form-group #howSupplementStatus").children("option");
+        for (var i=0; i<options.length; i++){
+            if ($(options[i]).text() != "不补充"){
+                $(options[i]).prop("disabled", true);
+            }
+        }
     }
 
     /**
@@ -30,11 +54,24 @@ $(document).ready(function () {
         fileInput.attr("id", idValue);
         // 拼接file input
         fileLabel.text(labelContext);
-        fileDiv.append(fileInput).append(fileLabel)
+        fileDiv.append(fileInput).append(fileLabel);
         // 将附件添加到表单中
         $(".form-group .btn-group #addFiles").parent().parent().append(fileDiv);
+        // 添加监听事件
+        $(".form-group .custom-file #" + idValue).unbind("change", inputFileShowChooseFileName);
+        $(".form-group .custom-file #" + idValue).bind("change", inputFileShowChooseFileName);
+
         // 触发添加按钮的事件
         fileButtonAddEvent();
+    }
+
+
+    /**
+     * Bootstrap 需求自定改变上传文件的文件名
+     */
+    function inputFileShowChooseFileName() {
+        var fileName = this.files[0].name;
+        $(this).siblings("label").text(fileName);
     }
 
     /**

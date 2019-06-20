@@ -9,7 +9,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -130,9 +132,18 @@ public class EdmFetchDataConditionController {
      * @return
      */
     @RequestMapping(value = "/edmApplySubmit", method = RequestMethod.POST)
-    public String edmApplySubmit(EdmApplyOrder edmApplyOrder){
+    public String edmApplySubmit(@RequestPart("edmFiles") MultipartFile[] edmFiles, EdmApplyOrder edmApplyOrder){
+        if (edmFiles == null || edmFiles.length == 0){
+            System.out.println("file is empty");
+        }else {
+            for (MultipartFile file :
+                    edmFiles) {
+                String originalFilename = file.getOriginalFilename();
+                System.out.println(originalFilename);
+            }
+        }
         logger.info(edmApplyOrder.toString());
-        return "";
+        return "redirect:/home";
     }
 
 }

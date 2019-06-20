@@ -29,20 +29,24 @@ public class EdmConditionServiceTest {
     @Test
     public void findEdmConditiondsByEid(){
         List<EdmCondition> edmConditions = edmConditionService.findEdmFetchDataConditionsByEid(1l);
-        for (EdmCondition edmCondition:
-             edmConditions) {
-            System.out.println(edmCondition);
+        if (edmConditions != null){
+            for (EdmCondition edmCondition:
+                    edmConditions) {
+                System.out.println(edmCondition);
+            }
         }
+
     }
 
     @Test
     public void findEdmConditonsByConIdAndEid(){
         Integer[] conIds = new Integer[]{1,2,3};
         List<EdmCondition> edmConditions = edmConditionService.findEdmConditionsByConId(conIds, 1l);
-        for (EdmCondition edmCondition :
-                edmConditions) {
-            System.out.println(edmCondition);
+        if (edmConditions != null){
+            for (EdmCondition edmCondition:
+                    edmConditions) {
+                System.out.println(edmCondition);
+            }
         }
-
     }
 }

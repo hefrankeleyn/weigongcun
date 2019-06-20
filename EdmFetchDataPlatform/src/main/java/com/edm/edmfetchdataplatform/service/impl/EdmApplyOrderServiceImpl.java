@@ -61,12 +61,20 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
         if (edmConditions == null || edmConditions.size() == 0){
             return null;
         }
+        // 创建 edmApplyOrder
+        EdmApplyOrder edmApplyOrder = new EdmApplyOrder();
         // 查询数据目标描述
         String[] targets = new String[edmConditions.size()];
+        // 申请项的Id
+        Integer[] conIds = new Integer[edmConditions.size()];
         for (int i = 0; i < edmConditions.size(); i++) {
             targets[i] = edmConditions.get(i).getDimension();
+            conIds[i] = edmConditions.get(i).getConId();
         }
-        // 查询 EdmConditions
+
+        // 将申请项的id 添加到 edmConditions中
+        edmApplyOrder.setConIds(conIds);
+        // 查询 EdmTargetDescription
         List<EdmTargetDescription> edmTargetDescriptions = edmTargetDescriptionService.findEdmTargetDescriptionsByTargets(targets);
 
 
@@ -75,7 +83,7 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
             targetDescription.put(edmTargetDescriptions.get(i).getTarget(), edmTargetDescriptions.get(i).getDescription());
         }
 
-        EdmApplyOrder edmApplyOrder = new EdmApplyOrder();
+
         // 拼接组别、和用户名
         edmApplyOrder.setEdmerDepartment(edmer.getDepartment());
         edmApplyOrder.setEdmUserName(edmer.getUsername());

@@ -15,18 +15,23 @@
 </head>
 
 <body>
+<nav th:replace="common/header :: header-navbar"></nav>
 <div class="container">
     <h2>邮箱事业部群发流转单</h2>
-    <form th:action="@{/edmFetchDataConditionController/edmApplySubmit}" method="post" th:if="${edmApplyOrder!=null}" th:object="${edmApplyOrder}">
+    <form th:action="@{/edmFetchDataConditionController/edmApplySubmit}" method="post" enctype="multipart/form-data"
+          th:if="${edmApplyOrder!=null}"
+          th:object="${edmApplyOrder}" class="needs-validation" >
         <div class="form-group">
             <div class="row">
                 <div class="col">
                     <label for="edmerDepartment">组别：</label>
-                    <input type="text" class="form-control" id="edmerDepartment" name="edmerDepartment" th:value="*{edmerDepartment}">
+                    <input type="text" class="form-control" id="edmerDepartment" name="edmerDepartment"
+                           th:value="*{edmerDepartment}">
                 </div>
                 <div class="col">
                     <label for="edmUserName">申请人：</label>
-                    <input type="text" class="form-control" id="edmUserName" name="edmUserName" th:value="*{edmUserName}">
+                    <input type="text" class="form-control" id="edmUserName" name="edmUserName"
+                           th:value="*{edmUserName}">
                 </div>
             </div>
         </div>
@@ -34,7 +39,7 @@
             <div class="row">
                 <div class="col">
                     <label for="quanFaTypeStates">群发类型及群发方式:</label>
-                    <select multiple id="quanFaTypeStates" name="quanFaTypeStates" class="form-control">
+                    <select multiple id="quanFaTypeStates" name="quanFaTypeStates" class="form-control" required>
                         <option value="1">收入</option>
                         <option value="2">拉活</option>
                         <option value="3">维系</option>
@@ -46,17 +51,21 @@
                 </div>
                 <div class="col">
                     <label for="qunFaSubjectAndContext">群发主题及短信内容：</label>
-                    <textarea class="form-control" id="qunFaSubjectAndContext"
-                              rows="3"></textarea>
+                    <textarea class="form-control" id="qunFaSubjectAndContext" name="qunFaSubjectAndContext"
+                              rows="3" required></textarea>
                 </div>
             </div>
+        </div>
+<!--        添加隐藏的项目项id-->
+        <div class="form-group" hidden="hidden" th:if="${edmApplyOrder.conIds != null}">
+           <input  type="text" class="form-control" th:each="conId : ${edmApplyOrder.conIds}" name="conIds" th:value="${conId}" hidden="hidden" readonly>
         </div>
         <div class="form-group">
             <div class="row">
                 <div class="col">
                     <label for="paiQiYiXiang">排期意向：</label>
                     <input type="text" class="form-control" id="paiQiYiXiang" name="paiQiYiXiang"
-                           value="2018/10/11">
+                           placeholder="XXXX年XX月XX日" required>
                 </div>
                 <div class="col">
                     <label for="targetSendProvince">目标群发省:</label>
@@ -78,7 +87,7 @@
                 </div>
                 <div class="col">
                     <label for="sendRoles">投递通道：</label>
-                    <select multiple id="sendRoles" name="sendRoles" class="form-control">
+                    <select multiple id="sendRoles" name="sendRoles" class="form-control" required>
                         <option value="462">462</option>
                         <option value="516">516</option>
                     </select>
@@ -86,10 +95,10 @@
                 <div class="col">
                     <label for="howSupplementStatus">目标用户不足时如何处理：</label>
                     <select id="howSupplementStatus" name="howSupplementStatus" class="form-control">
-                        <option value="1">其他</option>
-                        <option value="2">不补充</option>
-                        <option value="3">以沉默用户补充</option>
-                        <option value="4">以其他省同属性用户补充</option>
+                        <option value="1" disabled>其他</option>
+                        <option value="2" selected>不补充</option>
+                        <option value="3" disabled>以沉默用户补充</option>
+                        <option value="4" disabled>以其他省同属性用户补充</option>
                     </select>
                 </div>
             </div>
@@ -97,7 +106,7 @@
         <div class="form-group">
             <label for="messageContext">短信内容：</label>
             <textarea class="form-control" id="messageContext" name="messageContext"
-                      rows="3"></textarea>
+                      rows="3" required></textarea>
         </div>
         <div class="form-group">
             <div class="btn-group mb-1" role="group" aria-label="Basic example">
