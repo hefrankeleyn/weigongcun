@@ -65,6 +65,11 @@ public class EdmFetchDataCondition implements Serializable {
     private Integer limitNum;
 
     /**
+     * 申请流转单的 id
+     */
+    private String oid;
+
+    /**
      * 每一个提数提条件对应一个用户
      */
     private Edmer edmer;

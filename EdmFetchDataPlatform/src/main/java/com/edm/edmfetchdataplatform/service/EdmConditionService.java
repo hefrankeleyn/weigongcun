@@ -19,10 +19,30 @@ public interface EdmConditionService {
     List<EdmCondition> findEdmFetchDataConditionsByUserEmail(String userEmail);
 
     /**
-     * 根据conId查询多个申请项
+     * 根据conId 和 eid 查询多个申请项
      * @param conIds
      * @param eid 当前登陆用户的id
      * @return
      */
-    List<EdmCondition> findEdmConditionsByConId(Integer[] conIds, Long eid);
+    List<EdmCondition> findEdmConditionsByConIdsAndEid(Integer[] conIds, Long eid);
+
+
+    /**
+     * 根据 conIds 查询多个 EdmCondition
+     * @param conIds
+     * @return
+     */
+    List<EdmCondition> findEdmConditionsByConIds(Integer[] conIds);
+
+    /**
+     * 更新edmCondition
+     * @param edmCondition
+     */
+    void updateEdmCondition(EdmCondition edmCondition);
+
+    /**
+     * 更新多个edmCondition
+     * @param edmConditions
+     */
+    void updateEdmConditions(List<EdmCondition> edmConditions);
 }

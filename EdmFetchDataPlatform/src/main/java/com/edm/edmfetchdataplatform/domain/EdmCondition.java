@@ -74,6 +74,11 @@ public class EdmCondition {
      */
     private Integer limitNum;
 
+    /**
+     * 申请流转单的 id
+     */
+    private String oid;
+
 
     /**
      * 每一个提数提条件对应一个用户
@@ -203,18 +208,31 @@ public class EdmCondition {
         this.description = description;
     }
 
+
+    public String getOid() {
+        return oid;
+    }
+
+    public void setOid(String oid) {
+        this.oid = oid;
+    }
+
     @Override
     public String toString() {
         return "EdmCondition{" +
                 "conId=" + conId +
                 ", dimension='" + dimension + '\'' +
+                ", description='" + description + '\'' +
                 ", provinceIf=" + provinceIf +
                 ", provinceCodes='" + provinceCodes + '\'' +
+                ", provinceNames='" + provinceNames + '\'' +
                 ", provinceOpt=" + provinceOpt +
                 ", cityIf=" + cityIf +
                 ", cityCodes='" + cityCodes + '\'' +
+                ", cityNames='" + cityNames + '\'' +
                 ", cityOpt=" + cityOpt +
                 ", limitNum=" + limitNum +
+                ", oid='" + oid + '\'' +
                 ", edmer=" + edmer +
                 '}';
     }

@@ -1,7 +1,6 @@
 package com.edm.edmfetchdataplatform.service;
 
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrder;
-import com.edm.edmfetchdataplatform.domain.EdmApplyOrderAndItemRelation;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -25,16 +24,4 @@ public interface EdmApplyOrderService {
      */
     void saveEdmApplyOrder(String edmerEmail, MultipartFile[] edmFiles, EdmApplyOrder edmApplyOrder);
 
-
-    /**
-     * 保存 流转单和申请项之间的关系
-     * @param edmApplyOrderAndItemRelation
-     */
-    void saveEdmApplyOrderAndItemRelation(EdmApplyOrderAndItemRelation edmApplyOrderAndItemRelation);
-
-    /**
-     * 保存 多个流转单和申请项之间的关系
-     * @param edmApplyOrderAndItemRelations
-     */
-    void saveEdmApplyOrderAndItemRelations(EdmApplyOrderAndItemRelation[] edmApplyOrderAndItemRelations);
 }

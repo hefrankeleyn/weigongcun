@@ -168,6 +168,11 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: oid
+                  type: varchar(200)
+                  constraints:
+                    nullable: true
+              - column:
                   name: eid
                   type: bigserial
                   constraints:
@@ -248,19 +253,6 @@ databaseChangeLog:
                   constraints:
                     nullable: false
         - createTable:
-            tableName: edm_order_and_item
-            columns:
-              - column:
-                  name: oid
-                  type: varchar(200)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: conid
-                  type: bigserial
-                  constraints:
-                    nullable: false
-        - createTable:
             tableName: edm_apply_files
             columns:
               - column:
@@ -312,9 +304,6 @@ databaseChangeLog:
         - sql:
             dbms: mysql
             sql: ALTER TABLE edm_apply_examine_order CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
-        - sql:
-            dbms: mysql
-            sql: ALTER TABLE edm_order_and_item CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
         - sql:
             dbms: mysql
             sql: ALTER TABLE edm_apply_files CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci

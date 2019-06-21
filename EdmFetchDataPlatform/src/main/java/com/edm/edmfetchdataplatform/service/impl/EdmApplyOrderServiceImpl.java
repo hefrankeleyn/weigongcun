@@ -63,7 +63,7 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
         // 获取用户
         Edmer edmer = edmerService.findEdmerByEmail(email);
         // 获取订单项
-        List<EdmCondition> edmConditions = edmConditionService.findEdmConditionsByConId(conId, edmer.getEid());
+        List<EdmCondition> edmConditions = edmConditionService.findEdmConditionsByConIdsAndEid(conId, edmer.getEid());
         // 组合成订单
         EdmApplyOrder edmApplyOrder = initEdmApplyOrder(edmConditions, edmer);
         return edmApplyOrder;
@@ -94,12 +94,13 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
         // 保存订单项和订单之间的关系
         Integer[] conIds = edmApplyOrder.getConIds();
         if (conIds != null && conIds.length > 0) {
-            EdmApplyOrderAndItemRelation[] edmApplyOrderAndItemRelations = new EdmApplyOrderAndItemRelation[conIds.length];
-            for (int i = 0; i < edmApplyOrderAndItemRelations.length; i++) {
-                edmApplyOrderAndItemRelations[i] = new EdmApplyOrderAndItemRelation(oid, conIds[i]);
+            List<EdmCondition> edmConditions = edmConditionService.findEdmConditionsByConIds(conIds);
+            for (int i = 0; i < edmConditions.size(); i++) {
+                edmConditions.get(i).setOid(oid);
             }
             // 保存和订单项之间的关系
-            saveEdmApplyOrderAndItemRelations(edmApplyOrderAndItemRelations);
+            // 更新订单项
+            edmConditionService.updateEdmConditions(edmConditions);
         }
 
         // 判断附件是否存在，并保存附件
@@ -110,33 +111,6 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
             e.printStackTrace();
         }
 
-    }
-
-    /**
-     * 保存流转单和单个申请项之间的关系
-     * @param edmApplyOrderAndItemRelation
-     */
-    @Override
-    @Transactional
-    public void saveEdmApplyOrderAndItemRelation(EdmApplyOrderAndItemRelation edmApplyOrderAndItemRelation) {
-        if (edmApplyOrderAndItemRelation !=null){
-            edmApplyOrderMapper.saveEdmOrderAndItem(edmApplyOrderAndItemRelation);
-        }
-    }
-
-    /**
-     * 保存流转单和多个申请项之间的关系
-     * @param edmApplyOrderAndItemRelations
-     */
-    @Override
-    @Transactional
-    public void saveEdmApplyOrderAndItemRelations(EdmApplyOrderAndItemRelation[] edmApplyOrderAndItemRelations) {
-        if (edmApplyOrderAndItemRelations !=null && edmApplyOrderAndItemRelations.length>0){
-            for (EdmApplyOrderAndItemRelation edmApplyOrderAndItemRelation :
-                    edmApplyOrderAndItemRelations) {
-                edmApplyOrderMapper.saveEdmOrderAndItem(edmApplyOrderAndItemRelation);
-            }
-        }
     }
 
     /**

@@ -11,6 +11,7 @@ import com.edm.edmfetchdataplatform.service.EdmerService;
 import com.edm.edmfetchdataplatform.tools.MyArrayUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -32,26 +33,32 @@ public class EdmConditionServiceImpl implements EdmConditionService {
 
     @Autowired(required = false)
     private EdmTargetDescriptionService edmTargetDescriptionService;
+
     /**
      * 保存提数项
+     *
      * @param edmCondition
      */
     @Override
+    @Transactional
     public void saveEdmCondition(EdmCondition edmCondition) {
         edmConditionMapper.saveEdmCondition(edmCondition);
     }
 
     /**
      * 保存提数项目
+     *
      * @param edmFetchDataCondition
      * @param edmer
      */
     @Override
+    @Transactional
     public void saveEdmCondition(EdmFetchDataCondition edmFetchDataCondition, Edmer edmer) {
         edmConditionMapper.saveEdmCondition(new EdmCondition(edmFetchDataCondition, edmer));
     }
 
     @Override
+    @Transactional
     public void savEdmCondition(EdmFetchDataCondition edmFetchDataCondition, String userEmail) {
         Edmer edmer = edmerService.findEdmerByEmail(userEmail);
         saveEdmCondition(edmFetchDataCondition, edmer);
@@ -59,6 +66,7 @@ public class EdmConditionServiceImpl implements EdmConditionService {
 
     /**
      * 根据 登陆用户的eid获取所有的 EdmFetchDataCondition
+     *
      * @param eid
      * @return
      */
@@ -67,9 +75,9 @@ public class EdmConditionServiceImpl implements EdmConditionService {
         List<EdmCondition> edmConditions = edmConditionMapper.findEdmConditionsByEid(eid);
 
 
-        if(edmConditions == null || edmConditions.isEmpty()){
+        if (edmConditions == null || edmConditions.isEmpty()) {
             return null;
-        }else {
+        } else {
             // 补充省份和城市信息
             setProvinceAndCityInfo(edmConditions);
             return edmConditions;
@@ -78,11 +86,12 @@ public class EdmConditionServiceImpl implements EdmConditionService {
 
     /**
      * 设置省份和城市信息
+     *
      * @param edmConditions
      */
-    private void setProvinceAndCityInfo(List<EdmCondition> edmConditions){
+    private void setProvinceAndCityInfo(List<EdmCondition> edmConditions) {
         // 查询省份名称 和 城市名称
-        for (EdmCondition edmCondition:
+        for (EdmCondition edmCondition :
                 edmConditions) {
             String[] provinceNames = edmZoneService.findProvinceNamesByProvinceCodes(MyArrayUtil.strToArray(edmCondition.getProvinceCodes()));
             edmCondition.setProvinceNames(MyArrayUtil.arrayToStr(provinceNames));
@@ -104,14 +113,56 @@ public class EdmConditionServiceImpl implements EdmConditionService {
     }
 
     @Override
-    public List<EdmCondition> findEdmConditionsByConId(Integer[] conIds, Long eid) {
-        if(conIds== null || conIds.length==0){
+    public List<EdmCondition> findEdmConditionsByConIdsAndEid(Integer[] conIds, Long eid) {
+        if (conIds == null || conIds.length == 0) {
             return null;
-        }else {
-            List<EdmCondition> edmConditions = edmConditionMapper.findEdmConditionsByConId(conIds, eid);
+        } else {
+            List<EdmCondition> edmConditions = edmConditionMapper.findEdmConditionsByConIdsAndEid(conIds, eid);
             // 补充省份和城市信息
             setProvinceAndCityInfo(edmConditions);
             return edmConditions;
         }
     }
+
+    @Override
+    public List<EdmCondition> findEdmConditionsByConIds(Integer[] conIds) {
+        if (conIds == null || conIds.length == 0) {
+            return null;
+        } else {
+            List<EdmCondition> edmConditions = edmConditionMapper.findEdmConditionsByConIds(conIds);
+            // 补充省份和城市信息
+            setProvinceAndCityInfo(edmConditions);
+            return edmConditions;
+        }
+    }
+
+    /**
+     * 更新 edmCondition
+     *
+     * @param edmCondition
+     */
+    @Override
+    @Transactional
+    public void updateEdmCondition(EdmCondition edmCondition) {
+        if (edmCondition != null) {
+            edmConditionMapper.updateEdmConditionByConId(edmCondition);
+        }
+    }
+
+    /**
+     * 更新多个edmCondition
+     * @param edmConditions
+     */
+    @Override
+    @Transactional
+    public void updateEdmConditions(List<EdmCondition> edmConditions) {
+        if (edmConditions != null && !edmConditions.isEmpty()){
+            for (EdmCondition edmCondition :
+                    edmConditions) {
+                edmConditionMapper.updateEdmConditionByConId(edmCondition);
+            }
+        }
+    }
+
+
 }

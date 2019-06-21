@@ -1,7 +1,6 @@
 package com.edm.edmfetchdataplatform.mapper;
 
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrder;
-import com.edm.edmfetchdataplatform.domain.EdmApplyOrderAndItemRelation;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -12,11 +11,6 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface EdmApplyOrderMapper {
-
-    /*
-    @Select("select eid,username,password,email,department from edmers where eid = #{eid}")
-    Edmer findEdmerByEid(@Param(value = "eid") Long eid);
-     */
 
     /**
      * 保存 edmApplyOrder
@@ -30,11 +24,4 @@ public interface EdmApplyOrderMapper {
             "#{sendNum},#{channelSends},#{howSupplement},#{messageContext},#{orderState})")
     void saveEdmApplyOrder(EdmApplyOrder edmApplyOrder);
 
-
-    /**
-     * 保存 EdmApplyOrderAndItemRelation
-     * @param edmApplyOrderAndItemRelation
-     */
-    @Insert("INSERT INTO edm_order_and_item (oid,conid) VALUES(#{oid},#{conId})")
-    void saveEdmOrderAndItem(EdmApplyOrderAndItemRelation edmApplyOrderAndItemRelation);
 }

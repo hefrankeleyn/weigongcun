@@ -41,7 +41,7 @@ public class EdmConditionServiceTest {
     @Test
     public void findEdmConditonsByConIdAndEid(){
         Integer[] conIds = new Integer[]{1,2,3};
-        List<EdmCondition> edmConditions = edmConditionService.findEdmConditionsByConId(conIds, 1l);
+        List<EdmCondition> edmConditions = edmConditionService.findEdmConditionsByConIdsAndEid(conIds, 1l);
         if (edmConditions != null){
             for (EdmCondition edmCondition:
                     edmConditions) {
