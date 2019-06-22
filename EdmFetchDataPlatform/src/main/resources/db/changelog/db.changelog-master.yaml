@@ -89,38 +89,46 @@ databaseChangeLog:
 
         - createTable:
             tableName: edm_usable_magnitude
+            remarks: edm 可发的量
             columns:
               - column:
                   name: target
                   type: varchar(300)
                   constraints:
                     nullable: false
+                  remarks: 维度名称
               - column:
                   name: magnitude
                   type: long
                   constraints:
                     nullable: false
+                  remarks: 可发的数据量级
               - column:
                   name: dt
                   type: date
                   constraints:
                     nullable: false
+                  remarks: 时间
 
         - createTable:
             tableName: edm_target_description
+            remarks: 各个可发维度的描述
             columns:
               - column:
                   name: target
                   type: varchar(300)
                   constraints:
                     nullable: false
+                  remarks: 可发维度名称
               - column:
                   name: description
                   type: varchar(300)
                   constraints:
                     nullable: false
+                  remarks: 可发维度描述
         - createTable:
             tableName: edm_zone
+            remarks: 省份和城市代码
             columns:
               - column:
                   name: zoneid
@@ -129,88 +137,106 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
+                  remarks: 主键，自增
               - column:
                   name: provincecode
                   type: varchar(10)
                   constraints:
                     nullable: false
+                  remarks: 省份代码
               - column:
                   name: provincename
                   type: varchar(10)
                   constraints:
                     nullable: false
+                  remarks: 省份名称
               - column:
                   name: citycode
                   type: varchar(10)
                   constraints:
                     nullable: false
+                  remarks: 城市代码
               - column:
                   name: cityname
                   type: varchar(10)
                   constraints:
                     nullable: false
+                  remarks: 城市名称
         - createTable:
             tableName: edm_conditions
+            remarks: edm提数申请项
             columns:
               - column:
                   name: conid
-                  type: bigserial
+                  type: int
                   autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
+                  remarks: 可发项的id，自增
               - column:
                   name: dimension
                   type: varchar(100)
                   constraints:
                     nullable: false
+                  remarks: 维度名称
               - column:
                   name: province_if
                   type: int
                   constraints:
                     nullable: true
+                  remarks: 是否包含省份条件（0 不包含，1 包含）
               - column:
                   name: provincecodes
                   type: varchar(500)
                   constraints:
                     nullable: true
+                  remarks: 省份代码
               - column:
                   name: province_opt
                   type: int
                   constraints:
                     nullable: true
+                  remarks: 对省份条件进行包含或排除操作（0 排除，1 包含）
               - column:
                   name: city_if
                   type: int
                   constraints:
                     nullable: true
+                  remarks: 是否包含城市条件（0 不包含，1 包含）
               - column:
                   name: citycodes
                   type: varchar(500)
                   constraints:
                     nullable: true
+                  remarks: 城市代码
               - column:
                   name: city_opt
                   type: int
                   constraints:
                     nullable: true
+                  remarks: 对城市条件进行包含或排除操作（0 排除，1 包含）
               - column:
                   name: limitnum
                   type: int
                   constraints:
                     nullable: false
+                  remarks: 提取的数据量
               - column:
                   name: oid
                   type: varchar(200)
                   constraints:
                     nullable: true
+                  remarks: 群发流转单的id
               - column:
                   name: eid
                   type: bigserial
                   constraints:
                     nullable: false
+                  remarks: 申请人的id
         - createTable:
             tableName: edm_apply_examine_order
+            remarks: edm群发流转单
             columns:
               - column:
                   name: oid
@@ -218,74 +244,89 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
+                  remarks: 群发流转单的id，uuid
               - column:
                   name: order_name
                   type: varchar(200)
                   constraints:
                     primaryKey: true
                     nullable: false
+                  remarks: 流转单的名称
               - column:
                   name: eid
                   type: bigserial
                   constraints:
                     nullable: false
+                  remarks: 流转单的发起人id
               - column:
                   name: apply_date
                   type: date
                   constraints:
                     nullable: true
+                  remarks: 流转单的发起时间
               - column:
                   name: qunfa_type_description
                   type: varchar(100)
                   constraints:
                     nullable: true
+                  remarks: 群发类型
               - column:
                   name: qunfa_subject_and_context
                   type: varchar(500)
                   constraints:
                     nullable: true
+                  remarks: 群发主题和短信内容
               - column:
                   name: paiqi_yixiang
                   type: varchar(100)
                   constraints:
                     nullable: true
+                  remarks: 排期意向
               - column:
                   name: target_send_province
                   type: varchar(500)
                   constraints:
                     nullable: true
+                  remarks: 群发省份
               - column:
                   name: user_conditions
                   type: varchar(2000)
                   constraints:
                     nullable: true
+                  remarks: 群发的用户要求
               - column:
                   name: send_num
                   type: int
                   constraints:
                     nullable: false
+                  remarks: 群发的数据量
               - column:
                   name: channel_sends
                   type: varchar(100)
                   constraints:
                     nullable: false
+                  remarks: 投递通道
               - column:
                   name: how_supplement
                   type: varchar(200)
                   constraints:
                     nullable: false
+                  remarks: 目标用户不足时处理方案
               - column:
                   name: message_context
                   type: varchar(200)
                   constraints:
                     nullable: false
+                  remarks: 短信内容
               - column:
                   name: order_state
                   type: int
                   constraints:
                     nullable: false
+                  remarks: 流转单的状态
         - createTable:
             tableName: edm_apply_files
+            remarks: 群发流转单的其他附件
             columns:
               - column:
                   name: fid
@@ -294,26 +335,31 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
+                  remarks: 附件id,自增
               - column:
                   name: filename
                   type: varchar(500)
                   constraints:
                     nullable: false
+                  remarks: 附件名称
               - column:
                   name: filepath
                   type: varchar(500)
                   constraints:
                     nullable: false
+                  remarks: 附件存储路径
               - column:
                   name: originalfilename
                   type: varchar(500)
                   constraints:
                     nullable: false
+                  remarks: 附件原始名称
               - column:
                   name: oid
                   type: varchar(200)
                   constraints:
                     nullable: false
+                  remarks: 转发流转单的id
 
         - sql:
             dbms: mysql

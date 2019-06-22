@@ -7,7 +7,7 @@ package com.edm.edmfetchdataplatform.domain;
 public class EdmOrderFile {
 
     // 主键
-    private String fid;
+    private Long fid;
 
     // 附件的名称
     private String edmFileName;
@@ -15,11 +15,11 @@ public class EdmOrderFile {
     // 附件的存储路径
     private String edmFilePath;
 
-    public String getFid() {
+    public Long getFid() {
         return fid;
     }
 
-    public void setFid(String fid) {
+    public void setFid(Long fid) {
         this.fid = fid;
     }
 
