@@ -23,7 +23,7 @@ public class EdmerServiceImpl implements EdmerService {
     private EdmerMapper edmerMapper;
 
     @Override
-    public Edmer findEdmerByEid(Long eid) {
+    public Edmer findEdmerByEid(Integer eid) {
         return edmerMapper.findEdmerByEid(eid);
     }
 

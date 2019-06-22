@@ -8,7 +8,7 @@ import com.edm.edmfetchdataplatform.domain.UserDetailsLogin;
  */
 public interface EdmerService {
 
-    Edmer findEdmerByEid(Long eid);
+    Edmer findEdmerByEid(Integer eid);
 
     UserDetailsLogin findUserDetailsByUserName(String username);
 

@@ -26,7 +26,7 @@ public class EdmApplyOrder {
     /**
      * 流转单的发起人 id
      */
-    private Long eid;
+    private Integer eid;
 
     /**
      * 申请单的组别
@@ -108,11 +108,11 @@ public class EdmApplyOrder {
         this.orderName = orderName;
     }
 
-    public Long getEid() {
+    public Integer getEid() {
         return eid;
     }
 
-    public void setEid(Long eid) {
+    public void setEid(Integer eid) {
         this.eid = eid;
     }
 

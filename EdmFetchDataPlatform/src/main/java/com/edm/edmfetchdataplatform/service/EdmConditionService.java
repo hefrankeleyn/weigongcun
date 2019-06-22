@@ -14,7 +14,7 @@ public interface EdmConditionService {
 
     void savEdmCondition(EdmFetchDataCondition edmFetchDataCondition, String userEmail);
 
-    List<EdmCondition> findEdmFetchDataConditionsByEid(Long eid);
+    List<EdmCondition> findEdmFetchDataConditionsByEid(Integer eid);
 
     List<EdmCondition> findEdmFetchDataConditionsByUserEmail(String userEmail);
 
@@ -24,7 +24,7 @@ public interface EdmConditionService {
      * @param eid 当前登陆用户的id
      * @return
      */
-    List<EdmCondition> findEdmConditionsByConIdsAndEid(Integer[] conIds, Long eid);
+    List<EdmCondition> findEdmConditionsByConIdsAndEid(Integer[] conIds, Integer eid);
 
 
     /**

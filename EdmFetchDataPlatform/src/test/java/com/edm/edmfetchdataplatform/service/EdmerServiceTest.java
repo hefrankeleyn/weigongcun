@@ -28,7 +28,7 @@ public class EdmerServiceTest {
 
     @Test
     public void findEdmByEidTest(){
-        Edmer edmer = edmerService.findEdmerByEid(1l);
+        Edmer edmer = edmerService.findEdmerByEid(1);
         System.out.println(edmer);
     }
 

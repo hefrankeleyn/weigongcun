@@ -1,10 +1,8 @@
 package com.edm.edmfetchdataplatform.common;
 
 import com.edm.edmfetchdataplatform.tools.MyDateUtil;
-import com.fasterxml.jackson.databind.deser.DataFormatReaders;
 import org.junit.Test;
 
-import java.util.Random;
 
 /**
  * @Date 2019-06-20

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -29,9 +30,11 @@ public class EdmTargetDescriptionTest {
     @Test
     public void findAllTargetDescriptionTest(){
         List<EdmTargetDescription> edmTargetDescriptions = edmTargetDescriptionService.findAllEdmTargetDescription();
-        for (EdmTargetDescription edmtargetDescription :
-                edmTargetDescriptions) {
-            System.out.println(edmtargetDescription);
+        if (edmTargetDescriptions != null){
+            for (EdmTargetDescription edmtargetDescription :
+                    edmTargetDescriptions) {
+                System.out.println(edmtargetDescription);
+            }
         }
     }
 
@@ -46,9 +49,11 @@ public class EdmTargetDescriptionTest {
     public void findDescriptionsByTargets(){
         String[] targets = new String[]{"lg01","lg02"};
         List<EdmTargetDescription> edmTargetDescriptions = edmTargetDescriptionService.findEdmTargetDescriptionsByTargets(targets);
-        for (EdmTargetDescription edmTargetDescription :
-                edmTargetDescriptions) {
-            System.out.println(edmTargetDescription);
+        if (edmTargetDescriptions != null){
+            for (EdmTargetDescription edmTargetDescription :
+                    edmTargetDescriptions) {
+                System.out.println(edmTargetDescription);
+            }
         }
     }
 

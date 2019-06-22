@@ -28,7 +28,7 @@ public class EdmConditionServiceTest {
 
     @Test
     public void findEdmConditiondsByEid(){
-        List<EdmCondition> edmConditions = edmConditionService.findEdmFetchDataConditionsByEid(1l);
+        List<EdmCondition> edmConditions = edmConditionService.findEdmFetchDataConditionsByEid(1);
         if (edmConditions != null){
             for (EdmCondition edmCondition:
                     edmConditions) {
@@ -41,7 +41,7 @@ public class EdmConditionServiceTest {
     @Test
     public void findEdmConditonsByConIdAndEid(){
         Integer[] conIds = new Integer[]{1,2,3};
-        List<EdmCondition> edmConditions = edmConditionService.findEdmConditionsByConIdsAndEid(conIds, 1l);
+        List<EdmCondition> edmConditions = edmConditionService.findEdmConditionsByConIdsAndEid(conIds, 1);
         if (edmConditions != null){
             for (EdmCondition edmCondition:
                     edmConditions) {

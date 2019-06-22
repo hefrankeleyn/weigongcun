@@ -38,7 +38,7 @@ public interface EdmConditionMapper {
                               many = @Many(select = "com.edm.edmfetchdataplatform.mapper.EdmerMapper.findEdmerByEid"))})
     @Select("select conid,dimension,province_if,provincecodes,province_opt,city_if,citycodes," +
             "city_opt,limitnum from edm_conditions where 1=1 and oid is null and eid=#{eid}")
-    List<EdmCondition> findEdmConditionsByEid(@Param("eid") Long eid);
+    List<EdmCondition> findEdmConditionsByEid(@Param("eid") Integer eid);
 
 
     /**
@@ -67,7 +67,7 @@ public interface EdmConditionMapper {
             "</foreach>",
             "</script>"
             })
-    List<EdmCondition> findEdmConditionsByConIdsAndEid(@Param("list") Integer[] conId, @Param("eid") Long eid);
+    List<EdmCondition> findEdmConditionsByConIdsAndEid(@Param("list") Integer[] conId, @Param("eid") Integer eid);
     /**
      * 查询多个 EdmCondition
      * @param conId

@@ -71,7 +71,7 @@ public class EdmConditionServiceImpl implements EdmConditionService {
      * @return
      */
     @Override
-    public List<EdmCondition> findEdmFetchDataConditionsByEid(Long eid) {
+    public List<EdmCondition> findEdmFetchDataConditionsByEid(Integer eid) {
         List<EdmCondition> edmConditions = edmConditionMapper.findEdmConditionsByEid(eid);
 
 
@@ -113,7 +113,7 @@ public class EdmConditionServiceImpl implements EdmConditionService {
     }
 
     @Override
-    public List<EdmCondition> findEdmConditionsByConIdsAndEid(Integer[] conIds, Long eid) {
+    public List<EdmCondition> findEdmConditionsByConIdsAndEid(Integer[] conIds, Integer eid) {
         if (conIds == null || conIds.length == 0) {
             return null;
         } else {

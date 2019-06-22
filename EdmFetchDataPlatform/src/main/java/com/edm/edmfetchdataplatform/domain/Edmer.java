@@ -1,6 +1,5 @@
 package com.edm.edmfetchdataplatform.domain;
 
-import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -11,18 +10,19 @@ import java.util.List;
 public class Edmer {
 
     // 唯一的id
-    private Long eid;
+    private Integer eid;
     private String username;
     private String password;
     private String email;
     private String department;
+    private Integer level;
     private List<Role> roles;
 
-    public Long getEid() {
+    public Integer getEid() {
         return eid;
     }
 
-    public void setEid(Long eid) {
+    public void setEid(Integer eid) {
         this.eid = eid;
     }
 
@@ -58,6 +58,14 @@ public class Edmer {
         this.department = department;
     }
 
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
     public List<Role> getRoles() {
         return roles;
     }
@@ -74,6 +82,7 @@ public class Edmer {
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", department='" + department + '\'' +
+                ", level=" + level +
                 ", roles=" + roles +
                 '}';
     }

@@ -5,35 +5,88 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: edmers
+            remarks: 用户表
             columns:
               - column:
                   name: eid
-                  type: bigserial
+                  type: int
                   autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
+                  remarks: 主键，自增
               - column:
                   name: username
                   type: varchar(100)
                   constraints:
                     nullable: false
+                  remarks: 用户名
               - column:
                   name: password
                   type: varchar(200)
                   constraints:
                     nullable: false
+                  remarks: 密码
               - column:
                   name: email
                   type: varchar(100)
                   constraints:
                     nullable: false
                     unique: true
+                  remarks: 邮箱
               - column:
                   name: department
                   type: varchar(200)
                   constraints:
                     nullable: false
+                  remarks: 部门，组别
+              - column:
+                  name: level
+                  type: int
+                  constraints:
+                    nullable: false
+                  remarks: 级别，职责（1 执行； 2 监督）,与邮件发送有关
+        - createTable:
+            tableName: edm_roles
+            remarks: 角色表
+            columns:
+              - column:
+                  name: rid
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                  remarks: 角色的id
+              - column:
+                  name: role_name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+                  remarks: 角色名称
+              - column:
+                  name: role_desc
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+                  remarks: 角色描述
+        - createTable:
+            tableName: edmer_role_relation
+            remarks: 用户-角色 关系表
+            columns:
+              - column:
+                  name: eid
+                  type: int
+                  constraints:
+                    nullable: false
+                  remarks: 用户id
+              - column:
+                  name: rid
+                  type: int
+                  constraints:
+                    nullable: false
+                  remarks: 角色id
+
         - createTable:
             tableName: edm_usable_magnitude
             columns:
@@ -52,28 +105,7 @@ databaseChangeLog:
                   type: date
                   constraints:
                     nullable: false
-        - createTable:
-            tableName: edmer_roles
-            columns:
-              - column:
-                  name: rid
-                  type: bigserial
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: role_name
-                  type: varchar(100)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: eid
-                  type: bigserial
-                  constraints:
-                    nullable: false
-                    references: edmers(eid)
-                    foreignKeyName: fk_eid
+
         - createTable:
             tableName: edm_target_description
             columns:
@@ -288,10 +320,13 @@ databaseChangeLog:
             sql: ALTER TABLE edmers CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
         - sql:
             dbms: mysql
-            sql: ALTER TABLE edm_usable_magnitude CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
+            sql: ALTER TABLE edm_roles CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
         - sql:
             dbms: mysql
-            sql: ALTER TABLE edmer_roles CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
+            sql: ALTER TABLE edmer_role_relation CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
+        - sql:
+            dbms: mysql
+            sql: ALTER TABLE edm_usable_magnitude CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
         - sql:
             dbms: mysql
             sql: ALTER TABLE edm_target_description CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
@@ -323,102 +358,25 @@ databaseChangeLog:
               - column:
                   name: department
                   value: 数据组
+              - column:
+                  name: level
+                  value: 1
         - insert:
-            tableName: edmer_roles
+            tableName: edm_roles
             columns:
               - column:
                   name: role_name
                   value: ROLE_EDM
               - column:
+                  name: role_desc
+                  value: edm 用户，能够进行所有操作
+        - insert:
+            tableName: edmer_role_relation
+            columns:
+              - column:
                   name: eid
                   value: 1
-        - insert:
-            tableName: edm_target_description
-            columns:
               - column:
-                  name: target
-                  value: lg01
-              - column:
-                  name: description
-                  value: 中高级活跃用户一（连续六个月有邮短阅读（点击URL）行为用户）
-        - insert:
-            tableName: edm_target_description
-            columns:
-              - column:
-                  name: target
-                  value: lg02
-              - column:
-                  name: description
-                  value: 中高级活跃用户二（连续三个月有邮短阅读（点击URL）行为用户）
-        - insert:
-            tableName: edm_target_description
-            columns:
-              - column:
-                  name: target
-                  value: zc
-              - column:
-                  name: description
-                  value: 忠诚用户（近三个月有1次及以上邮箱登录行为的用户）
-        - insert:
-            tableName: edm_target_description
-            columns:
-              - column:
-                  name: target
-                  value: df01
-              - column:
-                  name: description
-                  value: 一般活跃用户一（近三个月活跃用户，涵盖各个用户层)
-        - insert:
-            tableName: edm_target_description
-            columns:
-              - column:
-                  name: target
-                  value: df02
-              - column:
-                  name: description
-                  value: 一般活跃用户二（近六个月活跃用户，涵盖各个用户层)
-        - insert:
-            tableName: edm_target_description
-            columns:
-              - column:
-                  name: target
-                  value: df03
-              - column:
-                  name: description
-                  value: 一般活跃用户三（近三个月有1-3次邮短阅读（点击URL），涵盖各个用户层)
-        - insert:
-            tableName: edm_target_description
-            columns:
-              - column:
-                  name: target
-                  value: new
-              - column:
-                  name: description
-                  value: 新用户：近三个月注册邮箱账号的用户
-        - insert:
-            tableName: edm_target_description
-            columns:
-              - column:
-                  name: target
-                  value: sl01
-              - column:
-                  name: description
-                  value: 沉默用户三（九个月以上没有活跃行为的用户，涵盖各用户层)
-        - insert:
-            tableName: edm_target_description
-            columns:
-              - column:
-                  name: target
-                  value: sl02
-              - column:
-                  name: description
-                  value: 沉默用户二（近九个月没有活跃行为的用户，涵盖各用户层)
-        - insert:
-            tableName: edm_target_description
-            columns:
-              - column:
-                  name: target
-                  value: sl03
-              - column:
-                  name: description
-                  value: 沉默用户一（近六个月没有活跃行为的用户，涵盖各用户层）
+                  name: rid
+                  value: 1
+
