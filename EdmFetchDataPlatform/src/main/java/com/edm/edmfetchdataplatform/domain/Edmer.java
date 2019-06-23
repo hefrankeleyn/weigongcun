@@ -1,5 +1,8 @@
 package com.edm.edmfetchdataplatform.domain;
 
+import com.edm.edmfetchdataplatform.domain.status.LevelState;
+import com.edm.edmfetchdataplatform.domain.status.LevelStateFactory;
+
 import java.util.List;
 
 /**
@@ -16,6 +19,7 @@ public class Edmer {
     private String email;
     private String department;
     private Integer level;
+    private String levelDesc;
     private List<Role> roles;
 
     public Integer getEid() {
@@ -64,6 +68,16 @@ public class Edmer {
 
     public void setLevel(Integer level) {
         this.level = level;
+        LevelState levelState = LevelStateFactory.fetchLevelStateByLeve(level);
+        setLevelDesc(levelState.getLevelDesc());
+    }
+
+    public String getLevelDesc() {
+        return levelDesc;
+    }
+
+    public void setLevelDesc(String levelDesc) {
+        this.levelDesc = levelDesc;
     }
 
     public List<Role> getRoles() {
@@ -83,6 +97,7 @@ public class Edmer {
                 ", email='" + email + '\'' +
                 ", department='" + department + '\'' +
                 ", level=" + level +
+                ", levelDesc='" + levelDesc + '\'' +
                 ", roles=" + roles +
                 '}';
     }

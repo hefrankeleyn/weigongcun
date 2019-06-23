@@ -1,5 +1,6 @@
 package com.edm.edmfetchdataplatform.mapper;
 
+import com.edm.edmfetchdataplatform.domain.EdmerRoleRelation;
 import com.edm.edmfetchdataplatform.domain.Role;
 import org.apache.ibatis.annotations.*;
 
@@ -20,4 +21,16 @@ public interface RoleMapper {
                       @Result(column = "role_desc", property = "roleDesc")
                      })
     List<Role> findRoleByEid(@Param(value = "eid") Integer eid);
+
+
+    @Insert("INSERT INTO `edmer_role_relation` (`eid`,`rid`) VALUES (#{eid},#{rid})")
+    void saveEdmRoleRelation(EdmerRoleRelation edmerRoleRelation);
+
+    /**
+     * 根据权限名称查询 Role
+     * @param roleName
+     * @return
+     */
+    @Select("select rid,role_name,role_desc from edm_roles where role_name=#{roleName}")
+    Role findRoleByRoleName(String roleName);
 }

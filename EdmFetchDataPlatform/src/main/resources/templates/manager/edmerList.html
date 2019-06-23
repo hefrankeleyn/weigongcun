@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Edmer list</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/bootstrap/js/bootstrap.js}"></script>
+</head>
+
+<body>
+<nav th:replace="common/edmManagerHeader :: header-navbar"></nav>
+<div class="container">
+    <table style="table-layout:fixed" class="table table-bordered table-hover table-striped table-condensed"
+           th:unless="${#lists.isEmpty(edmers)}">
+        <thead>
+        <tr>
+            <th scope="col">序号</th>
+            <th scope="col">姓名</th>
+            <th scope="col">部门（组别）</th>
+            <th scope="col">职责</th>
+            <th scope="col">邮箱</th>
+            <th scope="col">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="edmer,edmerState : ${edmers}">
+            <td scope="row" th:text="${edmerState.count}">
+                序号
+            </td>
+            <td th:text="${edmer.getUsername()}">性别</td>
+            <td th:text="${edmer.getDepartment()}">部门</td>
+            <td th:text="${edmer.getLevelDesc()}">职责</td>
+            <td th:text="${edmer.getEmail()}">邮箱</td>
+            <td>
+                <div>
+                    <input type="hidden" th:id="${edmer.getEid()}" name="eid" th:value="${edmer.getEid()}">
+                    <a class="btn btn-sm btn-danger" th:href="@{|/edmerController/roleUpdateView/${edmer.getEid()}|}">修改权限</a>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+
+</html>

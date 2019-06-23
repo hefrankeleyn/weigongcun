@@ -415,7 +415,53 @@ databaseChangeLog:
                   value: ROLE_EDM
               - column:
                   name: role_desc
-                  value: edm 用户，能够进行所有操作
+                  value: 开发者权限，能够进行所有操作
+        - insert:
+            tableName: edm_roles
+            columns:
+              - column:
+                  name: role_name
+                  value: ROLE_OPERATION
+              - column:
+                  name: role_desc
+                  value: 运营者组权限，能够进行EDM提数申请
+        - insert:
+            tableName: edm_roles
+            columns:
+              - column:
+                  name: role_name
+                  value: ROLE_APPLY
+              - column:
+                  name: role_desc
+                  value: 申请组权限，对edm提数申请进行初步审核
+        - insert:
+            tableName: edm_roles
+            columns:
+              - column:
+                  name: role_name
+                  value: ROLE_CAPACITY
+              - column:
+                  name: role_desc
+                  value: 能力组权限，对edm提数申请进行二次审核
+        - insert:
+            tableName: edm_roles
+            columns:
+              - column:
+                  name: role_name
+                  value: ROLE_CUSTOMER_SERVICE
+              - column:
+                  name: role_desc
+                  value: 客服组权限，对edm提数申请进行三次审核
+        - insert:
+            tableName: edm_roles
+            columns:
+              - column:
+                  name: role_name
+                  value: ROLE_SHUJU
+              - column:
+                  name: role_desc
+                  value: 数据组权限，对edm提数申请进行处理
+
         - insert:
             tableName: edmer_role_relation
             columns:

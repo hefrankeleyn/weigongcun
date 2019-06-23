@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EDMER 注册</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/bootstrap/js/bootstrap.js}"></script>
+</head>
+
+<body>
+<nav th:replace="common/edmManagerHeader :: header-navbar"></nav>
+<div class="container">
+    <h2>注册EDM用户</h2>
+    <form class="was-validated">
+        <div class="form-group">
+            <label for="username">姓名：</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="email">邮箱：</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="department">部门（组别）：</label>
+            <select id="department" name="department" class="form-control" required>
+                <option value="运营组" selected>运营组</option>
+                <option value="申请组">申请组</option>
+                <option value="能力组">能力组</option>
+                <option value="客服组">客服组</option>
+                <option value="数据组">数据组</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="level">职责：</label>
+            <select id="level" name="level" class="form-control" required>
+                <option value="1" selected>执行</option>
+                <option value="2">监督</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="password">密码：</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary" id="submitButton">注册</button>
+    </form>
+</div>
+</body>
+
+</html>
