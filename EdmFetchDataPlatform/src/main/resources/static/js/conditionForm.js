@@ -66,8 +66,7 @@ $(document).ready(function () {
         var data = {"provincecode" : provincecode};
         var headers = {"X-CSRF-TOKEN": token}
         // 获取项目路径
-        var projectUrl = createProjectUrl();
-        var url = projectUrl + "/edmFetchDataConditionController/findCitiesByProvinceCode";
+        var url = $.projectRootUrl() + "/edmFetchDataConditionController/findCitiesByProvinceCode";
         $.ajax({
             type: "POST",
             dataType: "json",
@@ -77,7 +76,7 @@ $(document).ready(function () {
             success: function (response) {
                 // 添加城市的 multi select
                 var status = response.status;
-                if(status=="SUCCESS"){
+                if(status == 0){
                     var result = response.result;
                     removeAndCreateMultipleCitySelect(result)
                 }else {
@@ -110,23 +109,6 @@ $(document).ready(function () {
         citycodesSelect.unbind("click", createCityCheckBox);
         citycodesSelect.bind("click", createCityCheckBox);
 
-    }
-
-
-    /**
-     * 获取项目的url
-     */
-    function createProjectUrl(){
-        // 获取网址 http://localhost:8080/EdmFetchDataPlatform/edmFetchDataConditionController/findCitiesByProvinceCode
-        var wwwPath = window.document.location.href;
-        // 获取主机之后的目录， /EdmFetchDataPlatform/edmFetchDataConditionController/findCitiesByProvinceCode
-        var pathname = window.document.location.pathname;
-        var pathnameIndex = wwwPath.indexOf(pathname);
-        // 获取主机地址 http://localhost:8080
-        var hostPath = wwwPath.substr(0,pathnameIndex);
-        //获取项目名称 /EdmFetchDataPlatform/
-        var projectName = pathname.substr(0, pathname.substr(1).indexOf("/")+1);
-        return hostPath + projectName;
     }
 
     /**
