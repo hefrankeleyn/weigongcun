@@ -10,6 +10,8 @@
     <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.css}">
     <script th:src="@{/js/jquery.min.js}"></script>
     <script th:src="@{/bootstrap/js/bootstrap.js}"></script>
+<!--    自定义的js 插件-->
+    <script th:src="@{/js/url-plugins.js}"></script>
     <!-- 自定义js -->
     <script th:src="@{/js/edmerRoleSetting.js}"></script>
 </head>
@@ -21,7 +23,7 @@
         <div class="card-body" th:if="${edmer!=null}" th:object="${edmer}">
             <h5 class="card-title" th:text="*{username}">小明</h5>
             <p class="card-text text-black-50">
-                <input type="hidden" id="eid" name="eid" value="1">
+                <input type="hidden" id="eid" name="eid" th:value="*{eid}">
                 <span>组别：</span><span th:text="*{department}">数据组</span><br>
                 <span>邮箱：</span><span th:text="*{email}">example@ic.com</span><br>
                 <span>职责：</span><span th:text="*{levelDesc}">执行</span>
@@ -29,8 +31,9 @@
         </div>
         <div class="card-body">
             <h6 class="card-title">权限</h6>
-            <div th:unless="${#lists.isEmpty(edmer.roles)}">
-                <span class="btn btn-primary btn-secondary" th:each="role : ${edmer.roles}" th:text="${role.getRoleDesc()}" th:id="${role.getRid()}">创建群发流传单</span>
+            <div th:unless="${#lists.isEmpty(edmer.roles)}" class="edmerRoles">
+                <span class="btn btn-primary btn-secondary" th:each="role : ${edmer.roles}"
+                      th:name="${role.getRid()}" th:text="${role.getRoleDesc()}">创建群发流传单</span>
             </div>
         </div>
     </div>

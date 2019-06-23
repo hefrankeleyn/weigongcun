@@ -7,13 +7,14 @@ import com.edm.edmfetchdataplatform.domain.UserDetailsLogin;
 import com.edm.edmfetchdataplatform.domain.status.GroupRole;
 import com.edm.edmfetchdataplatform.domain.status.GroupRoleFactory;
 import com.edm.edmfetchdataplatform.mapper.EdmerMapper;
-import com.edm.edmfetchdataplatform.mapper.RoleMapper;
 import com.edm.edmfetchdataplatform.service.EdmerService;
+import com.edm.edmfetchdataplatform.service.RoleService;
 import com.edm.edmfetchdataplatform.tools.MyPasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,8 +32,8 @@ public class EdmerServiceImpl implements EdmerService {
     @Autowired(required = false)
     private EdmerMapper edmerMapper;
 
-    @Autowired(required = false)
-    private RoleMapper roleMapper;
+    @Autowired
+    private RoleService roleService;
 
     @Override
     public Edmer findEdmerByEid(Integer eid) {
@@ -72,31 +73,11 @@ public class EdmerServiceImpl implements EdmerService {
         Edmer saveEdmer = edmerMapper.findEdmerByEmail(edmer.getEmail());
         // 赋予相应组别的权限
         GroupRole groupRole = GroupRoleFactory.fetchGroupRole(edmer.getDepartment());
-        Role role = roleMapper.findRoleByRoleName(groupRole.getRoleName());
+        Role role = roleService.findRoleByRoleName(groupRole.getRoleName());
         EdmerRoleRelation edmerRoleRelation = new EdmerRoleRelation(saveEdmer.getEid(), role.getRid());
-        roleMapper.saveEdmRoleRelation(edmerRoleRelation);
+        roleService.saveEdmerRoleRelation(edmerRoleRelation);
     }
 
-    /**
-     * 保存多个
-     * @param edmerRoleRelation
-     */
-    @Override
-    @Transactional
-    public void saveEdmerRoleRelation(EdmerRoleRelation edmerRoleRelation) {
-        roleMapper.saveEdmRoleRelation(edmerRoleRelation);
-    }
-
-    @Override
-    @Transactional
-    public void saveEdmerRoleRelationList(List<EdmerRoleRelation> edmerRoleRelationList) {
-        if (edmerRoleRelationList != null && !edmerRoleRelationList.isEmpty()){
-            for (EdmerRoleRelation edmerRoleRelation :
-                    edmerRoleRelationList) {
-                roleMapper.saveEdmRoleRelation(edmerRoleRelation);
-            }
-        }
-    }
 
     /**
      * 查询所有的edmer
@@ -107,4 +88,36 @@ public class EdmerServiceImpl implements EdmerService {
         List<Edmer> edmers = edmerMapper.findAllEdmer();
         return edmers;
     }
+
+
+    /**
+     * 更新用户的权限
+     * @param eid
+     * @param rids
+     */
+    @Override
+    @Transactional
+    public List<Role> updateEdmerRoles(Integer eid, Integer[] rids) {
+
+        List<Role> roles = new ArrayList<>();
+        // 判断用户是否存在
+        Edmer edmer = edmerMapper.findEdmerByEid(eid);
+        if (edmer!=null){
+            // 删除eid与role的关联关系
+            roleService.deleteEdmerRoleRelactionsByEid(eid);
+            // 遍历rid
+            for (Integer rid:
+                    rids) {
+                // 根据rid 查询 Role
+                Role role = roleService.findRoleByRid(rid);
+                if (role != null){
+                    EdmerRoleRelation roleRelation = new EdmerRoleRelation(eid, rid);
+                    roleService.saveEdmerRoleRelation(roleRelation);
+                    roles.add(role);
+                }
+            }
+        }
+        return roles;
+    }
+
 }

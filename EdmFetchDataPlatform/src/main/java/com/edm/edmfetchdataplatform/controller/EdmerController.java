@@ -1,13 +1,15 @@
 package com.edm.edmfetchdataplatform.controller;
 
 import com.edm.edmfetchdataplatform.domain.Edmer;
+import com.edm.edmfetchdataplatform.domain.ResponseResult;
+import com.edm.edmfetchdataplatform.domain.Role;
+import com.edm.edmfetchdataplatform.domain.status.EdmRolesParamter;
+import com.edm.edmfetchdataplatform.domain.status.ResultStatus;
 import com.edm.edmfetchdataplatform.service.EdmerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -62,5 +64,22 @@ public class EdmerController {
         Edmer edmer = edmerService.findEdmerByEid(eid);
         model.addAttribute("edmer", edmer);
         return "manager/edmerRoleSetting";
+    }
+
+    /**
+     * 修改Edmer 的权限
+     * @param edmRolesParamter
+     * @return
+     */
+    @RequestMapping(value = "/updateEdmerRoles", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseResult updateEdmerRoles(@RequestBody EdmRolesParamter edmRolesParamter){
+        try {
+            List<Role> roles = edmerService.updateEdmerRoles(edmRolesParamter.getEid(), edmRolesParamter.getRids());
+            return new ResponseResult(ResultStatus.SUCCESS, roles);
+        }catch (RuntimeException e){
+            return new ResponseResult(ResultStatus.FAIL, null);
+        }
+
     }
 }

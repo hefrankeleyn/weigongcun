@@ -16,7 +16,7 @@
 <nav th:replace="common/edmManagerHeader :: header-navbar"></nav>
 <div class="container">
     <h2>注册EDM用户</h2>
-    <form class="was-validated">
+    <form class="was-validated" th:action="@{/edmerController/registerFormSubmit}" method="post">
         <div class="form-group">
             <label for="username">姓名：</label>
             <input type="text" class="form-control" id="username" name="username" required>

@@ -5,34 +5,27 @@ import com.edm.edmfetchdataplatform.domain.status.ResultStatus;
 import java.io.Serializable;
 
 /**
+ * 用于封装Controller的查询结果， 用于RESTful
  * @Date 2019-06-11
  * @Author lifei
  */
 public class ResponseResult implements Serializable {
 
-    public static final int success = 0;
-    public static final int fail = 1;
-    private ResultStatus status;
+    private Integer status;
     private Object result;
     private String info;
 
-    public ResponseResult(ResultStatus status, Object result) {
-        this.status = status;
+    public ResponseResult(ResultStatus resultStatus, Object result) {
         this.result = result;
-
-        if(status.getStatus() == 0){
-            this.info = "success";
-        }else {
-            this.info = "fail";
-        }
-
+        this.status = resultStatus.getStatus();
+        this.info = resultStatus.getInfo();
     }
 
-    public ResultStatus getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(ResultStatus status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
@@ -55,7 +48,7 @@ public class ResponseResult implements Serializable {
     @Override
     public String toString() {
         return "ResponseResult{" +
-                "status='" + status + '\'' +
+                "status=" + status +
                 ", result=" + result +
                 ", info='" + info + '\'' +
                 '}';
