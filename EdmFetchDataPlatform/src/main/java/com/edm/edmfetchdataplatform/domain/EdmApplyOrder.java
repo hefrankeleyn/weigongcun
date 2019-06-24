@@ -6,6 +6,7 @@ import com.edm.edmfetchdataplatform.tools.MyArrayUtil;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * EDM 申请 流转单
@@ -99,6 +100,12 @@ public class EdmApplyOrder {
      * 订单的状态
      */
     private Integer orderState;
+
+
+    /**
+     * 群发流转单的附件
+     */
+    private List<EdmApplyFile> edmApplyFiles;
 
     public String getOrderName() {
         return orderName;
@@ -274,6 +281,14 @@ public class EdmApplyOrder {
         this.conIds = conIds;
     }
 
+    public List<EdmApplyFile> getEdmApplyFiles() {
+        return edmApplyFiles;
+    }
+
+    public void setEdmApplyFiles(List<EdmApplyFile> edmApplyFiles) {
+        this.edmApplyFiles = edmApplyFiles;
+    }
+
     @Override
     public String toString() {
         return "EdmApplyOrder{" +
@@ -297,6 +312,7 @@ public class EdmApplyOrder {
                 ", messageContext='" + messageContext + '\'' +
                 ", conIds=" + Arrays.toString(conIds) +
                 ", orderState=" + orderState +
+                ", edmApplyFiles=" + edmApplyFiles +
                 '}';
     }
 }

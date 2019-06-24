@@ -18,7 +18,13 @@ public class DataConfig {
 
     private String upLoadPath;
 
+    private String emailFrom;
+
     public String getUpLoadPath() {
         return environment.getProperty("edm.upload.filepath");
+    }
+
+    public String getEmailFrom() {
+        return environment.getProperty("mailserver.username");
     }
 }

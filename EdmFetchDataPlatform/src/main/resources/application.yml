@@ -4,7 +4,18 @@ spring:
   # 关闭Spring Boot艺术字
   main:
     banner-mode: "off"
-
+  # 发送邮件
+  mail:
+    host: smtp.wo.cn
+    port: 25
+    username: shuju@wo.cn
+    password: shu@ju#2019
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 ---
 spring:

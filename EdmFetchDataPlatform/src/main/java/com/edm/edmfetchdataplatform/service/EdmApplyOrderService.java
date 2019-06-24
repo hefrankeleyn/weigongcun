@@ -24,4 +24,12 @@ public interface EdmApplyOrderService {
      */
     void saveEdmApplyOrder(String edmerEmail, MultipartFile[] edmFiles, EdmApplyOrder edmApplyOrder);
 
+
+    /**
+     * 根据 流转单id 查询 EdmApplyOrder
+     * @param oid
+     * @return
+     */
+    EdmApplyOrder findEdmApplyOrderByOid(String oid);
+
 }

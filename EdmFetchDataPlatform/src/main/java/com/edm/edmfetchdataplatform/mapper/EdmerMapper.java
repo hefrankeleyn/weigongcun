@@ -52,7 +52,8 @@ public interface EdmerMapper {
             @Result(column = "department", property = "department"),
             @Result(column = "level", property = "level"),
             @Result(property = "roles", column = "eid", javaType = List.class,
-                    many = @Many(select = "com.edm.edmfetchdataplatform.mapper.RoleMapper.findRoleByEid"))})
+                    many = @Many(select = "com.edm.edmfetchdataplatform.mapper.RoleMapper.findRoleByEid"))
+    })
     Edmer findEdmerByEmail(@Param(value = "email") String email);
 
     /**

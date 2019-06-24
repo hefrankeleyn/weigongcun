@@ -2,6 +2,8 @@ package com.edm.edmfetchdataplatform.domain;
 
 import com.edm.edmfetchdataplatform.tools.MyArrayUtil;
 
+import java.util.List;
+
 /**
  * 提数条件
  * @Date 2019-06-15
@@ -216,6 +218,7 @@ public class EdmCondition {
     public void setOid(String oid) {
         this.oid = oid;
     }
+
 
     @Override
     public String toString() {

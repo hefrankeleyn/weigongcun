@@ -35,6 +35,11 @@ public class EdmApplyFile {
     public EdmApplyFile() {
     }
 
+    public EdmApplyFile(String filepath, String filename) {
+        this.filepath = filepath;
+        this.filename = filename;
+    }
+
     public EdmApplyFile(String filename, String filepath, String originalfilename, String oid) {
         this.filename = filename;
         this.filepath = filepath;

@@ -113,6 +113,12 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
 
     }
 
+    @Override
+    public EdmApplyOrder findEdmApplyOrderByOid(String oid) {
+        EdmApplyOrder edmApplyOrder = edmApplyOrderMapper.findEdmApplyOrderByOid(oid);
+        return edmApplyOrder;
+    }
+
     /**
      * 上传文件，并保存edmApplyFile
      *
