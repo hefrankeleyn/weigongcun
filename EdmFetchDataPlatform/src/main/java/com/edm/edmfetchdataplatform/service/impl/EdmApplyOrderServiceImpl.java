@@ -7,6 +7,7 @@ import com.edm.edmfetchdataplatform.domain.status.IncludeState;
 import com.edm.edmfetchdataplatform.mapper.EdmApplyOrderMapper;
 import com.edm.edmfetchdataplatform.service.*;
 import com.edm.edmfetchdataplatform.tools.MyDateUtil;
+import com.edm.edmfetchdataplatform.tools.MyFileUtil;
 import com.edm.edmfetchdataplatform.tools.MyIdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -79,37 +80,41 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
     @Override
     @Transactional
     public void saveEdmApplyOrder(String edmerEmail, MultipartFile[] edmFiles, EdmApplyOrder edmApplyOrder) {
-        // 获取用户
-        Edmer edmer = edmerService.findEdmerByEmail(edmerEmail);
-        // 创建 UUID， 流转单的主键
-        String oid = MyIdGenerator.createUUID();
-        // 保存流转单、保存流转单id与申请项的id
-        edmApplyOrder.setOid(oid);
-        // 流转单的状态， 添加准备审批的状态
-        edmApplyOrder.setOrderState(ExamineProgressState.READY_EXAMINE.getStatus());
-        // 流转但的时间 保存
-        edmApplyOrder.setApplyDate(new Date());
-        // 保存订单
-        edmApplyOrderMapper.saveEdmApplyOrder(edmApplyOrder);
-        // 保存订单项和订单之间的关系
-        Integer[] conIds = edmApplyOrder.getConIds();
-        if (conIds != null && conIds.length > 0) {
-            List<EdmCondition> edmConditions = edmConditionService.findEdmConditionsByConIds(conIds);
-            for (int i = 0; i < edmConditions.size(); i++) {
-                edmConditions.get(i).setOid(oid);
-            }
-            // 保存和订单项之间的关系
-            // 更新订单项
-            edmConditionService.updateEdmConditions(edmConditions);
-        }
 
-        // 判断附件是否存在，并保存附件
         try {
+            // 获取用户
+            Edmer edmer = edmerService.findEdmerByEmail(edmerEmail);
+            // 创建 UUID， 流转单的主键
+            String oid = MyIdGenerator.createUUID();
+            // 保存流转单、保存流转单id与申请项的id
+            edmApplyOrder.setOid(oid);
+            // 流转单的状态， 添加准备审批的状态
+            edmApplyOrder.setOrderState(ExamineProgressState.READY_EXAMINE.getStatus());
+            // 流转但的时间 保存
+            edmApplyOrder.setApplyDate(new Date());
+            // 保存订单
+            edmApplyOrderMapper.saveEdmApplyOrder(edmApplyOrder);
+            // 保存订单项和订单之间的关系
+            Integer[] conIds = edmApplyOrder.getConIds();
+            if (conIds != null && conIds.length > 0) {
+                List<EdmCondition> edmConditions = edmConditionService.findEdmConditionsByConIds(conIds);
+                for (int i = 0; i < edmConditions.size(); i++) {
+                    edmConditions.get(i).setOid(oid);
+                }
+                // 保存和订单项之间的关系
+                // 更新订单项
+                edmConditionService.updateEdmConditions(edmConditions);
+            }
+
+            // 判断附件是否存在，并保存附件
             upLoadFileAndSaveEdmApplyFiles(edmFiles, oid);
+
+            // 给申请组组长发送邮件，并抄送给申请人
         } catch (IOException e) {
             logger.info("文件上传失败。");
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
+
 
     }
 
@@ -132,11 +137,10 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
 
         if (edmFiles != null && edmFiles.length > 0) {
             EdmApplyFile[] edmApplyFiles = new EdmApplyFile[edmFiles.length];
-
             for (int i = 0; i < edmFiles.length; i++) {
                 String originalFilename = edmFiles[i].getOriginalFilename();
-                String filePath = createUpLoadFilePath(rootPath);
-                String fileName = createUpLoadFileName(originalFilename);
+                String filePath = MyFileUtil.createUpLoadFilePath(rootPath);
+                String fileName = MyFileUtil.createUpLoadFileName(originalFilename);
                 edmApplyFiles[i] = new EdmApplyFile(fileName, filePath, originalFilename, oid);
 
                 // 上传附件
@@ -148,36 +152,6 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
         } else {
             logger.info("edmFiles is empty");
         }
-    }
-
-    /**
-     * 根据真实的文件名创建 唯一的文件名
-     *
-     * @param realFileName
-     * @return
-     */
-    private String createUpLoadFileName(String realFileName) {
-        String datetimeStr = MyDateUtil.currentDatetimeStr();
-        double random = Math.random();
-        int r = (int) (random * 1000);
-        String fileName = datetimeStr + "-" + r + realFileName.substring(realFileName.lastIndexOf("."));
-        return fileName;
-    }
-
-    /**
-     * 根据根目录创建 完整的上传目录
-     *
-     * @param rootPath
-     * @return
-     */
-    private String createUpLoadFilePath(String rootPath) {
-        String yearStr = MyDateUtil.currentYearStr();
-        String filePath = rootPath + File.separator + yearStr;
-        File file = new File(rootPath + File.separator + yearStr);
-        if (!file.exists()) {
-            boolean mkdirs = file.mkdirs();
-        }
-        return filePath;
     }
 
 

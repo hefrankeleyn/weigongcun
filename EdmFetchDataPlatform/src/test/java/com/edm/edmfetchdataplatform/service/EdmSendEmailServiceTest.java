@@ -23,7 +23,7 @@ public class EdmSendEmailServiceTest {
     private EdmSendEmailService edmSendEmailService;
 
 
-//    @Test
+    @Test
     public void sendEmailTest(){
         EdmLiuZhuanEmailParameters edmLiuZhuanEmailParameters = new EdmLiuZhuanEmailParameters();
         edmLiuZhuanEmailParameters.setOrderName("沃油料13期");
