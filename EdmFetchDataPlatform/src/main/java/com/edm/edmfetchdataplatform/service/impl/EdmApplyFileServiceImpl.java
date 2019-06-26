@@ -6,6 +6,8 @@ import com.edm.edmfetchdataplatform.service.EdmApplyFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * 申请流转单的附件 service
  *
@@ -45,5 +47,11 @@ public class EdmApplyFileServiceImpl implements EdmApplyFileService {
             }
         }
 
+    }
+
+    @Override
+    public List<EdmApplyFile> findEdmApplyFilesByOid(String oid) {
+        List<EdmApplyFile> edmApplyFiles = edmApplyFileMapper.findEdmOrderFilesByOid(oid);
+        return edmApplyFiles;
     }
 }

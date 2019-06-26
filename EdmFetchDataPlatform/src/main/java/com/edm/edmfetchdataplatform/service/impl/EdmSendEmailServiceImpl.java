@@ -41,6 +41,8 @@ public class EdmSendEmailServiceImpl implements EdmSendEmailService {
 
     @Override
     public void sendThymeleafEmail(EdmLiuZhuanEmailParameters edmLiuZhuanEmailParameters) {
+        // 解决附件名称过程，发送乱码问题
+        System.setProperty("mail.mime.splitlongparameters", "false");
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = null;
         try {

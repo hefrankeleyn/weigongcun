@@ -44,4 +44,12 @@ public interface EdmerService {
      * @return 返回修改后的权限
      */
     List<Role> updateEdmerRoles(Integer eid, Integer[] rids);
+
+
+    /**
+     * 根据部门查询edmers
+     * @param departments
+     * @return
+     */
+    List<Edmer> findEdmersByDepartments(String[] departments);
 }

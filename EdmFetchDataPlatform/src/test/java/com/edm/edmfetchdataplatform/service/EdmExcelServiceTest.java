@@ -51,7 +51,7 @@ public class EdmExcelServiceTest {
         edmApplyOrder.setHowSupplement("不补充");
         edmApplyOrder.setMessageContext("今天心情真好，点这里~");
 
-        edmExcelService.createEdmApplyExcelOrder(edmApplyOrder, edmOrderCheckers);
+//        edmExcelService.createEdmApplyExcelOrder(edmApplyOrder, edmOrderCheckers,"/Users/lifei/Documents/servers/edm_upload_files/2019");
 
     }
 }

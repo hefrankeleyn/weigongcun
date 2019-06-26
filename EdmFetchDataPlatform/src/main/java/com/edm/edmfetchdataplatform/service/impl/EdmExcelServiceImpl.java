@@ -1,6 +1,7 @@
 package com.edm.edmfetchdataplatform.service.impl;
 
 import com.edm.edmfetchdataplatform.config.DataConfig;
+import com.edm.edmfetchdataplatform.domain.EdmApplyFile;
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrder;
 import com.edm.edmfetchdataplatform.domain.EdmOrderCheckers;
 import com.edm.edmfetchdataplatform.service.EdmExcelService;
@@ -37,12 +38,14 @@ public class EdmExcelServiceImpl implements EdmExcelService {
     /**
      * 生成 群发流转单excel
      * 为合并的单元格设置样式，应当在其它相关单元格内容设置完成之后设置
+     * 并生成的excel放到指定的目录下
      *
      * @param edmApplyOrder
      * @param edmOrderCheckers
+     * @return EdmApplyFile
      */
     @Override
-    public void createEdmApplyExcelOrder(EdmApplyOrder edmApplyOrder, EdmOrderCheckers edmOrderCheckers) {
+    public EdmApplyFile createEdmApplyExcelOrder(EdmApplyOrder edmApplyOrder, EdmOrderCheckers edmOrderCheckers, String filePath) {
         // 当前时间的年月
         String currentYearMonthDayStr = MyDateUtil.toDateStr(new Date());
         HSSFWorkbook workbook = new HSSFWorkbook();
@@ -67,7 +70,7 @@ public class EdmExcelServiceImpl implements EdmExcelService {
         // 创建第一行
         row = sheet.createRow(0);
         // 设置行高
-        row.setHeight((short)(23.25 * 20));
+        row.setHeight((short) (23.25 * 20));
         // 创建一个单元格
         cell = row.createCell(0);
         cell.setCellValue("邮箱事业部群发流转单");
@@ -89,10 +92,10 @@ public class EdmExcelServiceImpl implements EdmExcelService {
         // 创建第二行
         row = sheet.createRow(1);
         // 设置行高
-        row.setHeight((short)(19.5 * 20));
+        row.setHeight((short) (19.5 * 20));
         // 创建单元格, 编号
         cell = row.createCell(0);
-        cell.setCellValue("编号: ");
+        cell.setCellValue("编号: " + edmApplyOrder.getOid());
         // 设置单元格样式
         // 左右居左， 加粗，字号14
         cell.setCellStyle(setCellStyle(workbook, HorizontalAlignment.LEFT, true, (short) 11));
@@ -122,7 +125,7 @@ public class EdmExcelServiceImpl implements EdmExcelService {
         // 创建行
         row = sheet.createRow(2);
         // 设置行高
-        row.setHeight((short)(55.5 * 20));
+        row.setHeight((short) (55.5 * 20));
         // 创建单元格： 申请人
         cell = row.createCell(0);
         cell.setCellValue("申请人");
@@ -171,7 +174,7 @@ public class EdmExcelServiceImpl implements EdmExcelService {
 
         row = sheet.createRow(9);
         // 设置行高
-        row.setHeight((short)(81.75 * 20));
+        row.setHeight((short) (81.75 * 20));
         createRowThreeToTowTenAndCellOneToCellFour(workbook, HorizontalAlignment.LEFT, false, (short) 12,
                 row, edmApplyOrder.getMessageContext(), "", "");
 
@@ -218,7 +221,7 @@ public class EdmExcelServiceImpl implements EdmExcelService {
         sheet.addMergedRegion(cellRangeAddress5);
         row = sheet.createRow(18);
         // 设置行高
-        row.setHeight((short)(60 * 20));
+        row.setHeight((short) (60 * 20));
         createFirstCellAndLastCell(workbook, HorizontalAlignment.CENTER, true, (short) 12, row, "备注说明", "结束");
         // 为合并单元格添加样式
         addBorderForRegion(cellRangeAddress5, sheet);
@@ -228,26 +231,35 @@ public class EdmExcelServiceImpl implements EdmExcelService {
         // 上传文件的根目录
         String originalFilename = "《" + edmApplyOrder.getOrderName() + "》群发流转单-" + currentYearMonthDayStr + ".xlsx";
         // 获取要上传的目录
+        /*  文件放到指定的目录下
         String rootPath = dataConfig.getUpLoadPath();
         String filePath = MyFileUtil.createUpLoadFilePath(rootPath);
-        // 生成一个文件名
         String fileName = MyFileUtil.createUpLoadFileName(originalFilename);
-        File file = new File(filePath + File.separator + fileName);
+        */
+        // 判断文件夹是否存放，如果不存在就创建
+        File fileFolds = new File(filePath);
+        if (!fileFolds.exists()){
+            fileFolds.mkdirs();
+        }
+        // 生成一个文件名
+        File file = new File(filePath + File.separator + originalFilename);
         // 如果文件存在，就删除文件
         if (file.exists()) {
             file.delete();
         }
 
+        EdmApplyFile edmApplyFile = new EdmApplyFile(originalFilename, filePath, originalFilename, 1, edmApplyOrder.getOid());
+
         logger.info(file.toString());
         // 该语法保证 close 一定会关闭
         try (OutputStream outputStream = new FileOutputStream(file)) {
             workbook.write(outputStream);
+            return edmApplyFile;
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-
     }
 
     /**
@@ -309,7 +321,8 @@ public class EdmExcelServiceImpl implements EdmExcelService {
     }
 
     /**
-     *  只设置边框
+     * 只设置边框
+     *
      * @param workbook
      * @param horizontalAlignment
      * @return
@@ -332,9 +345,6 @@ public class EdmExcelServiceImpl implements EdmExcelService {
     }
 
 
-
-
-
     /**
      * 创建第三行到到十行，每行的第2个到第三个单元格
      *
@@ -355,7 +365,7 @@ public class EdmExcelServiceImpl implements EdmExcelService {
                                                             String cellFourValue) {
         HSSFRow row = sheet.createRow(rowNum);
         // 设置行高
-        row.setHeight((short)(34.5 * 20));
+        row.setHeight((short) (34.5 * 20));
         createRowThreeToTowTenAndCellOneToCellFour(workbook, horizontalAlignment, blodIf, fontSize, row, cellTwoValue, cellThreeValue, cellFourValue);
     }
 
@@ -419,7 +429,7 @@ public class EdmExcelServiceImpl implements EdmExcelService {
         zeroRichTextString.applyFont(0, zeros[0].length(), setFontStyle(workbook, (short) 11, true));
         if (zeros != null && zeros.length >= 2) {
             // 设置富文本后半段的字体样式
-            zeroRichTextString.applyFont(zeros[0].length(),zeroCellValue.length(), setFontStyle(workbook, (short) 10, false));
+            zeroRichTextString.applyFont(zeros[0].length(), zeroCellValue.length(), setFontStyle(workbook, (short) 10, false));
         }
         cell.setCellValue(zeroRichTextString);
 
@@ -488,7 +498,7 @@ public class EdmExcelServiceImpl implements EdmExcelService {
 
         HSSFRow row = sheet.createRow(rowNum);
         // 设置行高
-        row.setHeight((short)(46.5* 20));
+        row.setHeight((short) (46.5 * 20));
         createFirstCellAndLastCell(workbook, horizontalAlignment, blodIf, fontSize, row, firstCellValue, lastCellValue);
 
         createRowThreeToTowTenAndCellOneToCellFour(workbook, horizontalAlignment, blodIf, fontSize,
@@ -496,7 +506,7 @@ public class EdmExcelServiceImpl implements EdmExcelService {
 
         row = sheet.createRow(rowNum + 1);
         // 设置行高
-        row.setHeight((short)(38.25* 20));
+        row.setHeight((short) (38.25 * 20));
         createRowThreeToTowTenAndCellOneToCellFour(workbook, horizontalAlignment, false, (short) 11,
                 row, twoRowCellOneValue, twoRowCellTwoValue, twoRowCellThreeValue);
         // 为合并单元格添加边框

@@ -2,6 +2,8 @@ package com.edm.edmfetchdataplatform.service;
 
 import com.edm.edmfetchdataplatform.domain.EdmApplyFile;
 
+import java.util.List;
+
 /**
  *
  */
@@ -17,4 +19,11 @@ public interface EdmApplyFileService {
      * @param edmApplyFiles
      */
     void saveEdmApplyFiles(EdmApplyFile[] edmApplyFiles);
+
+    /**
+     * 根据oid查询附件
+     * @param oid
+     * @return
+     */
+    List<EdmApplyFile> findEdmApplyFilesByOid(String oid);
 }

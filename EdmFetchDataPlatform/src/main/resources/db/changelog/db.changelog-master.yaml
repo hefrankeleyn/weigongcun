@@ -355,6 +355,12 @@ databaseChangeLog:
                     nullable: false
                   remarks: 附件原始名称
               - column:
+                  name: flag
+                  type: int
+                  constraints:
+                    nullable: false
+                  remarks: 附件的标识, 0 代表其他附件， 1 代表 流转单生成的excel
+              - column:
                   name: oid
                   type: varchar(200)
                   constraints:

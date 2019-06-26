@@ -3,9 +3,12 @@ package com.edm.edmfetchdataplatform.service.impl;
 import com.edm.edmfetchdataplatform.config.DataConfig;
 import com.edm.edmfetchdataplatform.domain.*;
 import com.edm.edmfetchdataplatform.domain.status.ExamineProgressState;
+import com.edm.edmfetchdataplatform.domain.status.GroupRole;
 import com.edm.edmfetchdataplatform.domain.status.IncludeState;
+import com.edm.edmfetchdataplatform.domain.translate.EdmLiuZhuanEmailParameters;
 import com.edm.edmfetchdataplatform.mapper.EdmApplyOrderMapper;
 import com.edm.edmfetchdataplatform.service.*;
+import com.edm.edmfetchdataplatform.tools.MyArrayUtil;
 import com.edm.edmfetchdataplatform.tools.MyDateUtil;
 import com.edm.edmfetchdataplatform.tools.MyFileUtil;
 import com.edm.edmfetchdataplatform.tools.MyIdGenerator;
@@ -16,10 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -51,6 +51,15 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
 
     @Autowired(required = false)
     private EdmApplyOrderMapper edmApplyOrderMapper;
+
+    @Autowired
+    private EdmExcelService edmExcelService;
+
+    /**
+     * 用于发邮件
+     */
+    @Autowired
+    private EdmSendEmailService edmSendEmailService;
 
     /**
      * 对申请的订单进行初始化
@@ -94,6 +103,15 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
             edmApplyOrder.setApplyDate(new Date());
             // 保存订单
             edmApplyOrderMapper.saveEdmApplyOrder(edmApplyOrder);
+
+
+            // 创建当前流转单的目录，该流转单及附件保存在同一个目录里面
+            // 上传文件的根目录
+            String rootPath = dataConfig.getUpLoadPath();
+            // 根据根目录创建一个唯一的目录
+            String uniqueFilePath = MyFileUtil.createUniqueFilePath(rootPath);
+
+
             // 保存订单项和订单之间的关系
             Integer[] conIds = edmApplyOrder.getConIds();
             if (conIds != null && conIds.length > 0) {
@@ -106,10 +124,37 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
                 edmConditionService.updateEdmConditions(edmConditions);
             }
 
-            // 判断附件是否存在，并保存附件
-            upLoadFileAndSaveEdmApplyFiles(edmFiles, oid);
+            // 判断附件是否存在，并保存附件 , 将附件保存在唯一的目录下
+            List<EdmApplyFile> edmApplyFileList = upLoadMultipartFile(edmFiles, oid, uniqueFilePath);
+
+            // 将群发流转单生成excel
+            EdmOrderCheckers edmOrderCheckers = findEdmOrderCheckers();
+            EdmApplyFile edmApplyOrderExcel = edmExcelService.createEdmApplyExcelOrder(edmApplyOrder, edmOrderCheckers, uniqueFilePath);
+
+            // 将excel插入到list的第一个元素
+            edmApplyFileList.add(0, edmApplyOrderExcel);
+            // 将 申请流转单excel文件及其其附件信息保存到表中
+            EdmApplyFile[] saveEdmApplyFiles = new EdmApplyFile[edmApplyFileList.size()];
+            edmApplyFileService.saveEdmApplyFiles(edmApplyFileList.toArray(saveEdmApplyFiles));
 
             // 给申请组组长发送邮件，并抄送给申请人
+            EdmLiuZhuanEmailParameters edmLiuZhuanEmailParameters = new EdmLiuZhuanEmailParameters();
+            edmLiuZhuanEmailParameters.setEmailTo(edmOrderCheckers.getChuShenCheckerEmail());
+            //  抄送者
+            String[] emailCcs = new String[]{edmer.getEmail()};
+            edmLiuZhuanEmailParameters.setEmailCc(emailCcs);
+            // 邮件接收者的姓名
+            edmLiuZhuanEmailParameters.setEmailToUserName(edmOrderCheckers.getChuShenChecker());
+            // 群发流转单的名称
+            edmLiuZhuanEmailParameters.setOrderName(edmApplyOrder.getOrderName());
+            // 排期意向
+            edmLiuZhuanEmailParameters.setPaiQiYiXiang(edmApplyOrder.getPaiQiYiXiang());
+            // 添加附件
+            edmLiuZhuanEmailParameters.setEdmApplyFiles(edmApplyFileList);
+            // 发邮件
+            logger.info(edmLiuZhuanEmailParameters.toString());
+            edmSendEmailService.sendThymeleafEmail(edmLiuZhuanEmailParameters);
+
         } catch (IOException e) {
             logger.info("文件上传失败。");
             throw new RuntimeException(e);
@@ -124,34 +169,123 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
         return edmApplyOrder;
     }
 
+
+    @Override
+    public EdmOrderCheckers findEdmOrderCheckers() {
+        List<String> departmentList = new ArrayList<>();
+        departmentList.add(GroupRole.ROLE_APPLY.getDepartment());
+        departmentList.add(GroupRole.ROLE_CAPACITY.getDepartment());
+        departmentList.add(GroupRole.ROLE_CUSTOMER_SERVICE.getDepartment());
+        departmentList.add(GroupRole.ROLE_SHUJU.getDepartment());
+
+        String[] departments = new String[departmentList.size()];
+
+        List<Edmer> edmers = edmerService.findEdmersByDepartments(departmentList.toArray(departments));
+
+
+        EdmOrderCheckers edmOrderCheckers = new EdmOrderCheckers();
+
+        String[] usernameAndEmail = null;
+        usernameAndEmail = fetchUsernameByDepartmentAndLevel(edmers, GroupRole.ROLE_APPLY);
+        if (usernameAndEmail != null) {
+            edmOrderCheckers.setChuShenChecker(usernameAndEmail[0]);
+            edmOrderCheckers.setChuShenCheckerEmail(usernameAndEmail[1]);
+        }
+        usernameAndEmail = fetchUsernameByDepartmentAndLevel(edmers, GroupRole.ROLE_CAPACITY);
+        if (usernameAndEmail != null) {
+            edmOrderCheckers.setCapacityChecker(usernameAndEmail[0]);
+            edmOrderCheckers.setCapacityCheckerEmail(usernameAndEmail[1]);
+        }
+        usernameAndEmail = fetchUsernameByDepartmentAndLevel(edmers, GroupRole.ROLE_OPERATION);
+        if (usernameAndEmail != null) {
+            edmOrderCheckers.setCapacityChecker(usernameAndEmail[0]);
+            edmOrderCheckers.setCapacityCheckerEmail(usernameAndEmail[1]);
+        }
+        usernameAndEmail = fetchUsernameByDepartmentAndLevel(edmers, GroupRole.ROLE_SHUJU);
+        if (usernameAndEmail != null) {
+            edmOrderCheckers.setShuJuGroup(usernameAndEmail[0]);
+            edmOrderCheckers.setShuJuGroupEmail(usernameAndEmail[1]);
+        }
+        return edmOrderCheckers;
+    }
+
+    /**
+     * 根据部门名称和级别获取姓名
+     * 尽可能去级别为1 的人员
+     *
+     * @param edmers
+     * @return
+     */
+    private String[] fetchUsernameByDepartmentAndLevel(List<Edmer> edmers, GroupRole groupRole) {
+        String[] usernameAndEmail = new String[2];
+        if (edmers != null && !edmers.isEmpty()) {
+            for (Edmer edmer : edmers) {
+                boolean existsIf = true;
+                if (groupRole.getDepartment().equals(edmer.getDepartment()) && edmer.getLevel() == 1) {
+                    usernameAndEmail[0] = edmer.getUsername();
+                    usernameAndEmail[1] = edmer.getEmail();
+                    return usernameAndEmail;
+                } else if (groupRole.getDepartment().equals(edmer.getDepartment()) && edmer.getLevel() == 2) {
+                    usernameAndEmail[0] = edmer.getUsername();
+                    usernameAndEmail[1] = edmer.getEmail();
+                    return usernameAndEmail;
+                }
+            }
+        }
+        return null;
+    }
+
     /**
      * 上传文件，并保存edmApplyFile
      *
      * @param edmFiles
      * @param oid
+     * @return 上传完成的edmApplyFiles
      */
-    private void upLoadFileAndSaveEdmApplyFiles(MultipartFile[] edmFiles, String oid) throws IOException {
+    private List<EdmApplyFile> upLoadMultipartFile(MultipartFile[] edmFiles, String oid) throws IOException {
         // 上传文件的根目录
         String rootPath = dataConfig.getUpLoadPath();
         logger.info(rootPath);
-
+        List<EdmApplyFile> edmApplyFiles = new ArrayList<>();
         if (edmFiles != null && edmFiles.length > 0) {
-            EdmApplyFile[] edmApplyFiles = new EdmApplyFile[edmFiles.length];
             for (int i = 0; i < edmFiles.length; i++) {
                 String originalFilename = edmFiles[i].getOriginalFilename();
                 String filePath = MyFileUtil.createUpLoadFilePath(rootPath);
                 String fileName = MyFileUtil.createUpLoadFileName(originalFilename);
-                edmApplyFiles[i] = new EdmApplyFile(fileName, filePath, originalFilename, oid);
-
+                edmApplyFiles.add(new EdmApplyFile(fileName, filePath, originalFilename, 0, oid));
                 // 上传附件
                 edmFiles[i].transferTo(new File(filePath + File.separator + fileName));
             }
-
-            edmApplyFileService.saveEdmApplyFiles(edmApplyFiles);
-
         } else {
             logger.info("edmFiles is empty");
         }
+        return edmApplyFiles;
+    }
+
+    /**
+     * 上传到指定目录
+     * @param edmFiles
+     * @param oid
+     * @param filePath
+     * @return
+     * @throws IOException
+     */
+    private List<EdmApplyFile> upLoadMultipartFile(MultipartFile[] edmFiles, String oid, String filePath) throws IOException {
+        // 上传文件的根目录
+        String rootPath = dataConfig.getUpLoadPath();
+        logger.info(rootPath);
+        List<EdmApplyFile> edmApplyFiles = new ArrayList<>();
+        if (edmFiles != null && edmFiles.length > 0) {
+            for (int i = 0; i < edmFiles.length; i++) {
+                String originalFilename = edmFiles[i].getOriginalFilename();
+                edmApplyFiles.add(new EdmApplyFile(originalFilename, filePath, originalFilename, 0, oid));
+                // 上传附件
+                edmFiles[i].transferTo(new File(filePath + File.separator + originalFilename));
+            }
+        } else {
+            logger.info("edmFiles is empty");
+        }
+        return edmApplyFiles;
     }
 
 
@@ -209,10 +343,10 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
                 // 判断省份
                 setQunFaProvinceValue(edmCondition.getProvinceOpt(), edmCondition.getProvinceNames(), qunfaProvinceAndCityConditions);
                 // 判断城市
-                setQunFaProvinceValue(edmCondition.getCityOpt(), edmCondition.getCityNames(), qunfaProvinceAndCityConditions);
+                setQunFaCityValue(edmCondition.getCityOpt(), edmCondition.getCityNames(), qunfaProvinceAndCityConditions);
             }
             // 添加换行符
-            qunfaProvinceAndCityConditions.append("\n");
+            qunfaProvinceAndCityConditions.append("\r\n");
 
             //
             usersDataCondition.append("目标用户" + (i + 1) + ": ");
@@ -220,7 +354,7 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
             // 根据
             usersDataCondition.append(targetDescription.get(edmCondition.getDimension()));
             usersDataCondition.append(", 提取 " + edmCondition.getLimitNum() + ";");
-            usersDataCondition.append("\n");
+            usersDataCondition.append("\r\n");
 
             sendNum += edmCondition.getLimitNum();
 
@@ -254,9 +388,23 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
      */
     private void setQunFaProvinceValue(Integer state, String desc, StringBuilder sb) {
         if (state == IncludeState.INCLUDE.getState()) {
-            sb.append("取 " + desc + "。");
+            sb.append("包含省份：" + desc + "，  ");
         } else if (state == IncludeState.EXCLUDE.getState()) {
-            sb.append("排除 " + desc + "。");
+            sb.append("排除城市：" + desc + "，  ");
+        }
+    }
+
+    /**
+     * 拼接城市
+     * @param state
+     * @param desc
+     * @param sb
+     */
+    private void setQunFaCityValue(Integer state, String desc, StringBuilder sb) {
+        if (state == IncludeState.INCLUDE.getState()) {
+            sb.append("包含城市：" + desc + "   ");
+        } else if (state == IncludeState.EXCLUDE.getState()) {
+            sb.append("排除城市：" + desc + "   ");
         }
     }
 }

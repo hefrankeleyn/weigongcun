@@ -120,4 +120,15 @@ public class EdmerServiceImpl implements EdmerService {
         return roles;
     }
 
+    /**
+     * 根据部门查询edmers
+     * @param departments
+     * @return
+     */
+    @Override
+    public List<Edmer> findEdmersByDepartments(String[] departments) {
+        List<Edmer> edmers = edmerMapper.findEdmersByDepartment(departments);
+        return edmers;
+    }
+
 }

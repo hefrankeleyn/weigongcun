@@ -11,6 +11,10 @@ public class EdmOrderCheckers {
      * 初审人
      */
     private String chuShenChecker;
+    /**
+     * 初审人邮箱
+     */
+    private String chuShenCheckerEmail;
 
     /**
      * 能力组 审核人
@@ -18,9 +22,20 @@ public class EdmOrderCheckers {
     private String capacityChecker;
 
     /**
+     * 能立组邮箱
+     */
+    private String capacityCheckerEmail;
+
+    /**
      * 客服组 审核人
      */
     private String customerServiceChecker;
+    /**
+     * 客服组 邮箱
+     */
+    private String customerServiceCheckerEmail;
+
+
 
     /**
      * 数据组
@@ -37,7 +52,11 @@ public class EdmOrderCheckers {
         this.capacityChecker = "葛新宇";
         this.customerServiceChecker = "梁南";
         this.shuJuGroup = "数据";
+
         this.shuJuGroupEmail = "shuju@wo.cn";
+        this.chuShenCheckerEmail = "shuju@wo.cn";
+        this.capacityCheckerEmail = "shuju@wo.cn";
+        this.customerServiceCheckerEmail = "shuju@wo.cn";
     }
 
     public EdmOrderCheckers(String chuShenChecker, String capacityChecker,
@@ -90,6 +109,30 @@ public class EdmOrderCheckers {
         this.shuJuGroupEmail = shuJuGroupEmail;
     }
 
+
+    public String getChuShenCheckerEmail() {
+        return chuShenCheckerEmail;
+    }
+
+    public void setChuShenCheckerEmail(String chuShenCheckerEmail) {
+        this.chuShenCheckerEmail = chuShenCheckerEmail;
+    }
+
+    public String getCapacityCheckerEmail() {
+        return capacityCheckerEmail;
+    }
+
+    public void setCapacityCheckerEmail(String capacityCheckerEmail) {
+        this.capacityCheckerEmail = capacityCheckerEmail;
+    }
+
+    public String getCustomerServiceCheckerEmail() {
+        return customerServiceCheckerEmail;
+    }
+
+    public void setCustomerServiceCheckerEmail(String customerServiceCheckerEmail) {
+        this.customerServiceCheckerEmail = customerServiceCheckerEmail;
+    }
 
     @Override
     public String toString() {

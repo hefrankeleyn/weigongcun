@@ -18,8 +18,8 @@ public interface EdmApplyFileMapper {
      * 保存EdmApplyFile
      * @param edmApplyFile
      */
-    @Insert("INSERT INTO edm_apply_files (`filename`,`filepath`,`originalfilename`,`oid`) " +
-            "VALUES(#{filename},#{filepath},#{originalfilename},#{oid});")
+    @Insert("INSERT INTO edm_apply_files (`filename`,`filepath`,`originalfilename`,`flag`,`oid`) " +
+            "VALUES(#{filename},#{filepath},#{originalfilename},#{flag},#{oid});")
     void saveEdmApplyFile(EdmApplyFile edmApplyFile);
 
     /**
@@ -27,13 +27,14 @@ public interface EdmApplyFileMapper {
      * @param oid
      * @return
      */
-    @Select("SELECT `fid`,`filename`,`filepath`,`originalfilename`,`oid` FROM `edm_apply_files` " +
-            "where oid='#{oid}'")
+    @Select("SELECT `fid`,`filename`,`filepath`,`originalfilename`,`flag`,`oid` FROM `edm_apply_files` " +
+            "where oid=#{oid}")
     @Results(value = {@Result(column = "fid", property = "fid"),
             @Result(column = "filename", property = "filename"),
             @Result(column = "filepath", property = "filepath"),
             @Result(column = "originalfilename", property = "originalfilename"),
-            @Result(column = "oid", property = "oid"),
+            @Result(column = "flag", property = "flag"),
+            @Result(column = "oid", property = "oid")
     })
     List<EdmApplyFile> findEdmOrderFilesByOid(String oid);
 

@@ -28,16 +28,34 @@ public class EdmApplyFile {
     private String originalfilename;
 
     /**
+     * 附件的标识： 默认为 0
+     * 0 : 流转单的其他附件
+     * 1 : 生成流转单的excel
+     */
+    private Integer flag = 0;
+
+    /**
      * 流转单的id
      */
     private String oid;
 
     public EdmApplyFile() {
+        this.flag= 0;
     }
 
     public EdmApplyFile(String filepath, String filename) {
         this.filepath = filepath;
         this.filename = filename;
+        this.flag = 0;
+    }
+
+    public EdmApplyFile(String filename, String filepath, String originalfilename, Integer flag, String oid) {
+        this.fid = fid;
+        this.filename = filename;
+        this.filepath = filepath;
+        this.originalfilename = originalfilename;
+        this.flag = flag;
+        this.oid = oid;
     }
 
     public EdmApplyFile(String filename, String filepath, String originalfilename, String oid) {
@@ -45,6 +63,7 @@ public class EdmApplyFile {
         this.filepath = filepath;
         this.originalfilename = originalfilename;
         this.oid = oid;
+        this.flag = 0;
     }
 
     public Long getFid() {
@@ -87,6 +106,14 @@ public class EdmApplyFile {
         this.oid = oid;
     }
 
+    public Integer getFlag() {
+        return flag;
+    }
+
+    public void setFlag(Integer flag) {
+        this.flag = flag;
+    }
+
     @Override
     public String toString() {
         return "EdmApplyFile{" +
@@ -94,6 +121,7 @@ public class EdmApplyFile {
                 ", filename='" + filename + '\'' +
                 ", filepath='" + filepath + '\'' +
                 ", originalfilename='" + originalfilename + '\'' +
+                ", flag=" + flag +
                 ", oid='" + oid + '\'' +
                 '}';
     }

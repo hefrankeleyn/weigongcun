@@ -70,4 +70,18 @@ public interface EdmerMapper {
      */
     @Select("select eid,username,password,email,department,level from edmers")
     List<Edmer> findAllEdmer();
+
+    /**
+     * 根据部门查找edmers
+     * @param departments  多个部门
+     * @return
+     */
+    @Select({"<script>",
+            "select eid,username,password,email,department,level from edmers ",
+            "where department in ",
+            "<foreach item='item' index='index' collection='list' open='(' separator=',' close=')'>",
+            "#{item}",
+            "</foreach>",
+            "</script>"})
+    List<Edmer> findEdmersByDepartment(@Param("list") String[] departments);
 }
