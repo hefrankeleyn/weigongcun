@@ -98,6 +98,7 @@ public class EdmApplyOrder {
 
     /**
      * 订单的状态
+     * // ExamineProgressState
      */
     private Integer orderState;
 

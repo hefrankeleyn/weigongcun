@@ -34,7 +34,7 @@ public interface EdmApplyOrderMapper {
     @Select("SELECT `oid`,`order_name`,`eid`,`apply_date`,`qunfa_type_description`,`qunfa_subject_and_context`," +
             "`paiqi_yixiang`,`target_send_province`,`user_conditions`,`send_num`,`channel_sends`,`how_supplement`," +
             "`message_context`,`order_state` FROM `edm_apply_examine_order` " +
-            "where 1=1 and oid='#{oid}'")
+            "where 1=1 and oid=#{oid}")
     @Results(value = {@Result(column = "oid", property = "oid"),
             @Result(column = "order_name", property = "orderName"),
             @Result(column = "eid", property = "eid"),
@@ -51,6 +51,33 @@ public interface EdmApplyOrderMapper {
                     many = @Many(select = "com.edm.edmfetchdataplatform.mapper.EdmApplyFileMapper.findEdmOrderFilesByOid"))
     })
     EdmApplyOrder findEdmApplyOrderByOid(String oid);
+
+
+    /**
+     * 根据用户id查询 该用户申请的流转单
+     * @param eid
+     * @return
+     */
+    @Select("SELECT `oid`,`order_name`,`eid`,`apply_date`,`qunfa_type_description`,`qunfa_subject_and_context`," +
+            "`paiqi_yixiang`,`target_send_province`,`user_conditions`,`send_num`,`channel_sends`,`how_supplement`," +
+            "`message_context`,`order_state` FROM `edm_apply_examine_order` " +
+            "where 1=1 and eid=#{eid} order by apply_date desc")
+    @Results(value = {@Result(column = "oid", property = "oid"),
+            @Result(column = "order_name", property = "orderName"),
+            @Result(column = "eid", property = "eid"),
+            @Result(column = "apply_date", property = "applyDate", javaType = java.util.Date.class),
+            @Result(column = "qunfa_type_description", property = "qunFaTypeDescription"),
+            @Result(column = "qunfa_subject_and_context", property = "qunFaSubjectAndContext"),
+            @Result(column = "paiqi_yixiang", property = "paiQiYiXiang"),
+            @Result(column = "target_send_province", property = "targetSendProvince"),
+            @Result(column = "user_conditions", property = "userConditions"),
+            @Result(column = "send_num", property = "sendNum"),
+            @Result(column = "channel_sends", property = "channelSends"),
+            @Result(column = "how_supplement", property = "howSupplement"),
+            @Result(property = "edmApplyFiles", column = "oid", javaType = List.class,
+                    many = @Many(select = "com.edm.edmfetchdataplatform.mapper.EdmApplyFileMapper.findEdmOrderFilesByOid"))
+    })
+    List<EdmApplyOrder> findEdmApplyOrdersByEid(Integer eid);
 
 
 }

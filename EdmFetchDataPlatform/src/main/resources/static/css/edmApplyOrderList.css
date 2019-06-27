@@ -1,0 +1,9 @@
+/*
+让操作行居中
+ */
+.container table .caozuo,
+.container table .liuzhuandan,
+.container table .applier,
+.container table tr th{
+    text-align: center;
+}

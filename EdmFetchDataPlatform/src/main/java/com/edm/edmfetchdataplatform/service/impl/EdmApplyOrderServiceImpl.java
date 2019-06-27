@@ -146,7 +146,6 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
             edmApplyOrderCheckResultService.saveEdmApplyOrderCheckResult(edmApplyOrderCheckResult);
 
 
-
             // 将群发流转单生成excel
             EdmApplyFile edmApplyOrderExcel = edmExcelService.createEdmApplyExcelOrder(edmApplyOrder, edmApplyOrderCheckResult, uniqueFilePath);
 
@@ -176,9 +175,6 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
             edmSendEmailService.sendThymeleafEmail(edmLiuZhuanEmailParameters);
 
 
-
-
-
         } catch (IOException e) {
             logger.info("文件上传失败。");
             throw new RuntimeException(e);
@@ -193,6 +189,34 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
         return edmApplyOrder;
     }
 
+    /**
+     * 根据用户邮箱查询该用户申请的流转单
+     * @param email
+     * @return
+     */
+    @Override
+    public List<EdmApplyOrder> findEdmApplyOrdersByEmail(String email) {
+        Edmer edmer = edmerService.findEdmerByEmail(email);
+        if (edmer !=null){
+            return findEdmApplyOrdersByEid(edmer.getEid());
+        }
+        return null;
+    }
+
+
+    /**
+     * 根据eid查询 EdmApplyOrders
+     * @param eid
+     * @return
+     */
+    @Override
+    public List<EdmApplyOrder> findEdmApplyOrdersByEid(Integer eid) {
+        if (eid != null) {
+            List<EdmApplyOrder> edmApplyOrders = edmApplyOrderMapper.findEdmApplyOrdersByEid(eid);
+            return edmApplyOrders;
+        }
+        return null;
+    }
 
     /**
      * 上传文件，并保存edmApplyFile
@@ -223,6 +247,7 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
 
     /**
      * 上传到指定目录
+     *
      * @param edmFiles
      * @param oid
      * @param filePath
@@ -355,6 +380,7 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
 
     /**
      * 拼接城市
+     *
      * @param state
      * @param desc
      * @param sb

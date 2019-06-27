@@ -3,6 +3,8 @@ package com.edm.edmfetchdataplatform.service;
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrder;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 /**
  *  edm 申请的 订单提交
  */
@@ -31,6 +33,24 @@ public interface EdmApplyOrderService {
      * @return
      */
     EdmApplyOrder findEdmApplyOrderByOid(String oid);
+
+
+    /**
+     * 根据邮箱查询当前用户发起的流转单
+     * @param email
+     * @return
+     */
+    List<EdmApplyOrder> findEdmApplyOrdersByEmail(String email);
+
+    /**
+     * 根据用户id 查询该用户申请的流转单
+     * @param eid
+     * @return
+     */
+    List<EdmApplyOrder> findEdmApplyOrdersByEid(Integer eid);
+
+
+
 
 
 }

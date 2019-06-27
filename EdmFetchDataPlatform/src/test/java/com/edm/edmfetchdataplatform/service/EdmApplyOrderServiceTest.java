@@ -8,16 +8,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Date 2019-06-20
  * @Author lifei
  */
-//@RunWith(SpringRunner.class)
-//@SpringBootTest
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class EdmApplyOrderServiceTest {
 
-//    @Autowired
+    @Autowired
     private EdmApplyOrderService edmApplyOrderService;
 
 
@@ -44,5 +45,17 @@ public class EdmApplyOrderServiceTest {
 
         edmApplyOrderService.saveEdmApplyOrder(email, null, edmApplyOrder);
 
+    }
+
+    @Test
+    public void findEdmApplyOrderByEmailTest(){
+        String email = "shuju@wo.cn";
+        List<EdmApplyOrder> edmApplyOrders = edmApplyOrderService.findEdmApplyOrdersByEmail(email);
+        if (edmApplyOrders != null && !edmApplyOrders.isEmpty()){
+            for (EdmApplyOrder edmApplyOrder :
+                    edmApplyOrders) {
+                System.out.println(edmApplyOrder);
+            }
+        }
     }
 }
