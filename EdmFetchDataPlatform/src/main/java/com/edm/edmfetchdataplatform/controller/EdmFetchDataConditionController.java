@@ -1,6 +1,7 @@
 package com.edm.edmfetchdataplatform.controller;
 
 import com.edm.edmfetchdataplatform.domain.*;
+import com.edm.edmfetchdataplatform.domain.status.GroupRole;
 import com.edm.edmfetchdataplatform.domain.status.ResultStatus;
 import com.edm.edmfetchdataplatform.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,7 @@ public class EdmFetchDataConditionController {
         List<EdmTargetDescription> edmTargetDescriptions = edmTargetDescriptionService.findAllEdmTargetDescription();
         // 获取所有的省份数据
         List<EdmZone> provinces = edmZoneService.findAllProvinces();
+
         //将数据放到模型中
         model.addAttribute("edmTargetDescriptions", edmTargetDescriptions);
         model.addAttribute("provinces",provinces);
@@ -121,8 +123,11 @@ public class EdmFetchDataConditionController {
         String userEmail = authentication.getName();
 
         EdmApplyOrder edmApplyOrder = edmApplyOrderService.orderInit(conId, userEmail);
+        // 查询申请组的所有用户
+        List<Edmer> applyGroupEdmers = edmerService.findEdmersByOneDepartment(GroupRole.ROLE_APPLY.getDepartment());
         // 将初始化订单数据放到模型中
         model.addAttribute("edmApplyOrder", edmApplyOrder);
+        model.addAttribute("applyGroupEdmers",applyGroupEdmers);
         return "applyEmdForm";
     }
 

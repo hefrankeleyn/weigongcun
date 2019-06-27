@@ -3,10 +3,9 @@ package com.edm.edmfetchdataplatform.service.impl;
 import com.edm.edmfetchdataplatform.config.DataConfig;
 import com.edm.edmfetchdataplatform.domain.EdmApplyFile;
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrder;
-import com.edm.edmfetchdataplatform.domain.EdmOrderCheckers;
+import com.edm.edmfetchdataplatform.domain.EdmApplyOrderCheckResult;
 import com.edm.edmfetchdataplatform.service.EdmExcelService;
 import com.edm.edmfetchdataplatform.tools.MyDateUtil;
-import com.edm.edmfetchdataplatform.tools.MyFileUtil;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -41,11 +40,11 @@ public class EdmExcelServiceImpl implements EdmExcelService {
      * 并生成的excel放到指定的目录下
      *
      * @param edmApplyOrder
-     * @param edmOrderCheckers
+     * @param edmApplyOrderCheckResult
      * @return EdmApplyFile
      */
     @Override
-    public EdmApplyFile createEdmApplyExcelOrder(EdmApplyOrder edmApplyOrder, EdmOrderCheckers edmOrderCheckers, String filePath) {
+    public EdmApplyFile createEdmApplyExcelOrder(EdmApplyOrder edmApplyOrder, EdmApplyOrderCheckResult edmApplyOrderCheckResult, String filePath) {
         // 当前时间的年月
         String currentYearMonthDayStr = MyDateUtil.toDateStr(new Date());
         HSSFWorkbook workbook = new HSSFWorkbook();
@@ -187,34 +186,34 @@ public class EdmExcelServiceImpl implements EdmExcelService {
         createCheckAndResultRows(workbook, HorizontalAlignment.CENTER, true, (short) 12,
                 sheet, 10, "申请组组长", "发能力组，" + "\r\n" + "抄申请人",
                 "内容初审", "", "",
-                edmOrderCheckers.getChuShenChecker(), "", "");
+                edmApplyOrderCheckResult.getFirstCheckerUserName(), "", "");
 
         // 创建第十一行， "能力组 //葛兴羽"
         createCheckAndResultRows(workbook, HorizontalAlignment.CENTER, true, (short) 12,
                 sheet, 12,
-                "能力组" + "\r\n" + edmOrderCheckers.getCapacityChecker(), "发客服组，" + "\r\n" + "抄申请人",
+                "能力组" + "\r\n" + edmApplyOrderCheckResult.getSecondCheckerUserName(), "发客服组，" + "\r\n" + "抄申请人",
                 "排期结果", "内容复审", "",
-                edmApplyOrder.getPaiQiYiXiang(), "", "");
+                edmApplyOrderCheckResult.getPaiQiResult(), edmApplyOrderCheckResult.getSecondCheckerResult(), "");
 
         // 创建十二行， "客服组 梁南"
         createCheckAndResultRows(workbook, HorizontalAlignment.CENTER, true, (short) 12,
                 sheet, 14,
-                "客服组" + "\r\n" + edmOrderCheckers.getCustomerServiceChecker(), "审核通过：" + "\r\n" +
+                "客服组" + "\r\n" + edmApplyOrderCheckResult.getThirdCheckerUserName(), "审核通过：" + "\r\n" +
                         "发数据组，抄申请人" + "\r\n" +
                         "审核不通过：" + "\r\n" +
                         "返回申请人",
                 "排期确认", "群发方案确认", "",
-                "", "", "请剔除黑名单用户和省分");
+                edmApplyOrderCheckResult.getThirdCheckerPaiQiResult(), edmApplyOrderCheckResult.getThirdCheckerQunFaFangAnResult(), edmApplyOrderCheckResult.getThirdCheckBeiZhu());
 
         // 创建第十三行， "数据组
         //数据
         //(shuju@wo.cn)"
         createCheckAndResultRows(workbook, HorizontalAlignment.CENTER, true, (short) 12,
                 sheet, 16,
-                "数据组" + "\r\n" + edmOrderCheckers.getShuJuGroup() + "\r\n (" + edmOrderCheckers.getShuJuGroupEmail() + ")", "发申请人，由申请人执行群发任务",
+                "数据组" + "\r\n" + edmApplyOrderCheckResult.getShuJuUserName() + "\r\n (" + edmApplyOrderCheckResult.getShuJuEmail() + ")", "发申请人，由申请人执行群发任务",
                 "用户数据链接" + "\r\n" +
                         "（分省用户明细可附表）", "实际用户数据属性说明", "实际用户数量",
-                "", "", "");
+                edmApplyOrderCheckResult.getFetchResultSheetName(), edmApplyOrderCheckResult.getDataUsersDescription(), edmApplyOrderCheckResult.getActualUserNum());
 
         // 第十四行
         CellRangeAddress cellRangeAddress5 = new CellRangeAddress(18, 18, 1, 3);

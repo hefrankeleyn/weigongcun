@@ -130,6 +130,17 @@
                 <label class="custom-file-label" for="edmFilesTwo">附件1</label>
             </div> -->
         </div>
+
+        <div class="from-group mb-2" th:unless="${#lists.isEmpty(applyGroupEdmers)}">
+            <label for="nextEdmerId">流转给申请组组长:</label>
+            <select id="nextEdmerId" name="nextEdmerId" class="form-control" required>
+                <option th:each="applyGroupEdmer : ${applyGroupEdmers}" th:value="${applyGroupEdmer.getEid()}"
+                        th:class="${applyGroupEdmer.getLevel()}"
+                        th:text="|${applyGroupEdmer.getUsername()}(${applyGroupEdmer.getEmail()})|"
+                        th:if="${applyGroupEdmer.getLevel() == 1}" th:selected="selected">组长姓名
+                </option>
+            </select>
+        </div>
         <button type="submit" class="btn btn-primary" id="submitButton">提交申请，转给申请组组长，进行初步审核</button>
     </form>
 </div>

@@ -29,6 +29,9 @@ spring:
     schema:
        - classpath:sql/edm_zone.sql
        - classpath:sql/edm_target_description.sql
+       - classpath:sql/edmers.sql
+       - classpath:sql/edm_roles.sql
+       - classpath:sql/edmer_role_relation.sql
 #    initialization-mode: always
   jpa:
     hibernate:

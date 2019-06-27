@@ -1,0 +1,2 @@
+truncate table edm_roles;
+INSERT INTO `edm_roles` VALUES (1,'ROLE_EDM','开发者权限，能够进行所有操作'),(2,'ROLE_OPERATION','运营者组权限，能够进行EDM提数申请'),(3,'ROLE_APPLY','申请组权限，对edm提数申请进行初步审核'),(4,'ROLE_CAPACITY','能力组权限，对edm提数申请进行二次审核'),(5,'ROLE_CUSTOMER_SERVICE','客服组权限，对edm提数申请进行三次审核'),(6,'ROLE_SHUJU','数据组权限，对edm提数申请进行处理');

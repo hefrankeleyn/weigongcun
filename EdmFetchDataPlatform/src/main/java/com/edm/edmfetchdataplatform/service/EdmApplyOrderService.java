@@ -1,7 +1,6 @@
 package com.edm.edmfetchdataplatform.service;
 
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrder;
-import com.edm.edmfetchdataplatform.domain.EdmOrderCheckers;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -33,11 +32,5 @@ public interface EdmApplyOrderService {
      */
     EdmApplyOrder findEdmApplyOrderByOid(String oid);
 
-
-    /**
-     * 获取群发流转单的审核人
-     * @return
-     */
-    EdmOrderCheckers findEdmOrderCheckers();
 
 }

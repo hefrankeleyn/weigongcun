@@ -12,6 +12,7 @@ $(document).ready(function () {
         // 将表单上若干个项目置为仅仅可读
         readonlySetter();
     }
+
     /**
      *  将表单上若干个项目置为不可用
      */

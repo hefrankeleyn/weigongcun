@@ -52,4 +52,12 @@ public interface EdmerService {
      * @return
      */
     List<Edmer> findEdmersByDepartments(String[] departments);
+
+
+    /**
+     * 查找一个部门的所有用户
+     * @param department
+     * @return
+     */
+    List<Edmer> findEdmersByOneDepartment(String department);
 }

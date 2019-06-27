@@ -103,6 +103,18 @@ public class EdmApplyOrder {
 
 
     /**
+     * 流转单下一个要流转的对象的邮箱
+     */
+    private Integer nextEdmerId;
+
+
+    /**
+     * 流转单 的 流转结果
+     */
+    private EdmApplyOrderCheckResult edmApplyOrderCheckResult;
+
+
+    /**
      * 群发流转单的附件
      */
     private List<EdmApplyFile> edmApplyFiles;
@@ -289,6 +301,23 @@ public class EdmApplyOrder {
         this.edmApplyFiles = edmApplyFiles;
     }
 
+
+    public EdmApplyOrderCheckResult getEdmApplyOrderCheckResult() {
+        return edmApplyOrderCheckResult;
+    }
+
+    public void setEdmApplyOrderCheckResult(EdmApplyOrderCheckResult edmApplyOrderCheckResult) {
+        this.edmApplyOrderCheckResult = edmApplyOrderCheckResult;
+    }
+
+    public Integer getNextEdmerId() {
+        return nextEdmerId;
+    }
+
+    public void setNextEdmerId(Integer nextEdmerId) {
+        this.nextEdmerId = nextEdmerId;
+    }
+
     @Override
     public String toString() {
         return "EdmApplyOrder{" +
@@ -313,6 +342,7 @@ public class EdmApplyOrder {
                 ", conIds=" + Arrays.toString(conIds) +
                 ", orderState=" + orderState +
                 ", edmApplyFiles=" + edmApplyFiles +
+                ", nextEdmerId=" + nextEdmerId +
                 '}';
     }
 }

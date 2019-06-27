@@ -61,6 +61,10 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
     @Autowired
     private EdmSendEmailService edmSendEmailService;
 
+    // 流转单的结果
+    @Autowired
+    private EdmApplyOrderCheckResultService edmApplyOrderCheckResultService;
+
     /**
      * 对申请的订单进行初始化
      *
@@ -127,9 +131,24 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
             // 判断附件是否存在，并保存附件 , 将附件保存在唯一的目录下
             List<EdmApplyFile> edmApplyFileList = upLoadMultipartFile(edmFiles, oid, uniqueFilePath);
 
+
+            // 保存流转单的结果
+            EdmApplyOrderCheckResult edmApplyOrderCheckResult = new EdmApplyOrderCheckResult();
+            Edmer applyGroupEdmer = edmerService.findEdmerByEid(edmApplyOrder.getNextEdmerId());
+            // 添加一个唯一的id
+            edmApplyOrderCheckResult.setOcId(MyIdGenerator.createUUID());
+            // 申请组组长的名称
+            edmApplyOrderCheckResult.setFirstCheckerUserName(applyGroupEdmer.getUsername());
+            // 排期
+            edmApplyOrderCheckResult.setPaiQiResult(edmApplyOrder.getPaiQiYiXiang());
+            edmApplyOrderCheckResult.setOid(oid);
+            // 保存流转单的结果
+            edmApplyOrderCheckResultService.saveEdmApplyOrderCheckResult(edmApplyOrderCheckResult);
+
+
+
             // 将群发流转单生成excel
-            EdmOrderCheckers edmOrderCheckers = findEdmOrderCheckers();
-            EdmApplyFile edmApplyOrderExcel = edmExcelService.createEdmApplyExcelOrder(edmApplyOrder, edmOrderCheckers, uniqueFilePath);
+            EdmApplyFile edmApplyOrderExcel = edmExcelService.createEdmApplyExcelOrder(edmApplyOrder, edmApplyOrderCheckResult, uniqueFilePath);
 
             // 将excel插入到list的第一个元素
             edmApplyFileList.add(0, edmApplyOrderExcel);
@@ -137,14 +156,15 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
             EdmApplyFile[] saveEdmApplyFiles = new EdmApplyFile[edmApplyFileList.size()];
             edmApplyFileService.saveEdmApplyFiles(edmApplyFileList.toArray(saveEdmApplyFiles));
 
+
             // 给申请组组长发送邮件，并抄送给申请人
             EdmLiuZhuanEmailParameters edmLiuZhuanEmailParameters = new EdmLiuZhuanEmailParameters();
-            edmLiuZhuanEmailParameters.setEmailTo(edmOrderCheckers.getChuShenCheckerEmail());
+            edmLiuZhuanEmailParameters.setEmailTo(applyGroupEdmer.getEmail());
             //  抄送者
             String[] emailCcs = new String[]{edmer.getEmail()};
             edmLiuZhuanEmailParameters.setEmailCc(emailCcs);
             // 邮件接收者的姓名
-            edmLiuZhuanEmailParameters.setEmailToUserName(edmOrderCheckers.getChuShenChecker());
+            edmLiuZhuanEmailParameters.setEmailToUserName(applyGroupEdmer.getUsername());
             // 群发流转单的名称
             edmLiuZhuanEmailParameters.setOrderName(edmApplyOrder.getOrderName());
             // 排期意向
@@ -154,6 +174,10 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
             // 发邮件
             logger.info(edmLiuZhuanEmailParameters.toString());
             edmSendEmailService.sendThymeleafEmail(edmLiuZhuanEmailParameters);
+
+
+
+
 
         } catch (IOException e) {
             logger.info("文件上传失败。");
@@ -169,71 +193,6 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
         return edmApplyOrder;
     }
 
-
-    @Override
-    public EdmOrderCheckers findEdmOrderCheckers() {
-        List<String> departmentList = new ArrayList<>();
-        departmentList.add(GroupRole.ROLE_APPLY.getDepartment());
-        departmentList.add(GroupRole.ROLE_CAPACITY.getDepartment());
-        departmentList.add(GroupRole.ROLE_CUSTOMER_SERVICE.getDepartment());
-        departmentList.add(GroupRole.ROLE_SHUJU.getDepartment());
-
-        String[] departments = new String[departmentList.size()];
-
-        List<Edmer> edmers = edmerService.findEdmersByDepartments(departmentList.toArray(departments));
-
-
-        EdmOrderCheckers edmOrderCheckers = new EdmOrderCheckers();
-
-        String[] usernameAndEmail = null;
-        usernameAndEmail = fetchUsernameByDepartmentAndLevel(edmers, GroupRole.ROLE_APPLY);
-        if (usernameAndEmail != null) {
-            edmOrderCheckers.setChuShenChecker(usernameAndEmail[0]);
-            edmOrderCheckers.setChuShenCheckerEmail(usernameAndEmail[1]);
-        }
-        usernameAndEmail = fetchUsernameByDepartmentAndLevel(edmers, GroupRole.ROLE_CAPACITY);
-        if (usernameAndEmail != null) {
-            edmOrderCheckers.setCapacityChecker(usernameAndEmail[0]);
-            edmOrderCheckers.setCapacityCheckerEmail(usernameAndEmail[1]);
-        }
-        usernameAndEmail = fetchUsernameByDepartmentAndLevel(edmers, GroupRole.ROLE_OPERATION);
-        if (usernameAndEmail != null) {
-            edmOrderCheckers.setCapacityChecker(usernameAndEmail[0]);
-            edmOrderCheckers.setCapacityCheckerEmail(usernameAndEmail[1]);
-        }
-        usernameAndEmail = fetchUsernameByDepartmentAndLevel(edmers, GroupRole.ROLE_SHUJU);
-        if (usernameAndEmail != null) {
-            edmOrderCheckers.setShuJuGroup(usernameAndEmail[0]);
-            edmOrderCheckers.setShuJuGroupEmail(usernameAndEmail[1]);
-        }
-        return edmOrderCheckers;
-    }
-
-    /**
-     * 根据部门名称和级别获取姓名
-     * 尽可能去级别为1 的人员
-     *
-     * @param edmers
-     * @return
-     */
-    private String[] fetchUsernameByDepartmentAndLevel(List<Edmer> edmers, GroupRole groupRole) {
-        String[] usernameAndEmail = new String[2];
-        if (edmers != null && !edmers.isEmpty()) {
-            for (Edmer edmer : edmers) {
-                boolean existsIf = true;
-                if (groupRole.getDepartment().equals(edmer.getDepartment()) && edmer.getLevel() == 1) {
-                    usernameAndEmail[0] = edmer.getUsername();
-                    usernameAndEmail[1] = edmer.getEmail();
-                    return usernameAndEmail;
-                } else if (groupRole.getDepartment().equals(edmer.getDepartment()) && edmer.getLevel() == 2) {
-                    usernameAndEmail[0] = edmer.getUsername();
-                    usernameAndEmail[1] = edmer.getEmail();
-                    return usernameAndEmail;
-                }
-            }
-        }
-        return null;
-    }
 
     /**
      * 上传文件，并保存edmApplyFile

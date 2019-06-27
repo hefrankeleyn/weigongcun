@@ -1,7 +1,7 @@
 package com.edm.edmfetchdataplatform.service;
 
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrder;
-import com.edm.edmfetchdataplatform.domain.EdmOrderCheckers;
+import com.edm.edmfetchdataplatform.domain.EdmApplyOrderCheckResult;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +26,7 @@ public class EdmExcelServiceTest {
     public void createExcelTest(){
         EdmApplyOrder edmApplyOrder = new EdmApplyOrder();
 
-        EdmOrderCheckers edmOrderCheckers = new EdmOrderCheckers();
-        edmOrderCheckers.setChuShenChecker("建伟");
-        edmOrderCheckers.setCapacityChecker("葛新宇");
-        edmOrderCheckers.setCustomerServiceChecker("梁南");
-        edmOrderCheckers.setShuJuGroup("数据");
-        edmOrderCheckers.setShuJuGroupEmail("shuju@wo.cn");
+        EdmApplyOrderCheckResult edmApplyOrderCheckResult = new EdmApplyOrderCheckResult();
 
 
 
@@ -51,7 +46,7 @@ public class EdmExcelServiceTest {
         edmApplyOrder.setHowSupplement("不补充");
         edmApplyOrder.setMessageContext("今天心情真好，点这里~");
 
-//        edmExcelService.createEdmApplyExcelOrder(edmApplyOrder, edmOrderCheckers,"/Users/lifei/Documents/servers/edm_upload_files/2019");
+//        edmExcelService.createEdmApplyExcelOrder(edmApplyOrder, edmApplyOrderCheckResult,"/Users/lifei/Documents/servers/edm_upload_files/2019");
 
     }
 }

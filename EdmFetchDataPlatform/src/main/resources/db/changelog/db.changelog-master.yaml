@@ -366,6 +366,119 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                   remarks: 转发流转单的id
+        - createTable:
+            tableName: edm_order_result
+            remarks: 群发流转单结果
+            columns:
+              - column:
+                  name: ocid
+                  type: varchar(200)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                  remarks: 流转单结果的id， UUID
+              - column:
+                  name: first_checker
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+                  remarks: 初审人的姓名
+              - column:
+                  name: first_result
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+                  remarks: 初审人的结果
+              - column:
+                  name: second_checker
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+                  remarks: 二次审核，能力组，审核人姓名
+              - column:
+                  name: second_result
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+                  remarks: 二次审核，结果
+              - column:
+                  name: paiqiyixiang
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+                  remarks: 排期结果
+              - column:
+                  name: third_checker
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+                  remarks: 第三次审核人姓名，客服组审核
+              - column:
+                  name: paiqi_result
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+                  remarks: 第三次审核， 排期的确认结果
+              - column:
+                  name: qunfafangan_result
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+                  remarks: 第三次审核， 群发方案的确认结果
+              - column:
+                  name: third_beizhu
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+                  remarks: 第三次审核，备注
+              - column:
+                  name: shuju_username
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+                  remarks: 数据组姓名
+              - column:
+                  name: shuju_email
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+                  remarks: 数据组的邮箱
+              - column:
+                  name: datacode
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+                  remarks: 数据编码
+              - column:
+                  name: datares_sheet
+                  type: varchar(200)
+                  constraints:
+                    nullable: true
+                  remarks: 提数结果附属sheet的名称
+              - column:
+                  name: datausers_des
+                  type: varchar(500)
+                  constraints:
+                    nullable: true
+                  remarks: 用户数据说明
+              - column:
+                  name: actual_usernum
+                  type: varchar(500)
+                  constraints:
+                    nullable: true
+                  remarks: 实际的用户量
+              - column:
+                  name: update_time
+                  type: date
+                  constraints:
+                    nullable: true
+                  remarks: 更新时间
+              - column:
+                  name: oid
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+                  remarks: 转发流转单的id
 
         - sql:
             dbms: mysql
@@ -394,87 +507,6 @@ databaseChangeLog:
         - sql:
             dbms: mysql
             sql: ALTER TABLE edm_apply_files CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
-
-        - insert:
-            tableName: edmers
-            columns:
-              - column:
-                  name: username
-                  value: edm
-              - column:
-                  name: password
-                  value: $2a$10$z0WVGwrlOiZ1WuFxpqa2T.byuiP2zylh2KCz1wGL9DeHdZUOPhVL2
-              - column:
-                  name: email
-                  value: shuju@wo.cn
-              - column:
-                  name: department
-                  value: 数据组
-              - column:
-                  name: level
-                  value: 1
-        - insert:
-            tableName: edm_roles
-            columns:
-              - column:
-                  name: role_name
-                  value: ROLE_EDM
-              - column:
-                  name: role_desc
-                  value: 开发者权限，能够进行所有操作
-        - insert:
-            tableName: edm_roles
-            columns:
-              - column:
-                  name: role_name
-                  value: ROLE_OPERATION
-              - column:
-                  name: role_desc
-                  value: 运营者组权限，能够进行EDM提数申请
-        - insert:
-            tableName: edm_roles
-            columns:
-              - column:
-                  name: role_name
-                  value: ROLE_APPLY
-              - column:
-                  name: role_desc
-                  value: 申请组权限，对edm提数申请进行初步审核
-        - insert:
-            tableName: edm_roles
-            columns:
-              - column:
-                  name: role_name
-                  value: ROLE_CAPACITY
-              - column:
-                  name: role_desc
-                  value: 能力组权限，对edm提数申请进行二次审核
-        - insert:
-            tableName: edm_roles
-            columns:
-              - column:
-                  name: role_name
-                  value: ROLE_CUSTOMER_SERVICE
-              - column:
-                  name: role_desc
-                  value: 客服组权限，对edm提数申请进行三次审核
-        - insert:
-            tableName: edm_roles
-            columns:
-              - column:
-                  name: role_name
-                  value: ROLE_SHUJU
-              - column:
-                  name: role_desc
-                  value: 数据组权限，对edm提数申请进行处理
-
-        - insert:
-            tableName: edmer_role_relation
-            columns:
-              - column:
-                  name: eid
-                  value: 1
-              - column:
-                  name: rid
-                  value: 1
-
+        - sql:
+            dbms: mysql
+            sql: ALTER TABLE edm_order_result CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
