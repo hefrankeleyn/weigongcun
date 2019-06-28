@@ -19,25 +19,16 @@ public class EdmApplyOrder {
      * 申请编号
      */
     private String oid;
-
     /**
      * 流转单的名称
      */
     private String orderName;
-    /**
-     * 流转单的发起人 id
-     */
-    private Integer eid;
 
     /**
-     * 申请单的组别
+     * edm 申请人
      */
-    private String edmerDepartment;
+    private Edmer edmer;
 
-    /**
-     * edm申请人
-     */
-    private String edmUserName;
     /**
      * 申请时间
      */
@@ -128,13 +119,7 @@ public class EdmApplyOrder {
         this.orderName = orderName;
     }
 
-    public Integer getEid() {
-        return eid;
-    }
 
-    public void setEid(Integer eid) {
-        this.eid = eid;
-    }
 
     public String getQunFaTypeDescription() {
         return qunFaTypeDescription;
@@ -204,22 +189,6 @@ public class EdmApplyOrder {
 
     public void setOid(String oid) {
         this.oid = oid;
-    }
-
-    public String getEdmerDepartment() {
-        return edmerDepartment;
-    }
-
-    public void setEdmerDepartment(String edmerDepartment) {
-        this.edmerDepartment = edmerDepartment;
-    }
-
-    public String getEdmUserName() {
-        return edmUserName;
-    }
-
-    public void setEdmUserName(String edmUserName) {
-        this.edmUserName = edmUserName;
     }
 
     public Date getApplyDate() {
@@ -319,14 +288,21 @@ public class EdmApplyOrder {
         this.nextEdmerId = nextEdmerId;
     }
 
+    public Edmer getEdmer() {
+        return edmer;
+    }
+
+    public void setEdmer(Edmer edmer) {
+        this.edmer = edmer;
+    }
+
+
     @Override
     public String toString() {
         return "EdmApplyOrder{" +
                 "oid='" + oid + '\'' +
                 ", orderName='" + orderName + '\'' +
-                ", eid=" + eid +
-                ", edmerDepartment='" + edmerDepartment + '\'' +
-                ", edmUserName='" + edmUserName + '\'' +
+                ", edmer=" + edmer +
                 ", applyDate=" + applyDate +
                 ", qunFaTypeDescription='" + qunFaTypeDescription + '\'' +
                 ", qunFaTypeStates=" + Arrays.toString(qunFaTypeStates) +
@@ -342,8 +318,9 @@ public class EdmApplyOrder {
                 ", messageContext='" + messageContext + '\'' +
                 ", conIds=" + Arrays.toString(conIds) +
                 ", orderState=" + orderState +
-                ", edmApplyFiles=" + edmApplyFiles +
                 ", nextEdmerId=" + nextEdmerId +
+                ", edmApplyOrderCheckResult=" + edmApplyOrderCheckResult +
+                ", edmApplyFiles=" + edmApplyFiles +
                 '}';
     }
 }

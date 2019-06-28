@@ -4,6 +4,7 @@
 .container table .caozuo,
 .container table .liuzhuandan,
 .container table .applier,
+.container table .applyDate,
 .container table tr th{
     text-align: center;
 }

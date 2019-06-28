@@ -24,15 +24,17 @@
         <tr>
             <th scope="col" class="xuhao" style="width: 8%;">序号</th>
             <th scope="col" class="liuzhuandan">流转单名称</th>
-            <th scope="col" class="applier" style="width: 15%;">申请人</th>
+            <th scope="col" class="applyDate" style="width: 11%;">申请时间</th>
+            <th scope="col" class="applier" style="width: 10%;">申请人</th>
             <th scope="col" class="caozuo" style="width: 18%;">操作</th>
         </tr>
         </thead>
         <tbody th:unless="${#lists.isEmpty(edmApplyOrders)}">
         <tr th:each="edmApplyOrder,edmApplyOrderStatus : ${edmApplyOrders}">
-            <th scope="row" class="xuhao" th:id="${edmApplyOrder.getEid()}" th:text="${edmApplyOrderStatus.count}">1</th>
+            <th scope="row" class="xuhao" th:id="${edmApplyOrder.getEdmer().getEid()}" th:text="${edmApplyOrderStatus.count}">1</th>
             <td class="liuzhuandan"><a href="#" th:text="${edmApplyOrder.getOrderName()}">沃油</a></td>
-            <td class="applier"><a href="#" th:text="${edmApplyOrder.getEdmUserName()}">小梁量</a></td>
+            <td class="applyDate" th:text="${#dates.format(edmApplyOrder.getApplyDate(), 'yyyy-MM-dd')}">2019-11-06</td>
+            <td class="applier" th:text="${edmApplyOrder.getEdmer().getUsername()}">小梁量</td>
             <td class="caozuo">
                 <div>
                     <a href="#" class="btn btn-info btn-sm active" role="button" aria-pressed="true">查看详情</a>

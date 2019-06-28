@@ -2,6 +2,7 @@ package com.edm.edmfetchdataplatform.service;
 
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrder;
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrderCheckResult;
+import com.edm.edmfetchdataplatform.domain.Edmer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +34,12 @@ public class EdmExcelServiceTest {
 
         edmApplyOrder.setOrderName("沃油料13期");
 
+        Edmer edmer = new Edmer();
+        edmer.setUsername("小谢");
+        edmer.setDepartment("运营组");
+
         // 申请人及组别
-        edmApplyOrder.setEdmUserName("小谢");
-        edmApplyOrder.setEdmerDepartment("运营组");
+        edmApplyOrder.setEdmer(edmer);
         edmApplyOrder.setQunFaTypeDescription("收入");
         edmApplyOrder.setQunFaSubjectAndContext("节日了，有活动");
         edmApplyOrder.setPaiQiYiXiang("2019年11月1日");

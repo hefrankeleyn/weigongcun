@@ -138,10 +138,8 @@ public class EdmFetchDataConditionController {
      */
     @RequestMapping(value = "/edmApplySubmit", method = RequestMethod.POST)
     public String edmApplySubmit(Authentication authentication,@RequestPart("edmFiles") MultipartFile[] edmFiles, EdmApplyOrder edmApplyOrder){
-
         // 获取用户名的邮箱
         String userEmail = authentication.getName();
-
         edmApplyOrderService.saveEdmApplyOrder(userEmail, edmFiles, edmApplyOrder);
         return "redirect:/home";
     }

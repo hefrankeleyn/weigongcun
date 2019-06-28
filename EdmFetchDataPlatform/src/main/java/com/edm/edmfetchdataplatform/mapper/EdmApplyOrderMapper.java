@@ -20,7 +20,7 @@ public interface EdmApplyOrderMapper {
     @Insert("INSERT INTO edm_apply_examine_order (`oid`,`order_name`,`eid`,`apply_date`,`qunfa_type_description`," +
             "`qunfa_subject_and_context`,`paiqi_yixiang`,`target_send_province`,`user_conditions`,`send_num`," +
             "`channel_sends`,`how_supplement`,`message_context`,`order_state`) " +
-            "VALUES (#{oid},#{orderName},#{eid},#{applyDate},#{qunFaTypeDescription}," +
+            "VALUES (#{oid},#{orderName},#{edmer.eid},#{applyDate},#{qunFaTypeDescription}," +
             "#{qunFaSubjectAndContext},#{paiQiYiXiang},#{targetSendProvince},#{userConditions}," +
             "#{sendNum},#{channelSends},#{howSupplement},#{messageContext},#{orderState})")
     void saveEdmApplyOrder(EdmApplyOrder edmApplyOrder);
@@ -37,7 +37,6 @@ public interface EdmApplyOrderMapper {
             "where 1=1 and oid=#{oid}")
     @Results(value = {@Result(column = "oid", property = "oid"),
             @Result(column = "order_name", property = "orderName"),
-            @Result(column = "eid", property = "eid"),
             @Result(column = "apply_date", property = "applyDate", javaType = java.util.Date.class),
             @Result(column = "qunfa_type_description", property = "qunFaTypeDescription"),
             @Result(column = "qunfa_subject_and_context", property = "qunFaSubjectAndContext"),
@@ -48,7 +47,9 @@ public interface EdmApplyOrderMapper {
             @Result(column = "channel_sends", property = "channelSends"),
             @Result(column = "how_supplement", property = "howSupplement"),
             @Result(property = "edmApplyFiles", column = "oid", javaType = List.class,
-                    many = @Many(select = "com.edm.edmfetchdataplatform.mapper.EdmApplyFileMapper.findEdmOrderFilesByOid"))
+                    many = @Many(select = "com.edm.edmfetchdataplatform.mapper.EdmApplyFileMapper.findEdmOrderFilesByOid")),
+            @Result(property = "edmer", column = "eid",
+                    one = @One(select = "com.edm.edmfetchdataplatform.mapper.EdmerMapper.findEdmerByEid"))
     })
     EdmApplyOrder findEdmApplyOrderByOid(String oid);
 
@@ -64,7 +65,6 @@ public interface EdmApplyOrderMapper {
             "where 1=1 and eid=#{eid} order by apply_date desc")
     @Results(value = {@Result(column = "oid", property = "oid"),
             @Result(column = "order_name", property = "orderName"),
-            @Result(column = "eid", property = "eid"),
             @Result(column = "apply_date", property = "applyDate", javaType = java.util.Date.class),
             @Result(column = "qunfa_type_description", property = "qunFaTypeDescription"),
             @Result(column = "qunfa_subject_and_context", property = "qunFaSubjectAndContext"),
@@ -75,7 +75,9 @@ public interface EdmApplyOrderMapper {
             @Result(column = "channel_sends", property = "channelSends"),
             @Result(column = "how_supplement", property = "howSupplement"),
             @Result(property = "edmApplyFiles", column = "oid", javaType = List.class,
-                    many = @Many(select = "com.edm.edmfetchdataplatform.mapper.EdmApplyFileMapper.findEdmOrderFilesByOid"))
+                    many = @Many(select = "com.edm.edmfetchdataplatform.mapper.EdmApplyFileMapper.findEdmOrderFilesByOid")),
+            @Result(property = "edmer", column = "eid",
+                    one = @One(select = "com.edm.edmfetchdataplatform.mapper.EdmerMapper.findEdmerByEid"))
     })
     List<EdmApplyOrder> findEdmApplyOrdersByEid(Integer eid);
 

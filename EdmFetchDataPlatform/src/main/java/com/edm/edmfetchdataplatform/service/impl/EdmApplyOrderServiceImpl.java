@@ -96,7 +96,13 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
 
         try {
             // 获取用户
-            Edmer edmer = edmerService.findEdmerByEmail(edmerEmail);
+
+            Edmer edmer = null;
+            if (edmApplyOrder.getEdmer() != null && edmApplyOrder.getEdmer().getEid() != null) {
+                edmer = edmerService.findEdmerByEid(edmApplyOrder.getEdmer().getEid());
+            }else {
+                edmer = edmerService.findEdmerByEmail(edmerEmail);
+            }
             // 创建 UUID， 流转单的主键
             String oid = MyIdGenerator.createUUID();
             // 保存流转单、保存流转单id与申请项的id
@@ -107,6 +113,8 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
             edmApplyOrder.setApplyDate(new Date());
             // 保存订单
             edmApplyOrderMapper.saveEdmApplyOrder(edmApplyOrder);
+            // 保存流转单申请者
+            edmApplyOrder.setEdmer(edmer);
 
 
             // 创建当前流转单的目录，该流转单及附件保存在同一个目录里面
@@ -191,13 +199,14 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
 
     /**
      * 根据用户邮箱查询该用户申请的流转单
+     *
      * @param email
      * @return
      */
     @Override
     public List<EdmApplyOrder> findEdmApplyOrdersByEmail(String email) {
         Edmer edmer = edmerService.findEdmerByEmail(email);
-        if (edmer !=null){
+        if (edmer != null) {
             return findEdmApplyOrdersByEid(edmer.getEid());
         }
         return null;
@@ -206,6 +215,7 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
 
     /**
      * 根据eid查询 EdmApplyOrders
+     *
      * @param eid
      * @return
      */
@@ -306,11 +316,8 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
             targetDescription.put(edmTargetDescriptions.get(i).getTarget(), edmTargetDescriptions.get(i).getDescription());
         }
 
-        // 拼接 eid
-        edmApplyOrder.setEid(edmer.getEid());
-        // 拼接组别、和用户名
-        edmApplyOrder.setEdmerDepartment(edmer.getDepartment());
-        edmApplyOrder.setEdmUserName(edmer.getUsername());
+        // 申请人
+        edmApplyOrder.setEdmer(edmer);
         // 拼接目标群发省份
         StringBuilder qunfaProvinceAndCityConditions = new StringBuilder();
         // 用户数据要求

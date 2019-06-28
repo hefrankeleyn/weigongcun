@@ -146,7 +146,7 @@ public class EdmExcelServiceImpl implements EdmExcelService {
 
         // 创建第四行 申请人及组别 群发类型 群发主题及短信内偶然
         createRowThreeToTowTenAndCellOneToCellFour(workbook, HorizontalAlignment.CENTER, false, (short) 11,
-                sheet, 3, edmApplyOrder.getEdmerDepartment() + "-" + edmApplyOrder.getEdmUserName(),
+                sheet, 3, edmApplyOrder.getEdmer().getDepartment() + "-" + edmApplyOrder.getEdmer().getUsername(),
                 edmApplyOrder.getQunFaTypeDescription(), edmApplyOrder.getQunFaSubjectAndContext());
         // 创建第五行
         // 排期意向	目标群发省	用户数据要求

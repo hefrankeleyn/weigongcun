@@ -30,17 +30,17 @@
         <div class="form-group">
             <div class="row">
                 <div class="col" hidden>
-                    <input type="text" class="form-control" id="eid" name="eid" th:value="*{eid}" hidden>
+                    <input type="text" class="form-control" id="eid" name="edmer.eid" th:value="*{edmer.getEid()}" hidden>
                 </div>
                 <div class="col">
                     <label for="edmerDepartment">组别：</label>
                     <input type="text" class="form-control" id="edmerDepartment" name="edmerDepartment"
-                           th:value="*{edmerDepartment}">
+                           th:value="*{edmer.getDepartment()}">
                 </div>
                 <div class="col">
                     <label for="edmUserName">申请人：</label>
                     <input type="text" class="form-control" id="edmUserName" name="edmUserName"
-                           th:value="*{edmUserName}">
+                           th:value="*{edmer.getUsername()}">
                 </div>
             </div>
         </div>
