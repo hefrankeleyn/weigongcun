@@ -111,8 +111,7 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
             edmApplyOrder.setOrderState(ExamineProgressState.READY_EXAMINE.getStatus());
             // 流转但的时间 保存
             edmApplyOrder.setApplyDate(new Date());
-            // 保存订单
-            edmApplyOrderMapper.saveEdmApplyOrder(edmApplyOrder);
+
             // 保存流转单申请者
             edmApplyOrder.setEdmer(edmer);
 
@@ -154,6 +153,11 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
             edmApplyOrderCheckResultService.saveEdmApplyOrderCheckResult(edmApplyOrderCheckResult);
 
 
+            edmApplyOrder.setEdmApplyOrderCheckResult(edmApplyOrderCheckResult);
+            // 保存订单
+            edmApplyOrderMapper.saveEdmApplyOrder(edmApplyOrder);
+
+
             // 将群发流转单生成excel
             EdmApplyFile edmApplyOrderExcel = edmExcelService.createEdmApplyExcelOrder(edmApplyOrder, edmApplyOrderCheckResult, uniqueFilePath);
 
@@ -162,6 +166,7 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
             // 将 申请流转单excel文件及其其附件信息保存到表中
             EdmApplyFile[] saveEdmApplyFiles = new EdmApplyFile[edmApplyFileList.size()];
             edmApplyFileService.saveEdmApplyFiles(edmApplyFileList.toArray(saveEdmApplyFiles));
+
 
 
             // 给申请组组长发送邮件，并抄送给申请人
@@ -181,6 +186,9 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
             // 发邮件
             logger.info(edmLiuZhuanEmailParameters.toString());
             edmSendEmailService.sendThymeleafEmail(edmLiuZhuanEmailParameters);
+
+
+
 
 
         } catch (IOException e) {

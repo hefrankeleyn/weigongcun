@@ -55,7 +55,9 @@ public class EdmApplyOrderServiceTest {
             for (EdmApplyOrder edmApplyOrder :
                     edmApplyOrders) {
                 System.out.println(edmApplyOrder);
+                System.out.println(edmApplyOrder.getEdmApplyOrderCheckResult());
             }
         }
     }
+
 }

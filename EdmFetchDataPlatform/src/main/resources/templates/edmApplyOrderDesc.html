@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EDM 流转单详情</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/bootstrap/js/bootstrap.js}"></script>
+
+    <!--    自定义的js-->
+    <script th:src="@{/js/header.js}"></script>
+
+    <!-- 自定义的css -->
+    <link rel="stylesheet" th:href="@{/css/edmApplyOrderDesc.css}">
+</head>
+
+<body>
+<nav th:replace="common/header :: header-navbar"></nav>
+<div class="container">
+    <h2 th:unless="${edmApplyOrder == null}" th:text="'《'+ ${edmApplyOrder.getOrderName()}+'》 流转单详情'">流转单详情页</h2>
+    <table style="table-layout:fixed" class="table table-bordered" th:unless="${edmApplyOrder == null}" th:object="${edmApplyOrder}">
+        <tr>
+            <td colspan="5">邮箱事业部群发流转单</td>
+        </tr>
+        <tr>
+            <td colspan="2" class="bianhao" th:text="|编号: *{oid}|">编号: XXXXXXXXXXXXX</td>
+            <td colspan="2" class="applyDate" th:text="|日期: *{applyDate}|">日期:</td>
+            <td>下一环节</td>
+        </tr>
+        <tr>
+            <td rowspan="10">申请人</td>
+            <td>申请人及组别</td>
+            <td>群发类型及群发方式</td>
+            <td>群发主题及短信内容</td>
+            <td rowspan="10">发所在组组长</td>
+        </tr>
+        <tr>
+            <td th:text="|*{edmer.department}'-'*{edmer.username}|">运营组-谢贞禄</td>
+            <td th:text="*{qunFaTypeDescription}">维系-邮件+短信</td>
+            <td th:text="*{qunFaSubjectAndContext}">权威播报：注意！10月起购物，一定要看清这个标识！</td>
+        </tr>
+        <tr>
+            <td>排期意向</td>
+            <td colspan="2">目标群发省</td>
+        </tr>
+        <tr>
+            <td th:text="*{paiQiYiXiang}">10月11日</td>
+            <td colspan="2" th:text="*{targetSendProvince}">全国（排除广东、北京）</td>
+        </tr>
+        <tr>
+            <td colspan="3">用户数据要求</td>
+        </tr>
+        <tr>
+            <td class="userCondition" colspan="3" th:text="*{userConditions}">
+                数据提取时间范围：<br>“近3个月”——2018年7月～2018年9月<br>目标用户1：2018年7-9月沃邮箱应用层活跃用户，取100万；<br>目标用户2：2018年7-9月沃邮箱基础层活跃用户，排除目标用户1，取100万；<br>目标用户3：2018年7-9月沃邮箱服务层活跃用户，排除目标用户1和目标用户2，取200万（100万+100万，分两批提取）<br>
+            </td>
+        </tr>
+        <tr>
+            <td>发送量</td>
+            <td>投递通道</td>
+            <td>目标用户不足时如何处理</td>
+        </tr>
+        <tr>
+            <td th:text="*{sendNum}">400W</td>
+            <td th:text="*{channelSends}">516516</td>
+            <td th:text="*{howSupplement}">其他</td>
+        </tr>
+        <tr>
+            <td colspan="3">短信内容</td>
+        </tr>
+        <tr>
+            <td colspan="3" class="messageContext" th:text="*{messageContext}">
+                【沃邮箱团队】权威播报：注意！10月起购物，一定要看清这个标识！详情${sl(L)}【中国联通沃邮箱】(“${sl(L)}”部分为页面链接)</td>
+        </tr>
+        <tr>
+            <td rowspan="2">申请组组长</td>
+            <td>内容初审</td>
+            <td></td>
+            <td></td>
+            <td rowspan="2">发能力组，<br>抄申请人</td>
+        </tr>
+        <tr>
+            <td th:text="*{edmApplyOrderCheckResult.firstCheckerUserName}">建伟</td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td rowspan="2">能力组<br><span th:text="*{edmApplyOrderCheckResult.secondCheckerUserName}">葛兴羽</span></td>
+            <td>排期结果</td>
+            <td>内容复审</td>
+            <td></td>
+            <td rowspan="2">发客服组，<br>抄申请人</td>
+        </tr>
+        <tr>
+            <td th:text="*{edmApplyOrderCheckResult.paiQiResult}">10月11日</td>
+            <td th:text="*{edmApplyOrderCheckResult.secondCheckerResult}">通过</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td rowspan="2">客服组<br><span th:text="*{edmApplyOrderCheckResult.thirdCheckerUserName}">梁南</span></td>
+            <td>排期确认</td>
+            <td>群发方案确认</td>
+            <td></td>
+            <td rowspan="2">审核通过：<br>发数据组，抄申请人<br>审核不通过：<br>返回申请人</td>
+        </tr>
+        <tr>
+            <td th:text="*{edmApplyOrderCheckResult.thirdCheckerPaiQiResult}">确认</td>
+            <td th:text="*{edmApplyOrderCheckResult.thirdCheckerQunFaFangAnResult}">确认</td>
+            <td th:text="*{edmApplyOrderCheckResult.thirdCheckBeiZhu}">请剔除黑名单用户和省分</td>
+        </tr>
+        <tr>
+            <td rowspan="2">数据组<br><span th:text="*{edmApplyOrderCheckResult.shuJuUserName}">数据</span><br><span th:text="|(*{edmApplyOrderCheckResult.shuJuEmail})|">(shuju@wo.cn)</span>
+            <td>用户数据链接</td>
+            <td>实际用户数据属性说明</td>
+            <td>实际用户数量</td>
+            <td rowspan="2">发申请人，<br>由申请人执行群发任务</td>
+        </tr>
+        <tr>
+            <td><a href="#" th:text="*{edmApplyOrderCheckResult.dataCode}"></a></td>
+            <td th:text="*{edmApplyOrderCheckResult.dataUsersDescription}"></td>
+            <td th:text="*{edmApplyOrderCheckResult.actualUserNum}"></td>
+        </tr>
+        <tr>
+            <td>备注说明</td>
+            <td colspan="3"></td>
+            <td>结束</td>
+        </tr>
+
+
+    </table>
+</div>
+</body>
+
+</html>

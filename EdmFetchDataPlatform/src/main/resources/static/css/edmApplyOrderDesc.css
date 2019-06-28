@@ -1,0 +1,15 @@
+/*
+ 让表格的内容居中
+*/
+table tr td{
+    text-align: center;
+}
+/*
+  部分内容居左
+*/
+table tr .userCondition,
+table tr .bianhao,
+table tr .applyDate,
+table tr .messageContext{
+    text-align: left;
+}

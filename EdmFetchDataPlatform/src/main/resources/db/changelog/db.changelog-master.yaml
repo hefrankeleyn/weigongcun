@@ -324,6 +324,12 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                   remarks: 流转单的状态
+              - column:
+                  name: ocid
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+                  remarks:  流转单结果的id， UUID
         - createTable:
             tableName: edm_apply_files
             remarks: 群发流转单的其他附件

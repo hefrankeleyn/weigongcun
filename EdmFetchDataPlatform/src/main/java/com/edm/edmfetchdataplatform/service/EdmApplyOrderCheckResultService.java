@@ -12,4 +12,19 @@ public interface EdmApplyOrderCheckResultService {
      * @param edmApplyOrderCheckResult
      */
     void saveEdmApplyOrderCheckResult(EdmApplyOrderCheckResult edmApplyOrderCheckResult);
+
+    /**
+     * 根据oid查询EdmApplyOrderCheckResult
+     * @param oid
+     * @return
+     */
+    EdmApplyOrderCheckResult findEdmApplyOrderCheckResultByOid(String oid);
+
+
+    /**
+     * 根据ocid 查询 EdmApplyOrderCheckResult
+     * @param ocid
+     * @return
+     */
+    EdmApplyOrderCheckResult findEdmApplyOrderCheckResultOcid(String ocid);
 }

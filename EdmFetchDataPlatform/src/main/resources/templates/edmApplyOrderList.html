@@ -32,12 +32,12 @@
         <tbody th:unless="${#lists.isEmpty(edmApplyOrders)}">
         <tr th:each="edmApplyOrder,edmApplyOrderStatus : ${edmApplyOrders}">
             <th scope="row" class="xuhao" th:id="${edmApplyOrder.getEdmer().getEid()}" th:text="${edmApplyOrderStatus.count}">1</th>
-            <td class="liuzhuandan"><a href="#" th:text="${edmApplyOrder.getOrderName()}">沃油</a></td>
+            <td class="liuzhuandan"><a th:href="@{|/edmApplyOrderController/findEdmApplyOrderByOid/${edmApplyOrder.getOid()}|}" th:text="${edmApplyOrder.getOrderName()}">沃油</a></td>
             <td class="applyDate" th:text="${#dates.format(edmApplyOrder.getApplyDate(), 'yyyy-MM-dd')}">2019-11-06</td>
             <td class="applier" th:text="${edmApplyOrder.getEdmer().getUsername()}">小梁量</td>
             <td class="caozuo">
                 <div>
-                    <a href="#" class="btn btn-info btn-sm active" role="button" aria-pressed="true">查看详情</a>
+                    <a th:href="@{|/edmApplyOrderController/findEdmApplyOrderByOid/${edmApplyOrder.getOid()}|}" class="btn btn-info btn-sm active" role="button" aria-pressed="true">查看详情</a>
                     <a href="#" class="btn btn-info btn-sm active" role="button" aria-pressed="true">流转进度</a>
                 </div>
             </td>

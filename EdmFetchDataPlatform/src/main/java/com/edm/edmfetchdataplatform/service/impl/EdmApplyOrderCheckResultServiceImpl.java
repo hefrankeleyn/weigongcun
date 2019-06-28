@@ -32,4 +32,25 @@ public class EdmApplyOrderCheckResultServiceImpl implements EdmApplyOrderCheckRe
             edmApplyOrderCheckResultMapper.saveEdmApplyOrderCheckResult(edmApplyOrderCheckResult);
         }
     }
+
+    /**
+     * 根据群发流转单的id查询流转单的流转情况
+     * @param oid
+     * @return
+     */
+    @Override
+    public EdmApplyOrderCheckResult findEdmApplyOrderCheckResultByOid(String oid) {
+        if (oid != null){
+            return edmApplyOrderCheckResultMapper.findEdmApplyOrderCheckResultByOid(oid);
+        }
+        return null;
+    }
+
+    @Override
+    public EdmApplyOrderCheckResult findEdmApplyOrderCheckResultOcid(String ocid) {
+        if (ocid == null){
+            return null;
+        }
+        return edmApplyOrderCheckResultMapper.findEdmApplyOrderCheckResultByOcid(ocid);
+    }
 }
