@@ -1,5 +1,6 @@
 package com.edm.edmfetchdataplatform.service;
 
+import com.edm.edmfetchdataplatform.base.EdmPage;
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,6 +59,13 @@ public class EdmApplyOrderServiceTest {
                 System.out.println(edmApplyOrder.getEdmApplyOrderCheckResult());
             }
         }
+    }
+
+    @Test
+    public void findPageEdmApplyOrdersByEmailTest(){
+        String email = "shuju@wo.cnn";
+        EdmPage<EdmApplyOrder> pageEdmApplyOrders = edmApplyOrderService.findPageEdmApplyOrdersByEmail(email);
+        System.out.println(pageEdmApplyOrders);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.edm.edmfetchdataplatform.controller;
 
+import com.edm.edmfetchdataplatform.base.EdmPage;
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrder;
 import com.edm.edmfetchdataplatform.service.EdmApplyOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,22 @@ public class EdmApplyOrderController {
         List<EdmApplyOrder> edmApplyOrders = edmApplyOrderService.findEdmApplyOrdersByEmail(userEmail);
         model.addAttribute("edmApplyOrders", edmApplyOrders);
         return "edmApplyOrderList";
+    }
+
+
+    /**
+     * 查询一页 edmApplyOrdersPage
+     * @param authentication
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/findPageCurrentUserEdmApplyOrders", method = RequestMethod.GET)
+    public String findPageCurrentUserEdmApplyOrders(Authentication authentication, Model model){
+        // 获取用户名的邮箱
+        String userEmail = authentication.getName();
+        EdmPage<EdmApplyOrder> pageEdmApplyOrders = edmApplyOrderService.findPageEdmApplyOrdersByEmail(userEmail);
+        model.addAttribute("pageEdmApplyOrders", pageEdmApplyOrders);
+        return "edmApplyOrdersPage";
     }
 
     /**

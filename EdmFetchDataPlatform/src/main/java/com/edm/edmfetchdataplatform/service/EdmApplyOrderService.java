@@ -1,6 +1,8 @@
 package com.edm.edmfetchdataplatform.service;
 
+import com.edm.edmfetchdataplatform.base.BaseQuery;
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrder;
+import com.edm.edmfetchdataplatform.base.EdmPage;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -50,6 +52,19 @@ public interface EdmApplyOrderService {
     List<EdmApplyOrder> findEdmApplyOrdersByEid(Integer eid);
 
 
+    /**
+     * 查询一页 EdmApplyOrder
+     * @param baseQuery
+     * @return
+     */
+    EdmPage<EdmApplyOrder> findPageEdmApplyOrdersByQuery(BaseQuery baseQuery);
+
+    /**
+     * 查询邮箱用户的 一页EdmApplyOrder
+     * @param email
+     * @return
+     */
+    EdmPage<EdmApplyOrder> findPageEdmApplyOrdersByEmail(String email);
 
 
 

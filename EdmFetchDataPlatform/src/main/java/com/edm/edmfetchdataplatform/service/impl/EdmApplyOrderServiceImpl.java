@@ -1,15 +1,15 @@
 package com.edm.edmfetchdataplatform.service.impl;
 
+import com.edm.edmfetchdataplatform.base.BaseQuery;
+import com.edm.edmfetchdataplatform.base.query.EdmApplyOrderQuery;
 import com.edm.edmfetchdataplatform.config.DataConfig;
 import com.edm.edmfetchdataplatform.domain.*;
 import com.edm.edmfetchdataplatform.domain.status.ExamineProgressState;
-import com.edm.edmfetchdataplatform.domain.status.GroupRole;
 import com.edm.edmfetchdataplatform.domain.status.IncludeState;
 import com.edm.edmfetchdataplatform.domain.translate.EdmLiuZhuanEmailParameters;
+import com.edm.edmfetchdataplatform.base.EdmPage;
 import com.edm.edmfetchdataplatform.mapper.EdmApplyOrderMapper;
 import com.edm.edmfetchdataplatform.service.*;
-import com.edm.edmfetchdataplatform.tools.MyArrayUtil;
-import com.edm.edmfetchdataplatform.tools.MyDateUtil;
 import com.edm.edmfetchdataplatform.tools.MyFileUtil;
 import com.edm.edmfetchdataplatform.tools.MyIdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -231,6 +231,43 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
         }
         return null;
     }
+
+
+    /**
+     * 查询邮箱用户一页 EdmApplyOrder
+     * @param email
+     * @return
+     */
+    @Override
+    public EdmPage<EdmApplyOrder> findPageEdmApplyOrdersByEmail(String email) {
+        Edmer edmer = edmerService.findEdmerByEmail(email);
+        EdmApplyOrderQuery edmApplyOrderQuery = new EdmApplyOrderQuery();
+        if (edmer!=null){
+            edmApplyOrderQuery.setEid(edmer.getEid());
+        }
+        return findPageEdmApplyOrdersByQuery(edmApplyOrderQuery);
+    }
+
+    /**
+     * 查询一页
+     * @param baseQuery
+     * @return
+     */
+    @Override
+    public EdmPage<EdmApplyOrder> findPageEdmApplyOrdersByQuery(BaseQuery baseQuery) {
+        // 查询总的记录条数
+        Map<String, Object> keyValues = baseQuery.buildWhere();
+        Integer eid = (Integer) keyValues.get("eid");
+        // 查询总的条数
+        Integer totalNum = edmApplyOrderMapper.countEdmApplyOrdersByEid(eid);
+        EdmPage<EdmApplyOrder> edmPage = new EdmPage<>(totalNum, baseQuery.getCurrentPage(), baseQuery.getPageSize());
+        if (totalNum!=null && totalNum >0){
+            List<EdmApplyOrder> edmApplyOrders = edmApplyOrderMapper.findPageEdmApplyOrdersByEid(eid, edmPage.getCurrentPageFirstItemNum(), edmPage.getPageSize());
+            edmPage.setPageObjList(edmApplyOrders);
+        }
+        return edmPage;
+    }
+
 
     /**
      * 上传文件，并保存edmApplyFile
