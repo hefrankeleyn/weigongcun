@@ -100,7 +100,7 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
             Edmer edmer = null;
             if (edmApplyOrder.getEdmer() != null && edmApplyOrder.getEdmer().getEid() != null) {
                 edmer = edmerService.findEdmerByEid(edmApplyOrder.getEdmer().getEid());
-            }else {
+            } else {
                 edmer = edmerService.findEdmerByEmail(edmerEmail);
             }
             // 创建 UUID， 流转单的主键
@@ -168,7 +168,6 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
             edmApplyFileService.saveEdmApplyFiles(edmApplyFileList.toArray(saveEdmApplyFiles));
 
 
-
             // 给申请组组长发送邮件，并抄送给申请人
             EdmLiuZhuanEmailParameters edmLiuZhuanEmailParameters = new EdmLiuZhuanEmailParameters();
             edmLiuZhuanEmailParameters.setEmailTo(applyGroupEdmer.getEmail());
@@ -186,9 +185,6 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
             // 发邮件
             logger.info(edmLiuZhuanEmailParameters.toString());
             edmSendEmailService.sendThymeleafEmail(edmLiuZhuanEmailParameters);
-
-
-
 
 
         } catch (IOException e) {
@@ -339,13 +335,14 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
             if (excludeIf(edmCondition.getProvinceIf()) && excludeIf(edmCondition.getCityIf())) {
                 qunfaProvinceAndCityConditions.append("全国。");
             } else {
-                // 判断省份
-                setQunFaProvinceValue(edmCondition.getProvinceOpt(), edmCondition.getProvinceNames(), qunfaProvinceAndCityConditions);
-                // 判断城市
-                setQunFaCityValue(edmCondition.getCityOpt(), edmCondition.getCityNames(), qunfaProvinceAndCityConditions);
+                // 判断省份 和城市
+                setQunFaProvinceAndCityValue(edmCondition.getProvinceOpt(), edmCondition.getCityOpt(),
+                                             edmCondition.getProvinceNames(), edmCondition.getCityNames(),
+                                             qunfaProvinceAndCityConditions);
+
             }
             // 添加换行符
-            qunfaProvinceAndCityConditions.append("\r\n");
+            qunfaProvinceAndCityConditions.append(";\r\n");
 
             //
             usersDataCondition.append("目标用户" + (i + 1) + ": ");
@@ -379,32 +376,41 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
     }
 
     /**
-     * 拼接目标群发省份
+     * 拼接省份和城市标识
      *
-     * @param state
-     * @param desc
+     * @param provinceStatue
+     * @param cityState
+     * @param provinceDesc
+     * @param cityDesc
      * @param sb
      */
-    private void setQunFaProvinceValue(Integer state, String desc, StringBuilder sb) {
-        if (state == IncludeState.INCLUDE.getState()) {
-            sb.append("包含省份：" + desc + "，  ");
-        } else if (state == IncludeState.EXCLUDE.getState()) {
-            sb.append("排除城市：" + desc + "，  ");
+    private void setQunFaProvinceAndCityValue(Integer provinceStatue, Integer cityState, String provinceDesc, String cityDesc, StringBuilder sb) {
+        // 省份信息
+        if (provinceStatue == IncludeState.INCLUDE.getState()) {
+            sb.append("包含省份：" + provinceDesc);
+        } else if (provinceStatue == IncludeState.EXCLUDE.getState()) {
+            sb.append("排除省份：" + provinceDesc);
+        }
+        // 添加对城市操作的信息
+        if (cityState == IncludeState.INCLUDE.getState()) {
+            // 添加逗号
+            ifProvinceSpilt(provinceStatue, sb);
+            sb.append("包含城市：" + cityDesc);
+        } else if (cityState == IncludeState.EXCLUDE.getState()) {
+            // 添加逗号
+            ifProvinceSpilt(provinceStatue, sb);
+            sb.append("排除城市：" + cityDesc);
         }
     }
 
     /**
-     * 拼接城市
-     *
-     * @param state
-     * @param desc
+     * @param provinceStatue
      * @param sb
      */
-    private void setQunFaCityValue(Integer state, String desc, StringBuilder sb) {
-        if (state == IncludeState.INCLUDE.getState()) {
-            sb.append("包含城市：" + desc + "   ");
-        } else if (state == IncludeState.EXCLUDE.getState()) {
-            sb.append("排除城市：" + desc + "   ");
+    private void ifProvinceSpilt(Integer provinceStatue, StringBuilder sb) {
+        // 添加分割号
+        if (provinceStatue == IncludeState.INCLUDE.getState() || provinceStatue == IncludeState.EXCLUDE.getState()) {
+            sb.append("，");
         }
     }
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * @Date 2019-06-27
@@ -19,6 +20,8 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/edmApplyOrderController")
 public class EdmApplyOrderController {
+
+    private static final Logger logger= Logger.getLogger("com.edm.edmfetchdataplatform.controller.EdmApplyOrderController");
 
     @Autowired
     private EdmApplyOrderService edmApplyOrderService;
@@ -47,7 +50,17 @@ public class EdmApplyOrderController {
     @RequestMapping(value = "/findEdmApplyOrderByOid/{oid}", method = RequestMethod.GET)
     public String findEdmApplyOrderByOid(@PathVariable("oid") String oid, Model model){
         EdmApplyOrder edmApplyOrder = edmApplyOrderService.findEdmApplyOrderByOid(oid);
+        // 将\r\n 换成 <br>
+        if (edmApplyOrder.getTargetSendProvince()!=null){
+            edmApplyOrder.setTargetSendProvince(edmApplyOrder.getTargetSendProvince().replaceAll("\r\n", "<br>"));
+        }
+        // 将\r\n 换成 <br>
+        if (edmApplyOrder.getUserConditions()!=null){
+            edmApplyOrder.setUserConditions(edmApplyOrder.getUserConditions().replaceAll("\r\n","<br>"));
+        }
+        // 将数据放到模型中
         model.addAttribute("edmApplyOrder", edmApplyOrder);
+        logger.info(edmApplyOrder.toString());
         return "edmApplyOrderDesc";
     }
 }

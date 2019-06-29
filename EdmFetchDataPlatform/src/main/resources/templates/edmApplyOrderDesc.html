@@ -9,13 +9,16 @@
     <title>EDM 流转单详情</title>
     <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.css}">
     <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/popper.min.js}"></script>
     <script th:src="@{/bootstrap/js/bootstrap.js}"></script>
-
-    <!--    自定义的js-->
+    <!--    自定义的js  所有页面公用-->
     <script th:src="@{/js/header.js}"></script>
 
     <!-- 自定义的css -->
     <link rel="stylesheet" th:href="@{/css/edmApplyOrderDesc.css}">
+<!--    自定义js-->
+    <script th:src="@{/js/edmApplyOrderDesc.js}"></script>
+
 </head>
 
 <body>
@@ -28,35 +31,44 @@
         </tr>
         <tr>
             <td colspan="2" class="bianhao" th:text="|编号: *{oid}|">编号: XXXXXXXXXXXXX</td>
-            <td colspan="2" class="applyDate" th:text="|日期: *{applyDate}|">日期:</td>
+            <td colspan="2" class="applyDate" th:text="|日期: *{#dates.format(applyDate, 'yyyy-MM-dd')}|">日期:</td>
             <td>下一环节</td>
         </tr>
         <tr>
-            <td rowspan="10">申请人</td>
+            <td rowspan="8">申请人</td>
             <td>申请人及组别</td>
             <td>群发类型及群发方式</td>
             <td>群发主题及短信内容</td>
-            <td rowspan="10">发所在组组长</td>
+            <td rowspan="8">发所在组组长</td>
         </tr>
         <tr>
             <td th:text="|*{edmer.department}'-'*{edmer.username}|">运营组-谢贞禄</td>
             <td th:text="*{qunFaTypeDescription}">维系-邮件+短信</td>
-            <td th:text="*{qunFaSubjectAndContext}">权威播报：注意！10月起购物，一定要看清这个标识！</td>
+            <td th:text="*{qunFaSubjectAndContext}">
+                <span th:text="*{qunFaSubjectAndContext!=null}?*{#strings.substring(qunFaSubjectAndContext, 0, 10)}:''"></span>
+                <span th:if="*{qunFaSubjectAndContext!=null && #strings.length(qunFaSubjectAndContext)>10}">
+                    <button data-toggle="popover" title="群发主题及短信内容" class="btn btn-link py-0 px-0" th:data-content="*{qunFaSubjectAndContext}" data-html="true">查看全文</button>
+                </span>
+            </td>
         </tr>
         <tr>
             <td>排期意向</td>
-            <td colspan="2">目标群发省</td>
+            <td>目标群发省</td>
+            <td>用户数据要求</td>
         </tr>
         <tr>
             <td th:text="*{paiQiYiXiang}">10月11日</td>
-            <td colspan="2" th:text="*{targetSendProvince}">全国（排除广东、北京）</td>
-        </tr>
-        <tr>
-            <td colspan="3">用户数据要求</td>
-        </tr>
-        <tr>
-            <td class="userCondition" colspan="3" th:text="*{userConditions}">
-                数据提取时间范围：<br>“近3个月”——2018年7月～2018年9月<br>目标用户1：2018年7-9月沃邮箱应用层活跃用户，取100万；<br>目标用户2：2018年7-9月沃邮箱基础层活跃用户，排除目标用户1，取100万；<br>目标用户3：2018年7-9月沃邮箱服务层活跃用户，排除目标用户1和目标用户2，取200万（100万+100万，分两批提取）<br>
+            <td class="sendProvinces">
+                <span th:utext="*{targetSendProvince!=null}?*{#strings.substring(targetSendProvince, 0, 32)}:''"></span>
+                <span th:if="*{targetSendProvince!=null && #strings.length(targetSendProvince)>32}">
+                    <button data-toggle="popover" title="目标群发省份" class="btn btn-link py-0 px-0" th:data-content="*{targetSendProvince}" data-html="true">查看全文</button>
+                </span>
+            </td>
+            <td class="userCondition">
+                <span th:text="*{userConditions!=null}?*{#strings.substring(userConditions, 0, 32)}:''"></span>
+                <span th:if="*{userConditions!=null && #strings.length(userConditions)>32}">
+                    <button data-toggle="popover" title="用户数据要求" class="btn btn-link py-0 px-0" th:data-content="*{userConditions}" data-html="true">查看全文</button>
+                </span>
             </td>
         </tr>
         <tr>
@@ -74,7 +86,11 @@
         </tr>
         <tr>
             <td colspan="3" class="messageContext" th:text="*{messageContext}">
-                【沃邮箱团队】权威播报：注意！10月起购物，一定要看清这个标识！详情${sl(L)}【中国联通沃邮箱】(“${sl(L)}”部分为页面链接)</td>
+                <span th:text="*{messageContext!=null}?*{#strings.substring(messageContext, 0, 50)}:''"></span>
+                <span th:if="*{messageContext!=null && #strings.length(messageContext)>50}">
+                    <button data-toggle="popover" title="短信内容" class="btn btn-link py-0 px-0" th:data-content="*{messageContext}" data-html="true">查看全文</button>
+                </span>
+            </td>
         </tr>
         <tr>
             <td rowspan="2">申请组组长</td>

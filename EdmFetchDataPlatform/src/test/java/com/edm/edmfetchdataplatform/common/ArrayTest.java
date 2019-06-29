@@ -1,5 +1,6 @@
 package com.edm.edmfetchdataplatform.common;
 
+import com.edm.edmfetchdataplatform.tools.MyArrayUtil;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -22,6 +23,14 @@ public class ArrayTest {
         String[] names = new String[nameList.size()];
 
         System.out.println(Arrays.toString(nameList.toArray(names)));
+    }
+
+    @Test
+    public void arrayToStrTest(){
+        String[] provinces = new String[]{"aaa","bbb"};
+        String proStr = MyArrayUtil.arrayToStr(provinces);
+        System.out.println(proStr);
+
     }
 
     @Test

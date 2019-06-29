@@ -10,6 +10,7 @@ table tr td{
 table tr .userCondition,
 table tr .bianhao,
 table tr .applyDate,
+table tr .sendProvinces,
 table tr .messageContext{
     text-align: left;
 }

@@ -15,7 +15,7 @@ public class MyArrayUtil {
             if(i == array.length-1){
                 sb.append(array[i]);
             }else {
-                sb.append(array[i]+ ",");
+                sb.append(array[i]+ "、");
             }
         }
         return sb.toString();
@@ -30,7 +30,7 @@ public class MyArrayUtil {
         if(str == null || str.trim().equals("")){
             return null;
         }else {
-            String[] array = str.split(",");
+            String[] array = str.split("、");
             return array;
         }
     }
