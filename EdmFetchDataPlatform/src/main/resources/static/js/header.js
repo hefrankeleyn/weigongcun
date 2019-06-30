@@ -47,7 +47,6 @@ $(document).ready(function () {
     function addActiveForA(item) {
         // 为父类的li添加active
         // 判断当前class包含 dropdown-item 不
-        console.log($(item).attr("class"));
         if($(item).hasClass("dropdown-item")){
             // 为父元素添加 active
             $(item).parent().parent(".nav-item").addClass("active");

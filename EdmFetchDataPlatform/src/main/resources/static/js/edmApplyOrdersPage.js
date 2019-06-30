@@ -166,6 +166,12 @@ $(document).ready(function () {
 
     }
 
+    /**
+     * 分页查询 ajax
+     * @param headers
+     * @param data
+     * @param url
+     */
     function ajaxFindPage(headers, data, url) {
         $.ajax({
             type: "POST",
@@ -179,11 +185,76 @@ $(document).ready(function () {
                 var status = response.status;
                 if (status == 0) {
                     var result = response.result;
-                    console.log(result);
+                    // table 的tr
+                    reloadTableTrs(result.pageObjList);
+                    // 分页的html
+                    reloadPageHtml(result);
                 } else {
                     console.error("Ajax Exception: " + url);
                 }
             }
         });
+    }
+
+    /**
+     * 重新加载分页的html
+     */
+    function reloadPageHtml(edmPage) {
+        // 修改隐藏域的值
+        // 修改总页面数
+        $(".container nav #pageValue input[name='pageSize']").val(edmPage.pageSize);
+        // 修改当前页面数
+        $(".container nav #pageValue input[name='currentPageNum']").val(edmPage.currentPageNum);
+        // 修改一页的记录条数
+        $(".container nav #pageValue input[name='totalPageNum']").val(edmPage.totalPageNum);
+
+        // 移除就得分页html
+        $(".container nav .pagination").remove();
+        // 重新添加分页的标签
+        initPageHtml();
+    }
+
+    /**
+     * 刷新table下面tr
+     */
+    function reloadTableTrs(edmApplyOrderList) {
+        // 查看详情的url
+        var rootUrl = $.projectRootUrl() + "/edmApplyOrderController/findEdmApplyOrderByOid/";
+        var tbody = $(".container table tbody");
+        // 删除所有的tr
+        tbody.children("tr").remove();
+        // 添加新的tr
+        for (var i=0; i<edmApplyOrderList.length; i++){
+            var tr = $("<tr></tr>")
+            var xuhaoTh = $("<th scope='row' class='xuhao'></th>").text(i+1);
+            xuhaoTh.attr("id", edmApplyOrderList[i].edmer.eid);
+            tr.append(xuhaoTh);
+            // 流转单的名字
+            var liuZhuanDanNameTd = $("<td class='liuzhuandan'></td>");
+            var xiangqingA = $("<a></a>").attr("href", rootUrl + edmApplyOrderList[i].oid);
+            xiangqingA.text(edmApplyOrderList[i].orderName);
+            liuZhuanDanNameTd.append(xiangqingA);
+            tr.append(liuZhuanDanNameTd);
+            // 申请时间
+            var applyDateTd = $("<td class='applyDate'></td>").text($.date(edmApplyOrderList[i].applyDate));
+            tr.append(applyDateTd);
+            // 申请人
+            var applierTd = $("<td class='applier'></td>").text(edmApplyOrderList[i].edmer.username);
+            tr.append(applierTd);
+            // 操作
+            var optionTd = $("<td class='caozuo'></td>");
+            var caoZouDiv = $("<div></div>");
+            var showDescA = $("<a class='btn btn-info btn-sm mr-1 active' role='button' aria-pressed='true'>查看详情</a>");
+            showDescA.attr("href", rootUrl + edmApplyOrderList[i].oid);
+            var jinduTiaoA = $("<a class='btn btn-info btn-sm active' role='button' aria-pressed='true'>流转进度</a>");
+            jinduTiaoA.attr("href", "#");
+            caoZouDiv.append(showDescA);
+            caoZouDiv.append(jinduTiaoA);
+            optionTd.append(caoZouDiv);
+            tr.append(optionTd);
+            tbody.append(tr);
+        }
+
+
     }
 });
