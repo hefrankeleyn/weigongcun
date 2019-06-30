@@ -1,15 +1,18 @@
 package com.edm.edmfetchdataplatform.controller;
 
 import com.edm.edmfetchdataplatform.base.EdmPage;
+import com.edm.edmfetchdataplatform.base.query.EdmApplyOrderQuery;
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrder;
+import com.edm.edmfetchdataplatform.domain.Edmer;
+import com.edm.edmfetchdataplatform.domain.ResponseResult;
+import com.edm.edmfetchdataplatform.domain.status.ResultStatus;
 import com.edm.edmfetchdataplatform.service.EdmApplyOrderService;
+import com.edm.edmfetchdataplatform.service.EdmerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -26,6 +29,9 @@ public class EdmApplyOrderController {
 
     @Autowired
     private EdmApplyOrderService edmApplyOrderService;
+
+    @Autowired
+    private EdmerService edmerService;
 
 
     /**
@@ -53,10 +59,28 @@ public class EdmApplyOrderController {
     public String findPageCurrentUserEdmApplyOrders(Authentication authentication, Model model){
         // 获取用户名的邮箱
         String userEmail = authentication.getName();
+        Edmer edmer = edmerService.findEdmerByEmail(userEmail);
         EdmPage<EdmApplyOrder> pageEdmApplyOrders = edmApplyOrderService.findPageEdmApplyOrdersByEmail(userEmail);
         model.addAttribute("pageEdmApplyOrders", pageEdmApplyOrders);
+        model.addAttribute("edmer", edmer);
         return "edmApplyOrdersPage";
     }
+
+    /**
+     * 根据 EdmApplyOrderQuery 查询一页 EdmApplyOrder
+     * @param edmApplyOrderQuery
+     * @return
+     */
+    @RequestMapping(value = "/findPageCurrentUserEdmApplyOrdersByQuery", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseResult findPageCurrentUserEdmApplyOrdersByQuery(@RequestBody EdmApplyOrderQuery edmApplyOrderQuery){
+        // 获取用户名的邮箱
+        Integer eid = edmApplyOrderQuery.getEid();
+        EdmPage<EdmApplyOrder> pageEdmApplyOrders = edmApplyOrderService.findPageEdmApplyOrdersByQuery(edmApplyOrderQuery);
+        return new ResponseResult(ResultStatus.SUCCESS, pageEdmApplyOrders);
+    }
+
+
 
     /**
      * 根据oid 查询群发流转单

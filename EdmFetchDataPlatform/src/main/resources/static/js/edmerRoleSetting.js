@@ -110,6 +110,7 @@ $(document).ready(function () {
             rids.push($(selectedOptions[i]).attr("value"));
         }
         var eid = $(".card .card-body .card-text #eid").val();
+        // 将值转化为sjon格式
         var data = JSON.stringify({"eid": eid, "rids": rids});
         var url = $.projectRootUrl() + "/edmerController/updateEdmerRoles";
         // 获取 token

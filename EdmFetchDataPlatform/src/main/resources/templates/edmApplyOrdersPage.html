@@ -13,6 +13,8 @@
 
     <!--    自定义js-->
     <script th:src="@{/js/header.js}"></script>
+    <!--    自定义的js 插件-->
+    <script th:src="@{/js/url-plugins.js}"></script>
     <!--    自定义的css-->
     <link rel="stylesheet" th:href="@{/css/edmApplyOrdersPage.css}">
 <!--    自定义js-->
@@ -55,9 +57,11 @@
     </table>
     <nav>
         <ul hidden id="pageValue">
-            <input name="pageSize" th:value="*{pageSize}" hidden>
-            <input name="currentPageNum" th:value="*{currentPageNum}" hidden>
-            <input name="totalPageNum" th:value="*{totalPageNum}" hidden>
+            <input type="hidden" name="eid" th:value="${edmer.getEid()}">
+            <input type="hidden" th:name="${_csrf.getParameterName()}" th:value="${_csrf.getToken()}">
+            <input type="hidden" name="pageSize" th:value="*{pageSize}">
+            <input type="hidden" name="currentPageNum" th:value="*{currentPageNum}">
+            <input type="hidden" name="totalPageNum" th:value="*{totalPageNum}">
         </ul>
     </nav>
     <div th:if="${#lists.isEmpty(pageEdmApplyOrders.getPageObjList())}">

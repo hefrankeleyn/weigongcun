@@ -78,7 +78,7 @@ $(document).ready(function () {
                 var status = response.status;
                 if(status == 0){
                     var result = response.result;
-                    removeAndCreateMultipleCitySelect(result)
+                    removeAndCreateMultipleCitySelect(result);
                 }else {
                     console.error("Ajax Exception: " + url);
                 }
