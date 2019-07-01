@@ -18,7 +18,7 @@
     <script th:src="@{/js/date-plugin.js}"></script>
     <!--    自定义的css-->
     <link rel="stylesheet" th:href="@{/css/edmApplyOrdersPage.css}">
-<!--    自定义js-->
+    <!--    自定义js-->
     <script th:src="@{/js/edmApplyOrdersPage.js}"></script>
 </head>
 <body>
@@ -50,7 +50,8 @@
                 <div>
                     <a th:href="@{|/edmApplyOrderController/findEdmApplyOrderByOid/${edmApplyOrder.getOid()}|}"
                        class="btn btn-info btn-sm active" role="button" aria-pressed="true">查看详情</a>
-                    <a href="#" class="btn btn-info btn-sm active" role="button" aria-pressed="true">流转进度</a>
+                    <a th:href="@{|/edmApplyOrderController/findEdmApplyOrderProgress/${edmApplyOrder.getOid()}|}"
+                       class="btn btn-info btn-sm active" role="button" aria-pressed="true">流转进度</a>
                 </div>
             </td>
         </tr>

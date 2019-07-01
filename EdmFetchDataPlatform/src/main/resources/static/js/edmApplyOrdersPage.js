@@ -219,7 +219,8 @@ $(document).ready(function () {
      */
     function reloadTableTrs(edmApplyOrderList) {
         // 查看详情的url
-        var rootUrl = $.projectRootUrl() + "/edmApplyOrderController/findEdmApplyOrderByOid/";
+        var rootDescUrl = $.projectRootUrl() + "/edmApplyOrderController/findEdmApplyOrderByOid/";
+        var rootProgressUrl = $.projectRootUrl() + "/edmApplyOrderController/findEdmApplyOrderProgress/";
         var tbody = $(".container table tbody");
         // 删除所有的tr
         tbody.children("tr").remove();
@@ -245,11 +246,12 @@ $(document).ready(function () {
             var optionTd = $("<td class='caozuo'></td>");
             var caoZouDiv = $("<div></div>");
             var showDescA = $("<a class='btn btn-info btn-sm mr-1 active' role='button' aria-pressed='true'>查看详情</a>");
-            showDescA.attr("href", rootUrl + edmApplyOrderList[i].oid);
-            var jinduTiaoA = $("<a class='btn btn-info btn-sm active' role='button' aria-pressed='true'>流转进度</a>");
-            jinduTiaoA.attr("href", "#");
+            showDescA.attr("href", rootDescUrl + edmApplyOrderList[i].oid);
+            var jinDuTiaoA = $("<a class='btn btn-info btn-sm active' role='button' aria-pressed='true'>流转进度</a>");
+            jinDuTiaoA.attr("href", rootProgressUrl + edmApplyOrderList[i].oid);
+            jinDuTiaoA.attr("href", "#");
             caoZouDiv.append(showDescA);
-            caoZouDiv.append(jinduTiaoA);
+            caoZouDiv.append(jinDuTiaoA);
             optionTd.append(caoZouDiv);
             tr.append(optionTd);
             tbody.append(tr);

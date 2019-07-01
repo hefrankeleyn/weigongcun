@@ -5,6 +5,7 @@ import com.edm.edmfetchdataplatform.base.query.EdmApplyOrderQuery;
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrder;
 import com.edm.edmfetchdataplatform.domain.Edmer;
 import com.edm.edmfetchdataplatform.domain.ResponseResult;
+import com.edm.edmfetchdataplatform.domain.status.ExamineProgressStateFactory;
 import com.edm.edmfetchdataplatform.domain.status.ResultStatus;
 import com.edm.edmfetchdataplatform.service.DownLoadFileService;
 import com.edm.edmfetchdataplatform.service.EdmApplyOrderService;
@@ -130,6 +131,19 @@ public class EdmApplyOrderController {
 
         logger.info("The length of " + excelFile.getName() + " is " + excelFile.length());
         downLoadFileService.downLoadFile(excelFile, response);
+    }
+
+    /**
+     * 查询当前订单的进度条
+     * @param oid
+     */
+    @RequestMapping(value = "/findEdmApplyOrderProgress/{oid}", method = RequestMethod.GET)
+    public String findEdmApplyOrderProgress(@PathVariable String oid, Model model){
+        EdmApplyOrder edmApplyOrder = edmApplyOrderService.findEdmApplyOrderByOid(oid);
+        edmApplyOrder.setOrderStateDescription(ExamineProgressStateFactory.fetchExaminProgressStateByState(edmApplyOrder.getOrderState()).getDescription());
+
+        model.addAttribute("edmApplyOrder", edmApplyOrder);
+        return "edmProgressBar";
     }
 
 

@@ -93,6 +93,11 @@ public class EdmApplyOrder {
      */
     private Integer orderState;
 
+    /**
+     * 订单的状态描述
+     */
+    private String orderStateDescription;
+
 
     /**
      * 流转单下一个要流转的对象的邮箱
@@ -296,6 +301,13 @@ public class EdmApplyOrder {
         this.edmer = edmer;
     }
 
+    public String getOrderStateDescription() {
+        return orderStateDescription;
+    }
+
+    public void setOrderStateDescription(String orderStateDescription) {
+        this.orderStateDescription = orderStateDescription;
+    }
 
     @Override
     public String toString() {
@@ -321,6 +333,7 @@ public class EdmApplyOrder {
                 ", nextEdmerId=" + nextEdmerId +
                 ", edmApplyOrderCheckResult=" + edmApplyOrderCheckResult +
                 ", edmApplyFiles=" + edmApplyFiles +
+                ", orderStateDescription=" + orderStateDescription +
                 '}';
     }
 }

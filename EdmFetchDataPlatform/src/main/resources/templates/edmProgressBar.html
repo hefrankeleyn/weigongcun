@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <title>EDM</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/popper.min.js}"></script>
+    <script th:src="@{/bootstrap/js/bootstrap.js}"></script>
+    <!-- 自定义css -->
+    <link rel="stylesheet" th:href="@{/css/edmProgressBar.css}">
+<!--     自定义js-->
+    <script th:src="@{/js/edmProgressBar.js}"></script>
+</head>
+
+<body>
+<div class="container">
+    <div class="jumbotron">
+        <h1 class="display-4" th:text="'《' + ${edmApplyOrder.orderName} + '》流转进度'">流转单流转进度</h1>
+        <p class="lead" th:text="${edmApplyOrder.orderStateDescription}" name="orderState" th:value="${edmApplyOrder.orderState}">当前正在等待客服组审核</p>
+    </div>
+    <ul class="progressBar">
+        <li class="applyGroup">申请组组长审核</li>
+        <li class="capalityGroup">能力组审核</li>
+        <li class="customerServerGroup">客服组审核</li>
+        <li class="shuJuGroup">数据组处理</li>
+    </ul>
+</div>
+
+</body>
+
+</html>
