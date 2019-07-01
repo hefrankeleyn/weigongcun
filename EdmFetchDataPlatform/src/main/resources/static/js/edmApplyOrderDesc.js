@@ -1,6 +1,16 @@
-/**
- * 启动bootstrap的 popover功能
- */
 $(document).ready(function () {
-    $('[data-toggle="popover"]').popover()
+    
+
+    init();
+    /**
+     * 初始化函数
+     */
+    function init() {
+        /**
+         * 启动bootstrap的 popover功能
+         */
+        $('[data-toggle="popover"]').popover();
+        
+    }
+
 });

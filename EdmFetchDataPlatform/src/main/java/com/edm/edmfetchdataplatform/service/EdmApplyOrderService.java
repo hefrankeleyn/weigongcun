@@ -5,6 +5,7 @@ import com.edm.edmfetchdataplatform.domain.EdmApplyOrder;
 import com.edm.edmfetchdataplatform.base.EdmPage;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -66,6 +67,13 @@ public interface EdmApplyOrderService {
      */
     EdmPage<EdmApplyOrder> findPageEdmApplyOrdersByEmail(String email);
 
+
+    /**
+     * 根据oid 查询流转单excel的 file文件
+     * @param oid
+     * @return
+     */
+    File getEdmApplyOrderExcelByOid(String oid);
 
 
 }

@@ -44,11 +44,12 @@ public class EdmExcelServiceImpl implements EdmExcelService {
      * @return EdmApplyFile
      */
     @Override
-    public EdmApplyFile createEdmApplyExcelOrder(EdmApplyOrder edmApplyOrder, EdmApplyOrderCheckResult edmApplyOrderCheckResult, String filePath) {
-        // 当前时间的年月
-        String currentYearMonthDayStr = MyDateUtil.toDateStr(new Date());
-        HSSFWorkbook workbook = new HSSFWorkbook();
+    public EdmApplyFile createEdmApplyExcelOrder(EdmApplyOrder edmApplyOrder,
+                                                 EdmApplyOrderCheckResult edmApplyOrderCheckResult,
+                                                 String filePath,
+                                                 String fileName) {
 
+        HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("流转单");
         // 设置默认宽和高
         sheet.setDefaultColumnWidth(12 * 255);
@@ -101,7 +102,7 @@ public class EdmExcelServiceImpl implements EdmExcelService {
 
         // 创建单元格, 日期
         cell = row.createCell(2);
-        cell.setCellValue("日期: " + currentYearMonthDayStr);
+        cell.setCellValue("日期: " + MyDateUtil.excelDate(edmApplyOrder.getApplyDate()));
         // 左右居左， 加粗，字号14
         cell.setCellStyle(setCellStyle(workbook, HorizontalAlignment.LEFT, true, (short) 11));
         // 创建单元格, 下一个环节
@@ -228,7 +229,9 @@ public class EdmExcelServiceImpl implements EdmExcelService {
         // 生成excel
         // 文件路径
         // 上传文件的根目录
-        String originalFilename = "《" + edmApplyOrder.getOrderName() + "》群发流转单-" + currentYearMonthDayStr + ".xlsx";
+        String originalFilename = fileName;
+
+
         // 获取要上传的目录
         /*  文件放到指定的目录下
         String rootPath = dataConfig.getUpLoadPath();
@@ -237,7 +240,7 @@ public class EdmExcelServiceImpl implements EdmExcelService {
         */
         // 判断文件夹是否存放，如果不存在就创建
         File fileFolds = new File(filePath);
-        if (!fileFolds.exists()){
+        if (!fileFolds.exists()) {
             fileFolds.mkdirs();
         }
         // 生成一个文件名

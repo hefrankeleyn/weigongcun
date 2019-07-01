@@ -54,4 +54,14 @@ public class EdmApplyFileServiceImpl implements EdmApplyFileService {
         List<EdmApplyFile> edmApplyFiles = edmApplyFileMapper.findEdmOrderFilesByOid(oid);
         return edmApplyFiles;
     }
+
+    @Override
+    public void updateEdmApplyFile(EdmApplyFile edmApplyFile) {
+        edmApplyFileMapper.updateEdmApplyFile(edmApplyFile);
+    }
+
+    @Override
+    public EdmApplyFile findEdmApplyFileByFid(Long fid) {
+        return edmApplyFileMapper.findEdmApplyFileByFid(fid);
+    }
 }

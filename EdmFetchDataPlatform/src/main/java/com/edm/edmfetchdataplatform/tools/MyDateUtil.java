@@ -12,6 +12,7 @@ public class MyDateUtil {
     private static SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
     private static SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyyMMddHHmmss");
     private static SimpleDateFormat simpleDateFormat3 = new SimpleDateFormat("yyyy");
+    private static SimpleDateFormat simpleDateFormat4 = new SimpleDateFormat("yyyy-MM-dd");
 
     /**
      * 将时间类型转换成字符串
@@ -37,6 +38,15 @@ public class MyDateUtil {
      */
     public static String currentYearStr(){
         return simpleDateFormat3.format(new Date());
+    }
+
+    /**
+     * 创建时间格式为： yyyy-MM-dd
+     * @param applyDate
+     * @return
+     */
+    public static String excelDate(Date applyDate){
+        return simpleDateFormat4.format(applyDate);
     }
 
 

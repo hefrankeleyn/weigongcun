@@ -26,4 +26,19 @@ public interface EdmApplyFileService {
      * @return
      */
     List<EdmApplyFile> findEdmApplyFilesByOid(String oid);
+
+
+    /**
+     * 更新 EdmApplyFile
+     * @param edmApplyFile
+     */
+    void updateEdmApplyFile(EdmApplyFile edmApplyFile);
+
+    /**
+     * 根据fid 查询 EdmApplyFile
+     * @param fid
+     * @return
+     */
+    EdmApplyFile findEdmApplyFileByFid(Long fid);
+
 }

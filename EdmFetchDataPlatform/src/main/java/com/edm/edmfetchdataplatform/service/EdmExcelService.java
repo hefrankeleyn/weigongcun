@@ -16,7 +16,10 @@ public interface EdmExcelService {
      * @param edmApplyOrderCheckResult  流转单的结果
      * @return EdmApplyFile excel的元数据
      */
-    EdmApplyFile createEdmApplyExcelOrder(EdmApplyOrder edmApplyOrder, EdmApplyOrderCheckResult edmApplyOrderCheckResult, String filePath);
+    EdmApplyFile createEdmApplyExcelOrder(EdmApplyOrder edmApplyOrder,
+                                          EdmApplyOrderCheckResult edmApplyOrderCheckResult,
+                                          String filePath,
+                                          String fileName);
 
 
 }

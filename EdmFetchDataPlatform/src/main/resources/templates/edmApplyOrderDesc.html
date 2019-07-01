@@ -14,6 +14,8 @@
     <!--    自定义的js  所有页面公用-->
     <script th:src="@{/js/header.js}"></script>
 
+    <!--    自定义的js 插件-->
+    <script th:src="@{/js/url-plugins.js}"></script>
     <!-- 自定义的css -->
     <link rel="stylesheet" th:href="@{/css/edmApplyOrderDesc.css}">
     <!--    自定义js-->
@@ -23,8 +25,19 @@
 
 <body>
 <nav th:replace="common/header :: header-navbar"></nav>
-<div class="container">
-    <h2 th:unless="${edmApplyOrder == null}" th:text="'《'+ ${edmApplyOrder.getOrderName()}+'》 流转单详情'">流转单详情页</h2>
+<div class="container" th:unless="${edmApplyOrder == null}">
+    <h2 th:text="'《'+ ${edmApplyOrder.getOrderName()}+'》 流转单详情'">流转单详情页</h2>
+    <div class="downloadDiv mb-1" th:unless="${#lists.isEmpty(edmApplyOrder.edmApplyFiles)}">
+        <a role="button" class="btn btn-outline-primary download" download="download" target="_blank" th:href="@{|/edmApplyOrderController/downLoadEdmApplyOrderExcel/${edmApplyFile.oid}|}"
+                th:each="edmApplyFile : ${edmApplyOrder.edmApplyFiles}" th:if="${edmApplyFile.flag == 1}" name="oid"
+                th:value="${edmApplyFile.oid}">下载流转单Excel
+        </a>
+        <a role="button" class="btn btn-outline-primary download" download="download" target="_blank" th:href="@{|/edmApplyFileController/downLoadAccessoryFile/${edmApplyFile.fid}|}"
+                th:each="edmApplyFile : ${edmApplyOrder.edmApplyFiles}" th:if="${edmApplyFile.flag == 0}" name="fid"
+                th:value="${edmApplyFile.fid}"
+                th:text="'下载附件：' + ${#strings.arraySplit(edmApplyFile.originalfilename,'.')[0]}">下载附件
+        </a>
+    </div>
     <table style="table-layout:fixed" class="table table-bordered" th:unless="${edmApplyOrder == null}"
            th:object="${edmApplyOrder}">
         <tr>

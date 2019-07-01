@@ -10,6 +10,7 @@ import com.edm.edmfetchdataplatform.domain.translate.EdmLiuZhuanEmailParameters;
 import com.edm.edmfetchdataplatform.base.EdmPage;
 import com.edm.edmfetchdataplatform.mapper.EdmApplyOrderMapper;
 import com.edm.edmfetchdataplatform.service.*;
+import com.edm.edmfetchdataplatform.tools.MyDateUtil;
 import com.edm.edmfetchdataplatform.tools.MyFileUtil;
 import com.edm.edmfetchdataplatform.tools.MyIdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -159,7 +160,10 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
 
 
             // 将群发流转单生成excel
-            EdmApplyFile edmApplyOrderExcel = edmExcelService.createEdmApplyExcelOrder(edmApplyOrder, edmApplyOrderCheckResult, uniqueFilePath);
+            // 当前时间的年月
+            String currentYearMonthDayStr = MyDateUtil.toDateStr(new Date());
+            String originalFilename = "《" + edmApplyOrder.getOrderName() + "》群发流转单-" + currentYearMonthDayStr + ".xlsx";
+            EdmApplyFile edmApplyOrderExcel = edmExcelService.createEdmApplyExcelOrder(edmApplyOrder, edmApplyOrderCheckResult, uniqueFilePath,originalFilename);
 
             // 将excel插入到list的第一个元素
             edmApplyFileList.add(0, edmApplyOrderExcel);
@@ -235,6 +239,7 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
 
     /**
      * 查询邮箱用户一页 EdmApplyOrder
+     *
      * @param email
      * @return
      */
@@ -242,14 +247,53 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
     public EdmPage<EdmApplyOrder> findPageEdmApplyOrdersByEmail(String email) {
         Edmer edmer = edmerService.findEdmerByEmail(email);
         EdmApplyOrderQuery edmApplyOrderQuery = new EdmApplyOrderQuery();
-        if (edmer!=null){
+        if (edmer != null) {
             edmApplyOrderQuery.setEid(edmer.getEid());
         }
         return findPageEdmApplyOrdersByQuery(edmApplyOrderQuery);
     }
 
     /**
+     * 根据流转单id 重新生成excel，并返回excel的File对象
+     * @param oid
+     * @return
+     */
+    @Override
+    @Transactional
+    public File getEdmApplyOrderExcelByOid(String oid) {
+        // 根据oid 查询 EdmApplyOrder
+        EdmApplyOrder edmApplyOrder = edmApplyOrderMapper.findEdmApplyOrderByOid(oid);
+
+        // 获取excel 文件
+        List<EdmApplyFile> edmApplyFiles = edmApplyOrder.getEdmApplyFiles();
+        File file = null;
+        for (EdmApplyFile edmApplyFile : edmApplyFiles) {
+            if (edmApplyFile.getFlag() == 1) {
+                file = new File(edmApplyFile.getFilepath() + File.separator + edmApplyFile.getFilename());
+                // 重新生成excel
+                // 删除已经存在的excel
+                if (file.exists()){
+                    file.deleteOnExit();
+                }
+
+                // 重新生成excel
+                // 将群发流转单生成excel
+                EdmApplyFile updateApplyFile = edmExcelService.createEdmApplyExcelOrder(edmApplyOrder,
+                        edmApplyOrder.getEdmApplyOrderCheckResult(),
+                        edmApplyFile.getFilepath(),
+                        edmApplyFile.getOriginalfilename());
+                updateApplyFile.setFid(edmApplyFile.getFid());
+                // 更新edmApplyFile
+                edmApplyFileService.updateEdmApplyFile(updateApplyFile);
+                file = new File(updateApplyFile.getFilepath() + File.separator + updateApplyFile.getFilename());
+            }
+        }
+        return file;
+    }
+
+    /**
      * 查询一页
+     *
      * @param baseQuery
      * @return
      */
@@ -261,7 +305,7 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
         // 查询总的条数
         Integer totalNum = edmApplyOrderMapper.countEdmApplyOrdersByEid(eid);
         EdmPage<EdmApplyOrder> edmPage = new EdmPage<>(totalNum, baseQuery.getCurrentPage(), baseQuery.getPageSize());
-        if (totalNum!=null && totalNum >0){
+        if (totalNum != null && totalNum > 0) {
             List<EdmApplyOrder> edmApplyOrders = edmApplyOrderMapper.findPageEdmApplyOrdersByEid(eid, edmPage.getCurrentPageFirstItemNum(), edmPage.getPageSize());
             edmPage.setPageObjList(edmApplyOrders);
         }
@@ -374,8 +418,8 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
             } else {
                 // 判断省份 和城市
                 setQunFaProvinceAndCityValue(edmCondition.getProvinceOpt(), edmCondition.getCityOpt(),
-                                             edmCondition.getProvinceNames(), edmCondition.getCityNames(),
-                                             qunfaProvinceAndCityConditions);
+                        edmCondition.getProvinceNames(), edmCondition.getCityNames(),
+                        qunfaProvinceAndCityConditions);
 
             }
             // 添加换行符

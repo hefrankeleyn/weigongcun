@@ -39,4 +39,30 @@ public interface EdmApplyFileMapper {
     List<EdmApplyFile> findEdmOrderFilesByOid(String oid);
 
 
+    /**
+     * 根据 fid 查询 EdmApplyFile
+     * @param fid
+     * @return
+     */
+    @Select("SELECT `fid`,`filename`,`filepath`,`originalfilename`,`flag`,`oid` FROM `edm_apply_files` " +
+            "where fid=#{fid}")
+    @Results(value = {@Result(column = "fid", property = "fid"),
+            @Result(column = "filename", property = "filename"),
+            @Result(column = "filepath", property = "filepath"),
+            @Result(column = "originalfilename", property = "originalfilename"),
+            @Result(column = "flag", property = "flag"),
+            @Result(column = "oid", property = "oid")
+    })
+    EdmApplyFile findEdmApplyFileByFid(Long fid);
+
+
+    /**
+     * 根据fid 更新附件名称
+     * @param edmApplyFile
+     */
+    @Update("UPDATE `edm_apply_files` SET `filename` = #{filename},`filepath` = #{filepath}," +
+            "`originalfilename` = #{originalfilename} " +
+            "WHERE `fid` = #{fid};")
+    void updateEdmApplyFile(EdmApplyFile edmApplyFile);
+
 }
