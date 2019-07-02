@@ -75,7 +75,7 @@ $(document).ready(function() {
             // 等待数据组处理
             var shuJuGroupLi = $(".container .progressBar .shuJuGroup");
             eleAddClassAndText(shuJuGroupLi, "waite", "等待数据组处理");
-        } else if (stateVal == 7) { // 等待数据组处理
+        } else if (stateVal == 7) { //数据组处理完成
             // 申请组审核通过
             var applyGroupLi = $(".container .progressBar .applyGroup");
             eleAddClassAndText(applyGroupLi, "active", "申请组组长审核通过");

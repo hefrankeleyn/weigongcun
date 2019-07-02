@@ -232,7 +232,7 @@ $(document).ready(function () {
             tr.append(xuhaoTh);
             // 流转单的名字
             var liuZhuanDanNameTd = $("<td class='liuzhuandan'></td>");
-            var xiangqingA = $("<a></a>").attr("href", rootUrl + edmApplyOrderList[i].oid);
+            var xiangqingA = $("<a></a>").attr("href", rootDescUrl + edmApplyOrderList[i].oid);
             xiangqingA.text(edmApplyOrderList[i].orderName);
             liuZhuanDanNameTd.append(xiangqingA);
             tr.append(liuZhuanDanNameTd);
@@ -242,6 +242,10 @@ $(document).ready(function () {
             // 申请人
             var applierTd = $("<td class='applier'></td>").text(edmApplyOrderList[i].edmer.username);
             tr.append(applierTd);
+            // 状态
+            var applyStatueTd = $("<td class='applyStatue'></td>").text(edmApplyOrderList[i].orderState == 7?'流转完成':'流转中');
+            tr.append(applyStatueTd);
+
             // 操作
             var optionTd = $("<td class='caozuo'></td>");
             var caoZouDiv = $("<div></div>");
