@@ -1,0 +1,23 @@
+
+/*
+让操作行居中
+ */
+.container table .caozuo,
+.container table .liuzhuandan,
+.container table .applier,
+.container table .applyDate,
+.container table .applyStatue,
+.container table tr th{
+    text-align: center;
+}
+
+.next {
+    margin-right: 300px;
+}
+.previous{
+    margin-left: 200px
+}
+
+.pagination li span:hover{
+    cursor: pointer;
+}

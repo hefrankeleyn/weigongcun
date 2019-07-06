@@ -1,8 +1,10 @@
 package com.edm.edmfetchdataplatform.service;
 
 import com.edm.edmfetchdataplatform.base.BaseQuery;
+import com.edm.edmfetchdataplatform.base.query.EdmApplyOrderQuery;
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrder;
 import com.edm.edmfetchdataplatform.base.EdmPage;
+import com.edm.edmfetchdataplatform.domain.Role;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -74,6 +76,32 @@ public interface EdmApplyOrderService {
      * @return
      */
     File getEdmApplyOrderExcelByOid(String oid);
+
+
+    /**
+     * 根据角色，获取可操作订单的状态
+     * @param roles
+     * @return
+     */
+    List<Integer> findOptOrderStatusByRoles(List<Role> roles);
+
+
+    /**
+     * 根据查询条件统计数量
+     * @param edmApplyOrderQuery
+     * @return
+     */
+    Integer countEdmApplyOrderByBEdmApplyOrderQuery(EdmApplyOrderQuery edmApplyOrderQuery);
+
+
+    /**
+     * 查询一页 EdmPage
+     * @param edmApplyOrderQuery
+     * @return
+     */
+    EdmPage<EdmApplyOrder> findPageEdmApplyOrdersByBEdmApplyOrderQuery(EdmApplyOrderQuery edmApplyOrderQuery);
+
+
 
 
 }

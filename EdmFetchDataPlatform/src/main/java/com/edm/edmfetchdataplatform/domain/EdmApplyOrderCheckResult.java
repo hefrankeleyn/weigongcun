@@ -48,6 +48,8 @@ public class EdmApplyOrderCheckResult implements Serializable {
      */
     private String secondCheckerResult;
 
+    // 能力组审核的结果状态
+    private Integer capacityCheckStatue;
     /**
      * 排期结果
      */
@@ -65,11 +67,17 @@ public class EdmApplyOrderCheckResult implements Serializable {
     private CheckResultStatue thirdCheckerPaiQiResultStatue;
     private String thirdCheckerPaiQiResult;
 
+    // 排期确认
+    private Integer paiQiQueRenStatue;
+
     /**
      * 第三位核查者，对群发方案确认的结果
      */
     private CheckResultStatue thirdCheckerQunFaFangAnResultStatue;
     private String thirdCheckerQunFaFangAnResult;
+
+    //群发方案确认
+    private Integer qunFaFangAnQueRenState;
 
 
     /**
@@ -104,6 +112,11 @@ public class EdmApplyOrderCheckResult implements Serializable {
     private String actualUserNum;
 
     /**
+     * 最后的备注
+     */
+    private String ednBeiZhu;
+
+    /**
      * 修改时间
      */
     private Date updateTime;
@@ -133,6 +146,7 @@ public class EdmApplyOrderCheckResult implements Serializable {
         this.dataUsersDescription = "";
         this.actualUserNum = "";
         this.updateTime = new Date();
+        this.ednBeiZhu = "";
 
     }
 
@@ -190,6 +204,13 @@ public class EdmApplyOrderCheckResult implements Serializable {
         return secondCheckerResult;
     }
 
+    public Integer getCapacityCheckStatue() {
+        return capacityCheckStatue;
+    }
+
+    public void setCapacityCheckStatue(Integer capacityCheckStatue) {
+        this.capacityCheckStatue = capacityCheckStatue;
+    }
 
     public String getPaiQiResult() {
         return paiQiResult;
@@ -323,6 +344,30 @@ public class EdmApplyOrderCheckResult implements Serializable {
 
     public void setOid(String oid) {
         this.oid = oid;
+    }
+
+    public Integer getPaiQiQueRenStatue() {
+        return paiQiQueRenStatue;
+    }
+
+    public void setPaiQiQueRenStatue(Integer paiQiQueRenStatue) {
+        this.paiQiQueRenStatue = paiQiQueRenStatue;
+    }
+
+    public Integer getQunFaFangAnQueRenState() {
+        return qunFaFangAnQueRenState;
+    }
+
+    public void setQunFaFangAnQueRenState(Integer qunFaFangAnQueRenState) {
+        this.qunFaFangAnQueRenState = qunFaFangAnQueRenState;
+    }
+
+    public String getEdnBeiZhu() {
+        return ednBeiZhu;
+    }
+
+    public void setEdnBeiZhu(String ednBeiZhu) {
+        this.ednBeiZhu = ednBeiZhu;
     }
 
     @Override

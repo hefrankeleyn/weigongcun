@@ -17,7 +17,7 @@ public abstract class BaseQuery {
     /**
      * 一页的条数， 默认为10条
      */
-    private Integer pageSize = 10;
+    private Integer pageSize = 2;
 
     /**
      * 查询条件

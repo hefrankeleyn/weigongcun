@@ -42,6 +42,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/", "/home").authenticated()
                 .antMatchers("/edmUsableMagnitudeController/showCurrentDayEdmUsableMagnitudes").hasRole("EDM")    // hasRole("ROLE_EDM")将会报异常
+                // 必须登录才能访问的请求： 流转单列表、对edmApplyFile的请求、edm订单项,查看可发数据量后台管理,角色管理,审核过程
+                .antMatchers("/edmApplyOrderController/**",
+                        "/edmApplyFileController/**",
+                        "/edmerController/**",
+                        "/edmFetchDataConditionController/**",
+                        "/edmUsableMagnitudeController/**",
+                        "/edmManagerController",
+                        "/roleController/**",
+                        "/edmApplyOrderCheckResultController/**").authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")

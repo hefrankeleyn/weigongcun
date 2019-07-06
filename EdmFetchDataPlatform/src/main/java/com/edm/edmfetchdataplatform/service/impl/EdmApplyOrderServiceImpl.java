@@ -5,6 +5,7 @@ import com.edm.edmfetchdataplatform.base.query.EdmApplyOrderQuery;
 import com.edm.edmfetchdataplatform.config.DataConfig;
 import com.edm.edmfetchdataplatform.domain.*;
 import com.edm.edmfetchdataplatform.domain.status.ExamineProgressState;
+import com.edm.edmfetchdataplatform.domain.status.GroupRole;
 import com.edm.edmfetchdataplatform.domain.status.IncludeState;
 import com.edm.edmfetchdataplatform.domain.translate.EdmLiuZhuanEmailParameters;
 import com.edm.edmfetchdataplatform.base.EdmPage;
@@ -163,7 +164,7 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
             // 当前时间的年月
             String currentYearMonthDayStr = MyDateUtil.toDateStr(new Date());
             String originalFilename = "《" + edmApplyOrder.getOrderName() + "》群发流转单-" + currentYearMonthDayStr + ".xlsx";
-            EdmApplyFile edmApplyOrderExcel = edmExcelService.createEdmApplyExcelOrder(edmApplyOrder, edmApplyOrderCheckResult, uniqueFilePath,originalFilename);
+            EdmApplyFile edmApplyOrderExcel = edmExcelService.createEdmApplyExcelOrder(edmApplyOrder, edmApplyOrderCheckResult, uniqueFilePath, originalFilename);
 
             // 将excel插入到list的第一个元素
             edmApplyFileList.add(0, edmApplyOrderExcel);
@@ -255,6 +256,7 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
 
     /**
      * 根据流转单id 重新生成excel，并返回excel的File对象
+     *
      * @param oid
      * @return
      */
@@ -272,7 +274,7 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
                 file = new File(edmApplyFile.getFilepath() + File.separator + edmApplyFile.getFilename());
                 // 重新生成excel
                 // 删除已经存在的excel
-                if (file.exists()){
+                if (file.exists()) {
                     file.deleteOnExit();
                 }
 
@@ -289,6 +291,77 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
             }
         }
         return file;
+    }
+
+
+    @Override
+    public List<Integer> findOptOrderStatusByRoles(List<Role> roles) {
+        if (roles != null && !roles.isEmpty()) {
+            List<Integer> optStateList = new ArrayList<>();
+            for (int i = 0; i < roles.size(); i++) {
+                //  申请组权限
+                if (roles.get(i).getRoleName() == GroupRole.ROLE_APPLY.getRoleName()) {
+                    // 等待申请组审核
+                    optStateList.add(ExamineProgressState.READY_EXAMINE.getStatus());
+                } else if (roles.get(i).getRoleName() == GroupRole.ROLE_CAPACITY.getRoleName()) {
+                    // 等待能力组审核
+                    optStateList.add(ExamineProgressState.APPLY_GROUP_EXAMINE_SUCCESS.getStatus());
+                } else if (roles.get(i).getRoleName() == GroupRole.ROLE_OPERATION.getRoleName()) {
+                    // 等待客户组审核
+                    optStateList.add(ExamineProgressState.POWER_GROUP_EXAMINE_SUCCESS.getStatus());
+                } else if (roles.get(i).getRoleName() == GroupRole.ROLE_SHUJU.getRoleName()) {
+                    // 等待数据组处理
+                    optStateList.add(ExamineProgressState.SERVICES_GROUP_EXAMINE_SUCCESS.getStatus());
+                } else if (roles.get(i).getRoleName() == GroupRole.ROLE_EDM.getRoleName()) {
+                    // 赋予开发者权限
+                    optStateList.add(ExamineProgressState.READY_EXAMINE.getStatus());
+                    optStateList.add(ExamineProgressState.APPLY_GROUP_EXAMINE_FAIL.getStatus());
+                    optStateList.add(ExamineProgressState.POWER_GROUP_EXAMINE_FAIL.getStatus());
+                    optStateList.add(ExamineProgressState.POWER_GROUP_EXAMINE_SUCCESS.getStatus());
+                    optStateList.add(ExamineProgressState.SERVICES_GROUP_EXAMINE_FAIL.getStatus());
+                    optStateList.add(ExamineProgressState.SERVICES_GROUP_EXAMINE_SUCCESS.getStatus());
+                    optStateList.add(ExamineProgressState.DATA_GROUP_EXAMINE_SUCCESS.getStatus());
+                }
+            }
+            if (optStateList.isEmpty()) {
+                return null;
+            } else {
+                return optStateList;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 根据查询条件获取数据量
+     *
+     * @param edmApplyOrderQuery
+     * @return
+     */
+    @Override
+    public Integer countEdmApplyOrderByBEdmApplyOrderQuery(EdmApplyOrderQuery edmApplyOrderQuery) {
+
+        Integer totalNum = edmApplyOrderMapper.countEdmApplyOrdersByEdmApplyOrderQuery(edmApplyOrderQuery);
+        return totalNum;
+    }
+
+    /**
+     * 根据查询条件类， 获取一页 EdmApplyOrder 数据
+     *
+     * @param edmApplyOrderQuery
+     * @return
+     */
+    @Override
+    public EdmPage<EdmApplyOrder> findPageEdmApplyOrdersByBEdmApplyOrderQuery(EdmApplyOrderQuery edmApplyOrderQuery) {
+        // 查询总的记录条数
+        Integer totalNum = countEdmApplyOrderByBEdmApplyOrderQuery(edmApplyOrderQuery);
+        // 查询一页数据
+        EdmPage<EdmApplyOrder> edmPage = new EdmPage<>(totalNum, edmApplyOrderQuery.getCurrentPage(), edmApplyOrderQuery.getPageSize());
+        List<EdmApplyOrder> edmApplyOrders = edmApplyOrderMapper.findPageEdmApplyOrdersByEdmApplyOrderQuery(edmApplyOrderQuery,
+                edmPage.getCurrentPageFirstItemNum(), edmPage.getPageSize());
+        edmPage.setPageObjList(edmApplyOrders);
+
+        return edmPage;
     }
 
     /**

@@ -2,6 +2,7 @@ package com.edm.edmfetchdataplatform.service;
 
 import com.edm.edmfetchdataplatform.base.EdmPage;
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrder;
+import com.edm.edmfetchdataplatform.domain.Edmer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ public class EdmApplyOrderServiceTest {
     @Autowired
     private EdmApplyOrderService edmApplyOrderService;
 
+    @Autowired
+    private EdmerService edmerService;
 
 //    @Test
     public void saveEdmApplyOrder(){
@@ -39,13 +42,17 @@ public class EdmApplyOrderServiceTest {
         edmApplyOrder.setChannelSends("516");
         edmApplyOrder.setHowSupplement("不补充");
         edmApplyOrder.setMessageContext("【沃邮箱团队】权威播报：");
-
-
-
-
-
         edmApplyOrderService.saveEdmApplyOrder(email, null, edmApplyOrder);
 
+    }
+
+    @Test
+    public void findPageEdmApplyOrderByQuery(){
+        String email = "shuju@wo.cn";
+        Edmer edmer = edmerService.findEdmerByEmail(email);
+        System.out.println(edmer.getRoles());
+        List<Integer> optOrderStatues = edmApplyOrderService.findOptOrderStatusByRoles(edmer.getRoles());
+        System.out.println(optOrderStatues);
     }
 
     @Test

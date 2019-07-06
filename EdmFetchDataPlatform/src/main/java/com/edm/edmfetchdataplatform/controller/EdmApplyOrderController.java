@@ -74,8 +74,56 @@ public class EdmApplyOrderController {
         EdmPage<EdmApplyOrder> pageEdmApplyOrders = edmApplyOrderService.findPageEdmApplyOrdersByEmail(userEmail);
         model.addAttribute("pageEdmApplyOrders", pageEdmApplyOrders);
         model.addAttribute("edmer", edmer);
-        return "edmApplyOrdersPage";
+        return "edmApplyOrdersPageList";
     }
+
+    /**
+     * 根据用户的权限查询 待审核的edmApplyOrder 列表
+     * @param authentication
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/findPageEdmApplyOrdersByUserRole", method = RequestMethod.GET)
+    public String findPageEdmApplyOrdersByUserRole(Authentication authentication, Model model) {
+        // 获取用户名的邮箱
+        String userEmail = authentication.getName();
+        Edmer edmer = edmerService.findEdmerByEmail(userEmail);
+        // 根据用户角色获取订单的状态
+        List<Integer> orderStatus = edmApplyOrderService.findOptOrderStatusByRoles(edmer.getRoles());
+
+        // 初始化查询条件
+        EdmApplyOrderQuery edmApplyOrderQuery = new EdmApplyOrderQuery();
+        edmApplyOrderQuery.setOrderStates(orderStatus);
+        // 查询一页数据
+        EdmPage<EdmApplyOrder> pageEdmApplyOrders = edmApplyOrderService.findPageEdmApplyOrdersByBEdmApplyOrderQuery(edmApplyOrderQuery);
+        model.addAttribute("pageEdmApplyOrders", pageEdmApplyOrders);
+        model.addAttribute("edmer", edmer);
+        return "edmApplyOrderCheckPageList";
+    }
+    /**
+     * 根据用户的权限查询 待审核的edmApplyOrder 列表
+     * @param authentication
+     * @param edmApplyOrderQuery  条件
+     * @return
+     */
+    @RequestMapping(value = "/findPageEdmApplyOrdersByUserRoleAndQuery", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseResult findPageEdmApplyOrdersByUserRoleAndQuery(Authentication authentication,@RequestBody EdmApplyOrderQuery edmApplyOrderQuery) {
+        // 获取用户名的邮箱
+        String userEmail = authentication.getName();
+        Edmer edmer = edmerService.findEdmerByEmail(userEmail);
+        // 根据用户角色获取订单的状态
+        List<Integer> orderStatus = edmApplyOrderService.findOptOrderStatusByRoles(edmer.getRoles());
+
+        // 初始化查询条件
+        edmApplyOrderQuery.setOrderStates(orderStatus);
+        // 查询一页数据
+        EdmPage<EdmApplyOrder> pageEdmApplyOrders = edmApplyOrderService.findPageEdmApplyOrdersByBEdmApplyOrderQuery(edmApplyOrderQuery);
+
+        return new ResponseResult(ResultStatus.SUCCESS, pageEdmApplyOrders);
+    }
+
+
 
     /**
      * 根据 EdmApplyOrderQuery 查询一页 EdmApplyOrder
@@ -115,6 +163,27 @@ public class EdmApplyOrderController {
         model.addAttribute("edmApplyOrder", edmApplyOrder);
         logger.info(edmApplyOrder.toString());
         return "edmApplyOrderDesc";
+    }
+
+
+    /**
+     * 展示审批流转单
+     * @param oid
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/findCheckEdmApplyOrderByOid/{oid}", method = RequestMethod.GET)
+    public String findCheckEdmApplyOrderByOid(Authentication authentication,
+                                              @PathVariable("oid") String oid, Model model) {
+        // 获取用户名的邮箱
+        String userEmail = authentication.getName();
+        Edmer edmer = edmerService.findEdmerByEmail(userEmail);
+        // 展示审批单
+        findEdmApplyOrderByOid(oid, model);
+        // 将当前用户添加到模型中
+        model.addAttribute("currentEdmer", edmer);
+        logger.info(edmer.toString());
+        return "edmApplyOrderCheck";
     }
 
     /**

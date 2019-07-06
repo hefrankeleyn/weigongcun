@@ -11,6 +11,7 @@ public enum  GroupRole {
     ROLE_CAPACITY("能力组","ROLE_CAPACITY"),
     ROLE_CUSTOMER_SERVICE("客服组","ROLE_CUSTOMER_SERVICE"),
     ROLE_SHUJU("数据组","ROLE_SHUJU"),
+    ROLE_EDM("EDM开发者","ROLE_EDM"),
     ;
     private String department;
     private String roleName;
