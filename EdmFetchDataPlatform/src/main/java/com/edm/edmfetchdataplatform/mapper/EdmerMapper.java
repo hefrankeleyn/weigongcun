@@ -95,4 +95,32 @@ public interface EdmerMapper {
             "</foreach>",
             "</script>"})
     List<Edmer> findEdmersByDepartmentArray(@Param("list") String[] departments);
+
+    /**
+     * 根据用户权限名称查询用户
+     * @param roleName
+     * @return
+     */
+    @Select({"<script>",
+            "SELECT b1.`eid`, b1.`username`, b1.`password`, b1.`email`, b1.`department`, b1.`level` ",
+            "FROM `edmers` b1 ",
+            "inner join (",
+            "select t2.eid from edmer_role_relation t2 inner join edm_roles t3 ",
+            "on t2.rid = t3.rid ",
+            "where 1=1 ",
+            "<if test='roleName != null'>",
+            "and t3.role_name=#{roleName}",
+            "</if>",
+            ")b2 on b1.eid=b2.eid",
+            "</script>"})
+    @Results(value = {@Result(id = true, column = "eid", property = "eid"),
+            @Result(column = "username", property = "username"),
+            @Result(column = "password", property = "password"),
+            @Result(column = "email", property = "email"),
+            @Result(column = "department", property = "department"),
+            @Result(column = "level", property = "level"),
+            @Result(property = "roles", column = "eid", javaType = List.class,
+                    many = @Many(select = "com.edm.edmfetchdataplatform.mapper.RoleMapper.findRoleByEid"))
+    })
+    List<Edmer> findEdmersByRoleName(@Param("roleName") String roleName);
 }

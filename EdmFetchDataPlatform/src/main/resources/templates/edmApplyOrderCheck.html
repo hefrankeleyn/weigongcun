@@ -41,6 +41,7 @@
         </a>
     </div>
     <div hidden="hidden" id="someHiddenValue">
+        <input type="hidden" th:name="${_csrf.getParameterName()}" th:value="${_csrf.getToken()}">
         <input type="hidden" name="oid" th:value="${edmApplyOrder.oid}">
         <input type="hidden" name="orderState" th:value="${edmApplyOrder.orderState}">
         <input type="checkbox" name="roleName"

@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
 
 
     init();
@@ -25,7 +25,7 @@ $(document).ready(function() {
         // 选择被选中的checkbox
         var roleNameCheckBoxs = $(".container #someHiddenValue input[type='checkbox']:checked");
         var continueFlag = false;
-        $.each(roleNameCheckBoxs, function(i, roleNameCheckBox) {
+        $.each(roleNameCheckBoxs, function (i, roleNameCheckBox) {
             if ($(roleNameCheckBox).val() == roleName) {
                 continueFlag = true;
             }
@@ -175,7 +175,6 @@ $(document).ready(function() {
     }
 
 
-
     /**
      * 修改数据组的tr
      */
@@ -183,7 +182,8 @@ $(document).ready(function() {
         // 为最后一个td添加 select 下拉选项和button按钮
         var fifthTd = $(".container table #shujuGroupFirstTr td:nth-child(5)");
         // 为最后一个td添加 select
-        addSendEmailLabelAndSelectElement(fifthTd);
+        // 查询所有运营者权限的用户
+        addSendEmailLabelAndSelectElement(fifthTd, "ROLE_OPERATION");
         // 添加 button按钮
         var subButtonInnerSpan = fifthTd.children(".sendEmailSpan");
         addSubButtonForChangeOrderResult(fifthTd, subButtonInnerSpan);
@@ -207,7 +207,7 @@ $(document).ready(function() {
         // 为最后一个td添加 select 下拉选项和button按钮
         var fifthTd = $(".container table #customerServerGroupFirstTr td:nth-child(5)");
         // 为最后一个td添加 select
-        addSendEmailLabelAndSelectElement(fifthTd);
+        addSendEmailLabelAndSelectElement(fifthTd, "ROLE_SHUJU");
         // 添加 button按钮
         var subButtonInnerSpan = fifthTd.children(".sendEmailSpan");
         var sendFailEmailSpan = fifthTd.children(".sendFailEmail");
@@ -238,7 +238,8 @@ $(document).ready(function() {
         addConcalLiuZhuanButton(capacityFirstTd);
         // 为最后一个td添加 select 下拉选项和button按钮
         var fifthTd = $(".container table #capacityGroupFirstTr td:nth-child(5)");
-        addSendEmailLabelAndSelectElement(fifthTd);
+        // 查询具有客服组权限的用户，并将用户信息添加到option中
+        addSendEmailLabelAndSelectElement(fifthTd, "ROLE_CUSTOMER_SERVICE");
         // 添加 button按钮
         var subButtonInnerSpan = fifthTd.children(".sendEmailSpan");
         addSubButtonForChangeOrderResult(fifthTd, subButtonInnerSpan);
@@ -255,8 +256,6 @@ $(document).ready(function() {
     }
 
 
-
-
     /**
      * 修改申请组的tr
      */
@@ -267,7 +266,8 @@ $(document).ready(function() {
 
         // 为最后一个td添加 select 下拉选项和button按钮
         var fifthTd = $(".container table #applyGroupFirstTr td:nth-child(5)");
-        addSendEmailLabelAndSelectElement(fifthTd);
+        // 查询权限为： ROLE_CAPACITY 的所有用户，并将用户信息放入到option中
+        addSendEmailLabelAndSelectElement(fifthTd, "ROLE_CAPACITY");
         // 添加 button按钮
         var subButtonInnerSpan = fifthTd.children(".sendEmailSpan");
         addSubButtonForChangeOrderResult(fifthTd, subButtonInnerSpan);
@@ -345,6 +345,15 @@ $(document).ready(function() {
     function addSubButtonForChangeOrderResult(tdJqElement, childSpan) {
         // 添加button按钮
         var subToUpdateEdmApplyOrderResultButton = $("<button type='button' class='btn btn-success mt-1 subToUpdateEdmApplyOrderResult'></button>");
+        // 判断是否有select元素，如果有判断是否有子元素，如果没有子元素将按钮置为不可用
+        var selectElement = childSpan.siblings("select");
+        if (selectElement.length > 0) {
+            var optionElements = selectElement.children("option");
+            if (optionElements.length == 0) {
+                subToUpdateEdmApplyOrderResultButton.prop("disabled", true);
+            }
+        }
+
         childSpan.wrap(subToUpdateEdmApplyOrderResultButton);
         // 为button添加点击事件
         tdJqElement.children(".subToUpdateEdmApplyOrderResult").unbind("click", submitToUpdateOrderResult);
@@ -354,8 +363,9 @@ $(document).ready(function() {
     /**
      * 添加用户选定发送邮件对象的 label和select元素
      * @param {jquery选中的td元素} tdJqElement
+     * @param {权限名称} roleName
      */
-    function addSendEmailLabelAndSelectElement(tdJqElement) {
+    function addSendEmailLabelAndSelectElement(tdJqElement, roleName) {
         var applyGroupLabel = $("<label for='applyGroupLeaderEmail'>邮件发送给：</label>");
         var applyGroupSelect = $("<select id='applyGroupLeaderEmail' name='applyGroupLeaderEmail' class='form-control'></select>");
 
@@ -398,11 +408,41 @@ $(document).ready(function() {
      * 根据权限和用户组获取用户
      */
     function addSelectByRoleAndGroup(roleName, selectJqElment) {
-        selectJqElment.append("<option value='liangnan@wo.cn'>梁南</option>")
+        // selectJqElment.append("<option value='liangnan@wo.cn'>梁南</option>");
+
+        var url = $.projectRootUrl() + "/edmerController/findEdmerListByRole";
+        // 获取 token
+        var token = $(".container #someHiddenValue input[name='_csrf']").val();
+        var headers = {"X-CSRF-TOKEN": token};
+        var data = {"roleName": roleName};
+        // 设置为同步
+        /*
+        async: false 设置ajax为同步，请求前，后面的js代码不执行
+         */
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: data,
+            headers: headers,
+            async: false,
+            success: function (response) {
+                // 结果的状态
+                var status = response.status;
+                if (status == 0) {
+                    var result = response.result;
+                    for (var i=0; i<result.length; i++){
+                        var userName = result[i].username;
+                        var email = result[i].email;
+                        var option = $("<option></option>").attr("value", email).text(userName);
+                        selectJqElment.append(option);
+                    }
+                    console.log(result);
+                } else {
+                    console.error("edmerList is empty.");
+                }
+            }
+        });
     }
-
-
-
 
 
     /**

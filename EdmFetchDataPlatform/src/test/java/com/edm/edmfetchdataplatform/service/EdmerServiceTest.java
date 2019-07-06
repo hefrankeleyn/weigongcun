@@ -54,4 +54,21 @@ public class EdmerServiceTest {
         UserDetailsLogin userDetailsLogin = edmerService.findUserDetailsByUserName("edm");
         System.out.println(userDetailsLogin);
     }
+
+    /**
+     * 根据rolename 查询用户
+     */
+    @Test
+    public void findEdmersByRoleName(){
+
+        String roleName = "ROLE_EDM";
+        List<Edmer> edmers = edmerService.findEdmerListByRole(roleName);
+        if (edmers !=null){
+            for (Edmer edmer :
+                    edmers) {
+                System.out.println(edmer);
+            }
+        }
+
+    }
 }

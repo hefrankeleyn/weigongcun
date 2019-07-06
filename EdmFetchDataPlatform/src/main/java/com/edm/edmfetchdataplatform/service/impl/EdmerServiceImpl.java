@@ -143,4 +143,14 @@ public class EdmerServiceImpl implements EdmerService {
         return edmers;
     }
 
+    /**
+     * 根据权限名称查询用户数据
+     * @param roleName
+     * @return
+     */
+    @Override
+    public List<Edmer> findEdmerListByRole(String roleName) {
+        return edmerMapper.findEdmersByRoleName(roleName);
+    }
+
 }

@@ -60,4 +60,11 @@ public interface EdmerService {
      * @return
      */
     List<Edmer> findEdmersByOneDepartment(String department);
+
+    /**
+     * 根据权限查询用户数据
+     * @param roleName
+     * @return
+     */
+    List<Edmer> findEdmerListByRole(String roleName);
 }
