@@ -1,9 +1,12 @@
 package com.edm.edmfetchdataplatform.controller;
 
+import com.edm.edmfetchdataplatform.base.query.EdmApplyOrderResultQuery;
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrderCheckResult;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import java.util.logging.Logger;
 
 /**
  * @Date 2019-07-03
@@ -13,37 +16,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @RequestMapping(value = "/edmApplyOrderCheckResultController")
 public class EdmApplyOrderCheckResultController {
 
+    private static Logger logger = Logger.getLogger("com.edm.edmfetchdataplatform.controller.EdmApplyOrderCheckResultController");
 
     /**
-     * 申请组组长审核
-     * @param edmApplyOrderCheckResult
+     * 修改 EdmApplyOrderCheckResult
+     * @param edmApplyOrderResultQuery
      * @return
      */
-    @RequestMapping(value = "/applyGroupLeaderCheck", method = RequestMethod.POST)
-    public String applyGroupLeaderCheck(EdmApplyOrderCheckResult edmApplyOrderCheckResult){
+    @RequestMapping(value = "/updateEdmApplyOrderCheckResult", method = RequestMethod.POST)
+    public String updateEdmApplyOrderCheckResult(EdmApplyOrderResultQuery edmApplyOrderResultQuery){
 
-        return "";
-    }
-
-    /**
-     * 能力组审核
-     * @param edmApplyOrderCheckResult
-     * @return
-     */
-    @RequestMapping(value = "/capacityGroupCheck", method = RequestMethod.POST)
-    public String capacityGroupCheck(EdmApplyOrderCheckResult edmApplyOrderCheckResult){
-
-        return "";
-    }
-
-    /**
-     * 客户组审核
-     * @param edmApplyOrderCheckResult
-     * @return
-     */
-    @RequestMapping(value = "/customerServerGroupCheck", method = RequestMethod.POST)
-    public String customerServerGroupCheck(EdmApplyOrderCheckResult edmApplyOrderCheckResult){
-
-        return "";
+        logger.info(edmApplyOrderResultQuery.toString());
+        return "edmApplyOrderCheckSuccess";
     }
 }

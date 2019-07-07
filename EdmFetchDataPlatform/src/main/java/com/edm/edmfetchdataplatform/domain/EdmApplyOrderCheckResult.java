@@ -114,7 +114,7 @@ public class EdmApplyOrderCheckResult implements Serializable {
     /**
      * 最后的备注
      */
-    private String ednBeiZhu;
+    private String endBeiZhu;
 
     /**
      * 修改时间
@@ -146,7 +146,7 @@ public class EdmApplyOrderCheckResult implements Serializable {
         this.dataUsersDescription = "";
         this.actualUserNum = "";
         this.updateTime = new Date();
-        this.ednBeiZhu = "";
+        this.endBeiZhu = "";
 
     }
 
@@ -362,12 +362,12 @@ public class EdmApplyOrderCheckResult implements Serializable {
         this.qunFaFangAnQueRenState = qunFaFangAnQueRenState;
     }
 
-    public String getEdnBeiZhu() {
-        return ednBeiZhu;
+    public String getEndBeiZhu() {
+        return endBeiZhu;
     }
 
-    public void setEdnBeiZhu(String ednBeiZhu) {
-        this.ednBeiZhu = ednBeiZhu;
+    public void setEndBeiZhu(String endBeiZhu) {
+        this.endBeiZhu = endBeiZhu;
     }
 
     @Override
