@@ -1,6 +1,5 @@
 package com.edm.edmfetchdataplatform.service;
 
-import com.edm.edmfetchdataplatform.domain.EdmApplyOrder;
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrderCheckResult;
 import org.junit.Test;
 import org.junit.runner.RunWith;

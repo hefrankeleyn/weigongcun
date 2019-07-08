@@ -14,14 +14,17 @@ public interface EdmApplyOrderCheckResultMapper {
      * 保存流转单的审核结果
      * @param edmApplyOrderCheckResult
      */
-    @Insert("INSERT INTO `edm_order_result` (`ocid`,`first_checker`,`first_result`,`second_checker`,`second_result`," +
-            "`paiqiyixiang`,`third_checker`,`paiqi_result`,`qunfafangan_result`,`third_beizhu`,`shuju_username`," +
+    @Insert("INSERT INTO `edm_order_result` (`ocid`,`first_checker`,`firstcheck_status`,`second_checker`,`secondcheck_status`," +
+            "`paiqi_result`,`third_checker`,`paiqicheck_status`,`fangancheck_status`,`third_beizhu`,`shuju_username`," +
             "`shuju_email`,`datacode`,`datares_sheet`,`datausers_des`,`actual_usernum`,`update_time`,`oid`) " +
-            "VALUES (#{ocId},#{firstCheckerUserName},#{firstCheckerResult},#{secondCheckerUserName}," +
-            "#{secondCheckerResult},#{paiQiResult},#{thirdCheckerUserName},#{thirdCheckerPaiQiResult}," +
-            "#{thirdCheckerQunFaFangAnResult},#{thirdCheckBeiZhu},#{shuJuUserName},#{shuJuEmail},#{dataCode}," +
+            "VALUES (#{ocId},#{firstCheckerUserName},#{applyGroupCheckStatus},#{secondCheckerUserName}," +
+            "#{capacityCheckStatus},#{paiQiResult},#{thirdCheckerUserName},#{paiQiQueRenStatus}," +
+            "#{qunFaFangAnQueRenStatus},#{thirdCheckBeiZhu},#{shuJuUserName},#{shuJuEmail},#{dataCode}," +
             "#{fetchResultSheetName},#{dataUsersDescription},#{actualUserNum},#{updateTime},#{oid})")
     void saveEdmApplyOrderCheckResult(EdmApplyOrderCheckResult edmApplyOrderCheckResult);
+
+
+    void updateEdmApplyOrderCheckResult();
 
 
     /**
@@ -29,19 +32,19 @@ public interface EdmApplyOrderCheckResultMapper {
      * @param oid
      * @return
      */
-    @Select("SELECT `ocid`,`first_checker`,`first_result`,`second_checker`,`second_result`,`paiqiyixiang`," +
-            "`third_checker`,`paiqi_result`,`qunfafangan_result`,`third_beizhu`,`shuju_username`,`shuju_email`," +
+    @Select("SELECT `ocid`,`first_checker`,`firstcheck_status`,`second_checker`,`secondcheck_status`,`paiqi_result`," +
+            "`third_checker`,`paiqicheck_status`,`fangancheck_status`,`third_beizhu`,`shuju_username`,`shuju_email`," +
             "`datacode`,`datares_sheet`,`datausers_des`,`actual_usernum`,`update_time`,`oid` " +
             "FROM `edm_order_result` where oid=#{oid}")
     @Results(value = {@Result(column = "ocid", property = "ocId"),
             @Result(column = "first_checker", property = "firstCheckerUserName"),
-            @Result(column = "first_result", property = "firstCheckerResult"),
+            @Result(column = "firstcheck_status", property = "applyGroupCheckStatus"),
             @Result(column = "second_checker", property = "secondCheckerUserName"),
-            @Result(column = "second_result", property = "secondCheckerResult"),
-            @Result(column = "paiqiyixiang", property = "paiQiResult"),
+            @Result(column = "secondcheck_status", property = "capacityCheckStatus"),
+            @Result(column = "paiqi_result", property = "paiQiResult"),
             @Result(column = "third_checker", property = "thirdCheckerUserName"),
-            @Result(column = "paiqi_result", property = "thirdCheckerPaiQiResult"),
-            @Result(column = "qunfafangan_result", property = "thirdCheckerQunFaFangAnResult"),
+            @Result(column = "paiqicheck_status", property = "paiQiQueRenStatus"),
+            @Result(column = "fangancheck_status", property = "qunFaFangAnQueRenStatus"),
             @Result(column = "third_beizhu", property = "thirdCheckBeiZhu"),
             @Result(column = "shuju_username", property = "shuJuUserName"),
             @Result(column = "shuju_email", property = "shuJuEmail"),
@@ -60,19 +63,19 @@ public interface EdmApplyOrderCheckResultMapper {
      * @param ocId
      * @return
      */
-    @Select("SELECT `ocid`,`first_checker`,`first_result`,`second_checker`,`second_result`,`paiqiyixiang`," +
-            "`third_checker`,`paiqi_result`,`qunfafangan_result`,`third_beizhu`,`shuju_username`,`shuju_email`," +
+    @Select("SELECT `ocid`,`first_checker`,`firstcheck_status`,`second_checker`,`secondcheck_status`,`paiqi_result`," +
+            "`third_checker`,`paiqicheck_status`,`fangancheck_status`,`third_beizhu`,`shuju_username`,`shuju_email`," +
             "`datacode`,`datares_sheet`,`datausers_des`,`actual_usernum`,`update_time`,`oid` " +
             "FROM `edm_order_result` where ocid=#{ocId}")
     @Results(value = {@Result(column = "ocid", property = "ocId"),
             @Result(column = "first_checker", property = "firstCheckerUserName"),
-            @Result(column = "first_result", property = "firstCheckerResult"),
+            @Result(column = "firstcheck_status", property = "applyGroupCheckStatus"),
             @Result(column = "second_checker", property = "secondCheckerUserName"),
-            @Result(column = "second_result", property = "secondCheckerResult"),
-            @Result(column = "paiqiyixiang", property = "paiQiResult"),
+            @Result(column = "secondcheck_status", property = "capacityCheckStatus"),
+            @Result(column = "paiqi_result", property = "paiQiResult"),
             @Result(column = "third_checker", property = "thirdCheckerUserName"),
-            @Result(column = "paiqi_result", property = "thirdCheckerPaiQiResult"),
-            @Result(column = "qunfafangan_result", property = "thirdCheckerQunFaFangAnResult"),
+            @Result(column = "paiqicheck_status", property = "paiQiQueRenStatus"),
+            @Result(column = "fangancheck_status", property = "qunFaFangAnQueRenStatus"),
             @Result(column = "third_beizhu", property = "thirdCheckBeiZhu"),
             @Result(column = "shuju_username", property = "shuJuUserName"),
             @Result(column = "shuju_email", property = "shuJuEmail"),

@@ -26,11 +26,11 @@ public class EdmApplyOrderServiceTest {
     @Autowired
     private EdmerService edmerService;
 
-//    @Test
-    public void saveEdmApplyOrder(){
+    //    @Test
+    public void saveEdmApplyOrder() {
 
         String email = "shuju@wo.cn";
-        Integer[] conIds = new Integer[]{1,2};
+        Integer[] conIds = new Integer[]{1, 2};
         EdmApplyOrder edmApplyOrder = edmApplyOrderService.orderInit(conIds, email);
 
         edmApplyOrder.setOrderName("沃油料13期");
@@ -47,19 +47,21 @@ public class EdmApplyOrderServiceTest {
     }
 
     @Test
-    public void findPageEdmApplyOrderByQuery(){
+    public void findPageEdmApplyOrderByQuery() {
         String email = "shuju@wo.cn";
         Edmer edmer = edmerService.findEdmerByEmail(email);
-        System.out.println(edmer.getRoles());
-        List<Integer> optOrderStatues = edmApplyOrderService.findOptOrderStatusByRoles(edmer.getRoles());
-        System.out.println(optOrderStatues);
+        if (edmer != null) {
+            System.out.println(edmer.getRoles());
+            List<Integer> optOrderStatues = edmApplyOrderService.findOptOrderStatusByRoles(edmer.getRoles());
+            System.out.println(optOrderStatues);
+        }
     }
 
     @Test
-    public void findEdmApplyOrderByEmailTest(){
+    public void findEdmApplyOrderByEmailTest() {
         String email = "shuju@wo.cn";
         List<EdmApplyOrder> edmApplyOrders = edmApplyOrderService.findEdmApplyOrdersByEmail(email);
-        if (edmApplyOrders != null && !edmApplyOrders.isEmpty()){
+        if (edmApplyOrders != null && !edmApplyOrders.isEmpty()) {
             for (EdmApplyOrder edmApplyOrder :
                     edmApplyOrders) {
                 System.out.println(edmApplyOrder);
@@ -69,7 +71,7 @@ public class EdmApplyOrderServiceTest {
     }
 
     @Test
-    public void findPageEdmApplyOrdersByEmailTest(){
+    public void findPageEdmApplyOrdersByEmailTest() {
         String email = "shuju@wo.cnn";
         EdmPage<EdmApplyOrder> pageEdmApplyOrders = edmApplyOrderService.findPageEdmApplyOrdersByEmail(email);
         System.out.println(pageEdmApplyOrders);

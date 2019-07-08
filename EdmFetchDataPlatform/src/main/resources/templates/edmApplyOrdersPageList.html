@@ -59,6 +59,9 @@
         </tr>
         </tbody>
     </table>
+    <div th:if="${#lists.isEmpty(pageEdmApplyOrders.getPageObjList())}">
+        <h2>暂时没有流转单可查询~</h2>
+    </div>
     <nav>
         <ul hidden id="pageValue">
             <input type="hidden" name="eid" th:value="${edmer.getEid()}">
@@ -68,9 +71,6 @@
             <input type="hidden" name="totalPageNum" th:value="*{totalPageNum}">
         </ul>
     </nav>
-    <div th:if="${#lists.isEmpty(pageEdmApplyOrders.getPageObjList())}">
-        <h2>暂时没有流转单可查询~</h2>
-    </div>
 </div>
 </body>
 </html>

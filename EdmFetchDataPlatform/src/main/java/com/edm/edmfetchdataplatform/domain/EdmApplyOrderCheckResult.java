@@ -1,6 +1,6 @@
 package com.edm.edmfetchdataplatform.domain;
 
-import com.edm.edmfetchdataplatform.domain.status.CheckResultStatue;
+import com.edm.edmfetchdataplatform.domain.status.CheckResultStatueFactory;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -26,8 +26,9 @@ public class EdmApplyOrderCheckResult implements Serializable {
 
     /**
      * 初审的状态
+     * 申请组组长审核的状态
      */
-    private CheckResultStatue firstCheckerResultStatus;
+    private Integer applyGroupCheckStatus;
     /**
      * 初审的结果
      */
@@ -35,21 +36,19 @@ public class EdmApplyOrderCheckResult implements Serializable {
 
     /**
      *
-     * 能力组审核
+     * 能力组审核，审核人的姓名
      */
     private String secondCheckerUserName;
 
     /**
      * 第二次审核的状态
      */
-    private CheckResultStatue secondCheckerResultStatus;
+    private Integer capacityCheckStatus;
     /**
      * 第二次审核结果
      */
     private String secondCheckerResult;
 
-    // 能力组审核的结果状态
-    private Integer capacityCheckStatue;
     /**
      * 排期结果
      */
@@ -57,27 +56,32 @@ public class EdmApplyOrderCheckResult implements Serializable {
 
 
     /**
-     * 客服组核查的状态
+     * 客服组核查的状态，客服组的姓名
      */
     private String thirdCheckerUserName;
 
     /**
-     * 第三位核查排期确认结果
+     * 第三位核查排期确认结果，排期的确认结果
      */
-    private CheckResultStatue thirdCheckerPaiQiResultStatue;
+    private Integer paiQiQueRenStatus;
+    /**
+     * 排期的确认结果
+     */
     private String thirdCheckerPaiQiResult;
 
-    // 排期确认
-    private Integer paiQiQueRenStatue;
 
     /**
      * 第三位核查者，对群发方案确认的结果
      */
-    private CheckResultStatue thirdCheckerQunFaFangAnResultStatue;
+    /**
+     * 群发方案确认 状态
+     */
+    private Integer qunFaFangAnQueRenStatus;
+    /**
+     * 群发方案的确认结果
+     */
     private String thirdCheckerQunFaFangAnResult;
 
-    //群发方案确认
-    private Integer qunFaFangAnQueRenState;
 
 
     /**
@@ -166,20 +170,25 @@ public class EdmApplyOrderCheckResult implements Serializable {
         this.firstCheckerUserName = firstCheckerUserName;
     }
 
-    public CheckResultStatue getFirstCheckerResultStatus() {
-        return firstCheckerResultStatus;
+    public Integer getApplyGroupCheckStatus() {
+        return applyGroupCheckStatus;
     }
 
-    public void setFirstCheckerResultStatus(CheckResultStatue firstCheckerResultStatus) {
-        this.firstCheckerResultStatus = firstCheckerResultStatus;
-        if (firstCheckerResultStatus !=null){
-            this.firstCheckerResult = firstCheckerResultStatus.getDesc();
+    /**
+     * 同时为 firstCheckerResult 赋值
+     * @param applyGroupCheckStatus
+     */
+    public void setApplyGroupCheckStatus(Integer applyGroupCheckStatus) {
+        this.applyGroupCheckStatus = applyGroupCheckStatus;
+        if (applyGroupCheckStatus !=null){
+            this.firstCheckerResult = CheckResultStatueFactory.getCheckResult(this.applyGroupCheckStatus).getDesc();
         }
     }
 
     public String getFirstCheckerResult() {
         return firstCheckerResult;
     }
+
 
     public String getSecondCheckerUserName() {
         return secondCheckerUserName;
@@ -189,14 +198,14 @@ public class EdmApplyOrderCheckResult implements Serializable {
         this.secondCheckerUserName = secondCheckerUserName;
     }
 
-    public CheckResultStatue getSecondCheckerResultStatus() {
-        return secondCheckerResultStatus;
+    public Integer getCapacityCheckStatus() {
+        return capacityCheckStatus;
     }
 
-    public void setSecondCheckerResultStatus(CheckResultStatue secondCheckerResultStatus) {
-        this.secondCheckerResultStatus = secondCheckerResultStatus;
-        if (secondCheckerResultStatus !=null){
-            this.secondCheckerResult = secondCheckerResultStatus.getDesc();
+    public void setCapacityCheckStatus(Integer capacityCheckStatus) {
+        this.capacityCheckStatus = capacityCheckStatus;
+        if (capacityCheckStatus !=null){
+            this.secondCheckerResult = CheckResultStatueFactory.getCheckResult(this.applyGroupCheckStatus).getDesc();
         }
     }
 
@@ -204,13 +213,6 @@ public class EdmApplyOrderCheckResult implements Serializable {
         return secondCheckerResult;
     }
 
-    public Integer getCapacityCheckStatue() {
-        return capacityCheckStatue;
-    }
-
-    public void setCapacityCheckStatue(Integer capacityCheckStatue) {
-        this.capacityCheckStatue = capacityCheckStatue;
-    }
 
     public String getPaiQiResult() {
         return paiQiResult;
@@ -218,14 +220,6 @@ public class EdmApplyOrderCheckResult implements Serializable {
 
     public void setPaiQiResult(String paiQiResult) {
         this.paiQiResult = paiQiResult;
-    }
-
-    public void setFirstCheckerResult(String firstCheckerResult) {
-        this.firstCheckerResult = firstCheckerResult;
-    }
-
-    public void setSecondCheckerResult(String secondCheckerResult) {
-        this.secondCheckerResult = secondCheckerResult;
     }
 
     public String getThirdCheckerUserName() {
@@ -236,14 +230,14 @@ public class EdmApplyOrderCheckResult implements Serializable {
         this.thirdCheckerUserName = thirdCheckerUserName;
     }
 
-    public CheckResultStatue getThirdCheckerPaiQiResultStatue() {
-        return thirdCheckerPaiQiResultStatue;
+    public Integer getPaiQiQueRenStatus() {
+        return paiQiQueRenStatus;
     }
 
-    public void setThirdCheckerPaiQiResultStatue(CheckResultStatue thirdCheckerPaiQiResultStatue) {
-        this.thirdCheckerPaiQiResultStatue = thirdCheckerPaiQiResultStatue;
-        if (thirdCheckerPaiQiResultStatue != null){
-            this.thirdCheckerPaiQiResult = thirdCheckerPaiQiResultStatue.getDesc();
+    public void setPaiQiQueRenStatus(Integer paiQiQueRenStatus) {
+        this.paiQiQueRenStatus = paiQiQueRenStatus;
+        if (paiQiQueRenStatus !=null){
+            this.thirdCheckerPaiQiResult = CheckResultStatueFactory.getCheckResult(this.paiQiQueRenStatus).getDesc();
         }
     }
 
@@ -251,19 +245,29 @@ public class EdmApplyOrderCheckResult implements Serializable {
         return thirdCheckerPaiQiResult;
     }
 
-    public CheckResultStatue getThirdCheckerQunFaFangAnResultStatue() {
-        return thirdCheckerQunFaFangAnResultStatue;
+
+    public Integer getQunFaFangAnQueRenStatus() {
+        return qunFaFangAnQueRenStatus;
     }
 
-    public void setThirdCheckerQunFaFangAnResultStatue(CheckResultStatue thirdCheckerQunFaFangAnResultStatue) {
-        this.thirdCheckerQunFaFangAnResultStatue = thirdCheckerQunFaFangAnResultStatue;
-        if (thirdCheckerQunFaFangAnResultStatue != null){
-            this.thirdCheckerQunFaFangAnResult = thirdCheckerQunFaFangAnResultStatue.getDesc();
+    public void setQunFaFangAnQueRenStatus(Integer qunFaFangAnQueRenStatus) {
+        this.qunFaFangAnQueRenStatus = qunFaFangAnQueRenStatus;
+        if (qunFaFangAnQueRenStatus !=null){
+            this.thirdCheckerQunFaFangAnResult = CheckResultStatueFactory.getCheckResult(this.qunFaFangAnQueRenStatus).getDesc();
         }
     }
 
     public String getThirdCheckerQunFaFangAnResult() {
         return thirdCheckerQunFaFangAnResult;
+    }
+
+
+    public String getThirdCheckBeiZhu() {
+        return thirdCheckBeiZhu;
+    }
+
+    public void setThirdCheckBeiZhu(String thirdCheckBeiZhu) {
+        this.thirdCheckBeiZhu = thirdCheckBeiZhu;
     }
 
     public String getShuJuUserName() {
@@ -280,6 +284,14 @@ public class EdmApplyOrderCheckResult implements Serializable {
 
     public void setShuJuEmail(String shuJuEmail) {
         this.shuJuEmail = shuJuEmail;
+    }
+
+    public String getDataCode() {
+        return dataCode;
+    }
+
+    public void setDataCode(String dataCode) {
+        this.dataCode = dataCode;
     }
 
     public String getFetchResultSheetName() {
@@ -306,28 +318,12 @@ public class EdmApplyOrderCheckResult implements Serializable {
         this.actualUserNum = actualUserNum;
     }
 
-    public String getThirdCheckBeiZhu() {
-        return thirdCheckBeiZhu;
+    public String getEndBeiZhu() {
+        return endBeiZhu;
     }
 
-    public void setThirdCheckBeiZhu(String thirdCheckBeiZhu) {
-        this.thirdCheckBeiZhu = thirdCheckBeiZhu;
-    }
-
-    public String getDataCode() {
-        return dataCode;
-    }
-
-    public void setDataCode(String dataCode) {
-        this.dataCode = dataCode;
-    }
-
-    public void setThirdCheckerPaiQiResult(String thirdCheckerPaiQiResult) {
-        this.thirdCheckerPaiQiResult = thirdCheckerPaiQiResult;
-    }
-
-    public void setThirdCheckerQunFaFangAnResult(String thirdCheckerQunFaFangAnResult) {
-        this.thirdCheckerQunFaFangAnResult = thirdCheckerQunFaFangAnResult;
+    public void setEndBeiZhu(String endBeiZhu) {
+        this.endBeiZhu = endBeiZhu;
     }
 
     public Date getUpdateTime() {
@@ -346,55 +342,20 @@ public class EdmApplyOrderCheckResult implements Serializable {
         this.oid = oid;
     }
 
-    public Integer getPaiQiQueRenStatue() {
-        return paiQiQueRenStatue;
+
+    public void setFirstCheckerResult(String firstCheckerResult) {
+        this.firstCheckerResult = firstCheckerResult;
     }
 
-    public void setPaiQiQueRenStatue(Integer paiQiQueRenStatue) {
-        this.paiQiQueRenStatue = paiQiQueRenStatue;
+    public void setSecondCheckerResult(String secondCheckerResult) {
+        this.secondCheckerResult = secondCheckerResult;
     }
 
-    public Integer getQunFaFangAnQueRenState() {
-        return qunFaFangAnQueRenState;
+    public void setThirdCheckerPaiQiResult(String thirdCheckerPaiQiResult) {
+        this.thirdCheckerPaiQiResult = thirdCheckerPaiQiResult;
     }
 
-    public void setQunFaFangAnQueRenState(Integer qunFaFangAnQueRenState) {
-        this.qunFaFangAnQueRenState = qunFaFangAnQueRenState;
-    }
-
-    public String getEndBeiZhu() {
-        return endBeiZhu;
-    }
-
-    public void setEndBeiZhu(String endBeiZhu) {
-        this.endBeiZhu = endBeiZhu;
-    }
-
-    @Override
-    public String toString() {
-        return "EdmApplyOrderCheckResult{" +
-                "ocId='" + ocId + '\'' +
-                ", firstCheckerUserName='" + firstCheckerUserName + '\'' +
-                ", firstCheckerResultStatus=" + firstCheckerResultStatus +
-                ", firstCheckerResult='" + firstCheckerResult + '\'' +
-                ", secondCheckerUserName='" + secondCheckerUserName + '\'' +
-                ", secondCheckerResultStatus=" + secondCheckerResultStatus +
-                ", secondCheckerResult='" + secondCheckerResult + '\'' +
-                ", paiQiResult='" + paiQiResult + '\'' +
-                ", thirdCheckerUserName='" + thirdCheckerUserName + '\'' +
-                ", thirdCheckerPaiQiResultStatue=" + thirdCheckerPaiQiResultStatue +
-                ", thirdCheckerPaiQiResult='" + thirdCheckerPaiQiResult + '\'' +
-                ", thirdCheckerQunFaFangAnResultStatue=" + thirdCheckerQunFaFangAnResultStatue +
-                ", thirdCheckerQunFaFangAnResult='" + thirdCheckerQunFaFangAnResult + '\'' +
-                ", shuJuUserName='" + shuJuUserName + '\'' +
-                ", shuJuEmail='" + shuJuEmail + '\'' +
-                ", dataCode='" + dataCode + '\'' +
-                ", fetchResultSheetName='" + fetchResultSheetName + '\'' +
-                ", dataUsersDescription='" + dataUsersDescription + '\'' +
-                ", actualUserNum='" + actualUserNum + '\'' +
-                ", thirdCheckBeiZhu='" + thirdCheckBeiZhu + '\'' +
-                ", updateTime=" + updateTime +
-                ", oid='" + oid + '\'' +
-                '}';
+    public void setThirdCheckerQunFaFangAnResult(String thirdCheckerQunFaFangAnResult) {
+        this.thirdCheckerQunFaFangAnResult = thirdCheckerQunFaFangAnResult;
     }
 }
