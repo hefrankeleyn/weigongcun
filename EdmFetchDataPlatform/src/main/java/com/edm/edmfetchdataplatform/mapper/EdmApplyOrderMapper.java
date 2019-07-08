@@ -29,6 +29,13 @@ public interface EdmApplyOrderMapper {
             "#{sendNum},#{channelSends},#{howSupplement},#{messageContext},#{orderState},#{edmApplyOrderCheckResult.ocId})")
     void saveEdmApplyOrder(EdmApplyOrder edmApplyOrder);
 
+    /**
+     * 修改edmApplyOrder 的状态
+     * @param edmApplyOrder
+     */
+    @Update("UPDATE `edm_apply_examine_order` SET `order_state` = #{orderState} WHERE `oid` = #{oid}")
+    void updateEdmApplyOrderStateByOid(EdmApplyOrder edmApplyOrder);
+
 
     /**
      * 根据订单号查询EdmApplyOrder

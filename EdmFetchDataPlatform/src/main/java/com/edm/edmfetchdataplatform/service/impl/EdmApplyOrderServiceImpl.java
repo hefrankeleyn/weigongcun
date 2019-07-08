@@ -200,6 +200,16 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
 
     }
 
+    /**
+     * 修改流转单的状态
+     * @param edmApplyOrder
+     */
+    @Override
+    @Transactional
+    public void updateEdmApplyOrderStatus(EdmApplyOrder edmApplyOrder) {
+        edmApplyOrderMapper.updateEdmApplyOrderStateByOid(edmApplyOrder);
+    }
+
     @Override
     public EdmApplyOrder findEdmApplyOrderByOid(String oid) {
         EdmApplyOrder edmApplyOrder = edmApplyOrderMapper.findEdmApplyOrderByOid(oid);

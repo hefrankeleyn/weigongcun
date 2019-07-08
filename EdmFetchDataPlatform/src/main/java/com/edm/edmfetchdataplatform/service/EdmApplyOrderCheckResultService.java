@@ -1,5 +1,6 @@
 package com.edm.edmfetchdataplatform.service;
 
+import com.edm.edmfetchdataplatform.base.query.EdmApplyOrderResultQuery;
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrderCheckResult;
 
 /**
@@ -12,6 +13,13 @@ public interface EdmApplyOrderCheckResultService {
      * @param edmApplyOrderCheckResult
      */
     void saveEdmApplyOrderCheckResult(EdmApplyOrderCheckResult edmApplyOrderCheckResult);
+
+
+    /**
+     * 修改 edmApplyOrderResultQuery
+     * @param edmApplyOrderResultQuery
+     */
+    void updateEdmApplyOrderCheckResult(EdmApplyOrderResultQuery edmApplyOrderResultQuery);
 
     /**
      * 根据oid查询EdmApplyOrderCheckResult

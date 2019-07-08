@@ -2,6 +2,8 @@ package com.edm.edmfetchdataplatform.controller;
 
 import com.edm.edmfetchdataplatform.base.query.EdmApplyOrderResultQuery;
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrderCheckResult;
+import com.edm.edmfetchdataplatform.service.EdmApplyOrderCheckResultService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,6 +21,12 @@ public class EdmApplyOrderCheckResultController {
     private static Logger logger = Logger.getLogger("com.edm.edmfetchdataplatform.controller.EdmApplyOrderCheckResultController");
 
     /**
+     * 订单结果的service
+     */
+    @Autowired
+    private EdmApplyOrderCheckResultService edmApplyOrderCheckResultService;
+
+    /**
      * 修改 EdmApplyOrderCheckResult
      * @param edmApplyOrderResultQuery
      * @return
@@ -27,6 +35,7 @@ public class EdmApplyOrderCheckResultController {
     public String updateEdmApplyOrderCheckResult(EdmApplyOrderResultQuery edmApplyOrderResultQuery){
 
         logger.info(edmApplyOrderResultQuery.toString());
+        edmApplyOrderCheckResultService.updateEdmApplyOrderCheckResult(edmApplyOrderResultQuery);
         return "edmApplyOrderCheckSuccess";
     }
 }

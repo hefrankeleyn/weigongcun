@@ -16,7 +16,7 @@ public class EdmApplyOrderResultQuery {
     private String firstCheckerUserName;
 
     // 能力组审核的状态
-    private String capacityCheckStatue;
+    private Integer capacityCheckStatue;
 
     // 排期结果
     private String paiQiResult;
@@ -76,11 +76,11 @@ public class EdmApplyOrderResultQuery {
         this.firstCheckerUserName = firstCheckerUserName;
     }
 
-    public String getCapacityCheckStatue() {
+    public Integer getCapacityCheckStatue() {
         return capacityCheckStatue;
     }
 
-    public void setCapacityCheckStatue(String capacityCheckStatue) {
+    public void setCapacityCheckStatue(Integer capacityCheckStatue) {
         this.capacityCheckStatue = capacityCheckStatue;
     }
 
