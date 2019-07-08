@@ -474,6 +474,12 @@ databaseChangeLog:
                     nullable: true
                   remarks: 实际的用户量
               - column:
+                  name: end_beizhu
+                  type: varchar(500)
+                  constraints:
+                    nullable: true
+                  remarks: 备注
+              - column:
                   name: update_time
                   type: date
                   constraints:
