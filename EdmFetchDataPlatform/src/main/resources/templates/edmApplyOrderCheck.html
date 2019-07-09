@@ -44,6 +44,8 @@
         <input type="hidden" th:name="${_csrf.getParameterName()}" th:value="${_csrf.getToken()}">
         <input type="hidden" name="oid" th:value="${edmApplyOrder.oid}">
         <input type="hidden" name="orderState" th:value="${edmApplyOrder.orderState}">
+        <input type="hidden" name="currentUserEmail" th:value="${currentEdmer.email}">
+        <input type="hidden" name="currentUserName" th:value="${currentEdmer.username}">
         <input type="checkbox" name="roleName"
                hidden="hidden"
                th:unless="${#lists.isEmpty(currentEdmer.roles)}"

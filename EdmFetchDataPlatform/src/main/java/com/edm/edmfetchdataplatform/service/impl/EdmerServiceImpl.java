@@ -49,6 +49,7 @@ public class EdmerServiceImpl implements EdmerService {
 
     /**
      * 根据邮箱查询
+     *
      * @param email
      * @return
      */
@@ -81,6 +82,7 @@ public class EdmerServiceImpl implements EdmerService {
 
     /**
      * 查询所有的edmer
+     *
      * @return
      */
     @Override
@@ -92,6 +94,7 @@ public class EdmerServiceImpl implements EdmerService {
 
     /**
      * 更新用户的权限
+     *
      * @param eid
      * @param rids
      */
@@ -102,15 +105,15 @@ public class EdmerServiceImpl implements EdmerService {
         List<Role> roles = new ArrayList<>();
         // 判断用户是否存在
         Edmer edmer = edmerMapper.findEdmerByEid(eid);
-        if (edmer!=null){
+        if (edmer != null) {
             // 删除eid与role的关联关系
             roleService.deleteEdmerRoleRelactionsByEid(eid);
             // 遍历rid
-            for (Integer rid:
+            for (Integer rid :
                     rids) {
                 // 根据rid 查询 Role
                 Role role = roleService.findRoleByRid(rid);
-                if (role != null){
+                if (role != null) {
                     EdmerRoleRelation roleRelation = new EdmerRoleRelation(eid, rid);
                     roleService.saveEdmerRoleRelation(roleRelation);
                     roles.add(role);
@@ -122,6 +125,7 @@ public class EdmerServiceImpl implements EdmerService {
 
     /**
      * 根据部门查询edmers
+     *
      * @param departments
      * @return
      */
@@ -134,6 +138,7 @@ public class EdmerServiceImpl implements EdmerService {
 
     /**
      * 查询某一个部门的所有用户
+     *
      * @param department
      * @return
      */
@@ -145,12 +150,35 @@ public class EdmerServiceImpl implements EdmerService {
 
     /**
      * 根据权限名称查询用户数据
+     *
      * @param roleName
      * @return
      */
     @Override
     public List<Edmer> findEdmerListByRole(String roleName) {
         return edmerMapper.findEdmersByRoleName(roleName);
+    }
+
+    /**
+     * 查询用户的邮箱
+     * @param roleNames
+     * @return
+     */
+    @Override
+    public List<String> findEdmerEmailsListByRoles(List<String> roleNames) {
+        if (roleNames == null || !roleNames.isEmpty()) {
+            return null;
+        } else {
+            List<Edmer> edmers = edmerMapper.findEdmersByRoleNameList(roleNames);
+            List<String> emails = new ArrayList<>();
+            if (edmers != null) {
+                for (Edmer edmer :
+                        edmers) {
+                    emails.add(edmer.getEmail());
+                }
+            }
+            return emails;
+        }
     }
 
 }

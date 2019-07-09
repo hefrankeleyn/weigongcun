@@ -67,4 +67,12 @@ public interface EdmerService {
      * @return
      */
     List<Edmer> findEdmerListByRole(String roleName);
+
+
+    /**
+     * 根据 用户角色 查询用户邮箱
+     * @param roleNames
+     * @return
+     */
+    List<String> findEdmerEmailsListByRoles(List<String> roleNames);
 }

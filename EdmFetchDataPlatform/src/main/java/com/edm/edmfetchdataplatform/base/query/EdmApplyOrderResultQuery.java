@@ -52,6 +52,27 @@ public class EdmApplyOrderResultQuery {
      */
     private String endBeiZhu;
 
+    /**
+     * 下一位收件人的邮箱
+     */
+    private String emailTo;
+
+    /**
+     * 下一位收件人的姓名
+     */
+    private String emailToUserName;
+
+
+    /**
+     * 当前正在审核的审核人的邮箱
+     */
+    private String currentUserEmail;
+    /**
+     * 当前正在审核的审核人的姓名
+     */
+    private String currentUserName;
+
+
     public String getOid() {
         return oid;
     }
@@ -148,13 +169,45 @@ public class EdmApplyOrderResultQuery {
         this.endBeiZhu = endBeiZhu;
     }
 
+    public String getEmailTo() {
+        return emailTo;
+    }
+
+    public void setEmailTo(String emailTo) {
+        this.emailTo = emailTo;
+    }
+
+    public String getEmailToUserName() {
+        return emailToUserName;
+    }
+
+    public void setEmailToUserName(String emailToUserName) {
+        this.emailToUserName = emailToUserName;
+    }
+
+    public String getCurrentUserEmail() {
+        return currentUserEmail;
+    }
+
+    public void setCurrentUserEmail(String currentUserEmail) {
+        this.currentUserEmail = currentUserEmail;
+    }
+
+    public String getCurrentUserName() {
+        return currentUserName;
+    }
+
+    public void setCurrentUserName(String currentUserName) {
+        this.currentUserName = currentUserName;
+    }
+
     @Override
     public String toString() {
         return "EdmApplyOrderResultQuery{" +
                 "oid='" + oid + '\'' +
                 ", orderState=" + orderState +
                 ", firstCheckerUserName='" + firstCheckerUserName + '\'' +
-                ", capacityCheckStatue='" + capacityCheckStatue + '\'' +
+                ", capacityCheckStatue=" + capacityCheckStatue +
                 ", paiQiResult='" + paiQiResult + '\'' +
                 ", paiQiQueRenStatue=" + paiQiQueRenStatue +
                 ", qunFaFangAnQueRenState=" + qunFaFangAnQueRenState +
@@ -163,6 +216,10 @@ public class EdmApplyOrderResultQuery {
                 ", dataUsersDescription='" + dataUsersDescription + '\'' +
                 ", actualUserNum='" + actualUserNum + '\'' +
                 ", endBeiZhu='" + endBeiZhu + '\'' +
+                ", emailTo='" + emailTo + '\'' +
+                ", emailToUserName='" + emailToUserName + '\'' +
+                ", currentUserEmail='" + currentUserEmail + '\'' +
+                ", currentUserName='" + currentUserName + '\'' +
                 '}';
     }
 }

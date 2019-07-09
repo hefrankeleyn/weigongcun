@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
 
 
     init();
@@ -25,7 +25,7 @@ $(document).ready(function() {
         // 选择被选中的checkbox
         var roleNameCheckBoxs = $(".container #someHiddenValue input[type='checkbox']:checked");
         var continueFlag = false;
-        $.each(roleNameCheckBoxs, function(i, roleNameCheckBox) {
+        $.each(roleNameCheckBoxs, function (i, roleNameCheckBox) {
             if ($(roleNameCheckBox).val() == roleName) {
                 continueFlag = true;
             }
@@ -361,24 +361,58 @@ $(document).ready(function() {
         var failIdValue = inputName + "Fail";
         // 添加选择成功的radio
         var divOne = $("<div class='custom-control custom-radio custom-control-inline mt-2'></div>");
-        var inputRadioSuccess = $("<input type='radio' class='custom-control-input'>")
+        var inputRadioSuccess = $("<input type='radio' class='custom-control-input success-radio'>")
             .attr("name", inputName)
-            .attr("value", 0)
+            .attr("value", 2)
             .attr("id", successIdValue);
-        var raidoLabelSuc = $("<label class='custom-control-label'>通过</label>").attr("for", successIdValue);
+        var raidoLabelSuc = $("<label class='custom-control-label'>确认</label>").attr("for", successIdValue);
         divOne.append(inputRadioSuccess);
         divOne.append(raidoLabelSuc);
         var divTwo = $("<div class='custom-control custom-radio custom-control-inline'></div>");
         // 添加 选择失败的radio
-        var inputRadioFail = $("<input type='radio' class='custom-control-input'>")
+        var inputRadioFail = $("<input type='radio' class='custom-control-input fail-radio'>")
             .attr("name", inputName)
-            .attr("value", 1)
+            .attr("value", 3)
             .attr("id", failIdValue);
-        var raidoLabelFail = $("<label class='custom-control-label'>不通过</label>").attr("for", failIdValue);
+        var raidoLabelFail = $("<label class='custom-control-label'>取消</label>").attr("for", failIdValue);
         divTwo.append(inputRadioFail);
         divTwo.append(raidoLabelFail);
         tdJqElement.append(divOne);
         tdJqElement.append(divTwo);
+        // 对该点选框添加监听事件
+        tdJqElement.children("div").children("input[type='radio']").unbind("click", buttionDisableEvent);
+        tdJqElement.children("div").children("input[type='radio']").bind("click", buttionDisableEvent);
+    }
+
+    /**
+     * 按钮失效事件
+     */
+    function buttionDisableEvent() {
+        if ($(this).hasClass("fail-radio")) {
+            // 让提交按钮不可用
+            $(this).parent().parent().parent("tr")
+                .prev("tr").children("td").children(".subToUpdateEdmApplyOrderResult").prop("disabled", true);
+        } else {
+            // 判断同一个tr下，其他td下 是否取消被选中
+            var sameTrRadios = $(this).parent().parent().parent("tr")
+                .children("td").children("div").children("input[type='radio']:checked");
+            var flag = true;
+            for (var i = 0; i < sameTrRadios.length; i++) {
+                if ($(sameTrRadios[i]).hasClass("fail-radio")) {
+                    flag = false;
+                }
+            }
+            if (flag) {
+                // 检查按钮上的select是否为空
+                var sumitbutton = $(this).parent().parent().parent("tr")
+                    .prev("tr").children("td").children(".subToUpdateEdmApplyOrderResult");
+                var options = sumitbutton.siblings("select").children("option");
+                if (options.length > 0) {
+                    $(this).parent().parent().parent("tr")
+                        .prev("tr").children("td").children(".subToUpdateEdmApplyOrderResult").prop("disabled", false);
+                }
+            }
+        }
     }
 
     /**
@@ -458,7 +492,8 @@ $(document).ready(function() {
         var applyGroupSelect = $("<select id='applyGroupLeaderEmail' name='applyGroupLeaderEmail' class='form-control'></select>");
 
         // 根据权限查询查询用户，并将用户信息添加到 select中
-        addSelectByRoleAndGroup("ROLE_CAPACITY", applyGroupSelect);
+        // addSelectByRoleAndGroup("ROLE_CAPACITY", applyGroupSelect);
+        addSelectByRoleAndGroup(roleName, applyGroupSelect);
         // 添加select
         tdJqElement.prepend(applyGroupSelect);
         // 添加lable
@@ -501,8 +536,8 @@ $(document).ready(function() {
         var url = $.projectRootUrl() + "/edmerController/findEdmerListByRole";
         // 获取 token
         var token = $(".container #someHiddenValue input[name='_csrf']").val();
-        var headers = { "X-CSRF-TOKEN": token };
-        var data = { "roleName": roleName };
+        var headers = {"X-CSRF-TOKEN": token};
+        var data = {"roleName": roleName};
         // 设置为同步
         /*
         async: false 设置ajax为同步，请求前，后面的js代码不执行
@@ -518,7 +553,7 @@ $(document).ready(function() {
                 var status = response.status;
                 if (status == 0) {
                     var result = response.result;
-                    for (var i=0; i<result.length; i++){
+                    for (var i = 0; i < result.length; i++) {
                         var userName = result[i].username;
                         var email = result[i].email;
                         var option = $("<option></option>").attr("value", email).text(userName);
@@ -543,13 +578,27 @@ $(document).ready(function() {
         var oid = $(".container #someHiddenValue input[name='oid']").val();
         // 获取下一步流转单的状态
         var orderState = $(this).siblings("input:hidden[name='orderState']").val();
-        var data = { "oid": oid, "orderState": orderState };
+        var data = {"oid": oid, "orderState": orderState};
         var beiZhuTd = $(".container table #endTr td:nth-child(2)");
         // 为备注添加 is-valid  类
         var endTextarea = beiZhuTd.children("textarea[name='endBeiZhu']");
         var endTextareaText = endTextarea.val();
         // 为data添加
         data.endBeiZhu = endTextareaText;
+        // 获取当前审核人的邮箱
+        var currentUserEmail = $(".container #someHiddenValue input[name='currentUserEmail']").val();
+        //当前审核人的姓名
+        var currentUserName = $(".container #someHiddenValue input[name='currentUserName']").val();
+        data.currentUserEmail = currentUserEmail;
+        data.currentUserName = currentUserName;
+        // 获取收件人的邮箱
+        var emailToSelect = $(this).siblings("select").children("option:selected");
+        if (emailToSelect.length == 1) {
+            var emailTo = emailToSelect.val();
+            var emailToUserName = emailToSelect.text();
+            data.emailTo = emailTo;
+            data.emailToUserName = emailToUserName;
+        }
         // 获取当前的按钮的父元素元素
         var trElement = $(this).parent().parent("tr");
         if (trElement.hasClass("applyGroupTr")) {
@@ -794,7 +843,7 @@ $(document).ready(function() {
         updateOrderResultForm.append(token);
 
 
-        $.each(jsonData, function(key, value) {
+        $.each(jsonData, function (key, value) {
             // console.log("key: " + key);
             // console.log("value: " + value);
             if (value != "") {
