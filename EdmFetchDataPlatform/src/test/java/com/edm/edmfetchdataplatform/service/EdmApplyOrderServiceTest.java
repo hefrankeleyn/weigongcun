@@ -77,4 +77,18 @@ public class EdmApplyOrderServiceTest {
         System.out.println(pageEdmApplyOrders);
     }
 
+
+    @Test
+    public void findPageEdmApplyOrdersByUserRole(){
+        String userEmail = "frankeleyn@163.com";
+        Edmer edmer = edmerService.findEdmerByEmail(userEmail);
+        if (edmer!=null){
+            // 打印用户权限
+            System.out.println(edmer.getRoles());
+            // 查询该用户可以操作的流转单状态
+            List<Integer> orderStatus = edmApplyOrderService.findOptOrderStatusByRoles(edmer.getRoles());
+            System.out.println(orderStatus);
+        }
+    }
+
 }

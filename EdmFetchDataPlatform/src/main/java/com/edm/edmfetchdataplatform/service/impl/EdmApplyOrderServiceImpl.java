@@ -310,19 +310,19 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
             List<Integer> optStateList = new ArrayList<>();
             for (int i = 0; i < roles.size(); i++) {
                 //  申请组权限
-                if (roles.get(i).getRoleName() == GroupRole.ROLE_APPLY.getRoleName()) {
+                if (GroupRole.ROLE_APPLY.getRoleName().equals(roles.get(i).getRoleName())) {
                     // 等待申请组审核
                     optStateList.add(ExamineProgressState.READY_EXAMINE.getStatus());
-                } else if (roles.get(i).getRoleName() == GroupRole.ROLE_CAPACITY.getRoleName()) {
+                } else if (GroupRole.ROLE_CAPACITY.getRoleName().equals(roles.get(i).getRoleName())) {
                     // 等待能力组审核
                     optStateList.add(ExamineProgressState.APPLY_GROUP_EXAMINE_SUCCESS.getStatus());
-                } else if (roles.get(i).getRoleName() == GroupRole.ROLE_OPERATION.getRoleName()) {
+                } else if (GroupRole.ROLE_OPERATION.getRoleName().equals(roles.get(i).getRoleName())) {
                     // 等待客户组审核
                     optStateList.add(ExamineProgressState.POWER_GROUP_EXAMINE_SUCCESS.getStatus());
-                } else if (roles.get(i).getRoleName() == GroupRole.ROLE_SHUJU.getRoleName()) {
+                } else if (GroupRole.ROLE_SHUJU.getRoleName().equals(roles.get(i).getRoleName())) {
                     // 等待数据组处理
                     optStateList.add(ExamineProgressState.SERVICES_GROUP_EXAMINE_SUCCESS.getStatus());
-                } else if (roles.get(i).getRoleName() == GroupRole.ROLE_EDM.getRoleName()) {
+                } else if (GroupRole.ROLE_EDM.getRoleName().equals(roles.get(i).getRoleName())) {
                     // 赋予开发者权限
                     optStateList.add(ExamineProgressState.READY_EXAMINE.getStatus());
                     optStateList.add(ExamineProgressState.APPLY_GROUP_EXAMINE_FAIL.getStatus());
