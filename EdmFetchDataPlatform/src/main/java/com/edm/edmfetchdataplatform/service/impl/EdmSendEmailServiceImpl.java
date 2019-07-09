@@ -2,6 +2,7 @@ package com.edm.edmfetchdataplatform.service.impl;
 
 import com.edm.edmfetchdataplatform.config.DataConfig;
 import com.edm.edmfetchdataplatform.domain.EdmApplyFile;
+import com.edm.edmfetchdataplatform.domain.status.ExamineProgressState;
 import com.edm.edmfetchdataplatform.domain.translate.EdmLiuZhuanEmailParameters;
 import com.edm.edmfetchdataplatform.service.EdmSendEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,6 +85,56 @@ public class EdmSendEmailServiceImpl implements EdmSendEmailService {
         context.setVariable("username", edmLiuZhuanEmailParameters.getEmailToUserName());
         context.setVariable("orderName", edmLiuZhuanEmailParameters.getOrderName());
         context.setVariable("paiQiYiXiang", edmLiuZhuanEmailParameters.getPaiQiYiXiang());
-        return templateEngine.process("email/emdApplyEmailModel.html", context);
+        context.setVariable("groupName", edmLiuZhuanEmailParameters.getGroupName());
+        // 根据流转单的状态获取邮件模板
+        String emailModel = fetchEmailModelByOrderStatus(edmLiuZhuanEmailParameters.getOrderStatus());
+        return templateEngine.process(emailModel, context);
+    }
+
+    /**
+     * 根据流转单的状态选择相应的邮件模板
+     * @param orderStatus
+     * @return
+     */
+    private String fetchEmailModelByOrderStatus(Integer orderStatus){
+        // 提交申请，让申请组组长审核
+        if (orderStatus == ExamineProgressState.READY_EXAMINE.getStatus()){
+            return "email/emdApplyEmailModel.html";
+        }
+        // 组长审核不通过，
+        else if (orderStatus == ExamineProgressState.APPLY_GROUP_EXAMINE_FAIL.getStatus()){
+            return "email/failEmailModel.html";
+        }
+        // 组长审核通过，告知能力组复审并安排排期
+        else if (orderStatus == ExamineProgressState.APPLY_GROUP_EXAMINE_SUCCESS.getStatus()){
+            return "email/applyGroupCheckEmailModel.html";
+        }
+        // 能力组审核不通过
+        else if (orderStatus == ExamineProgressState.POWER_GROUP_EXAMINE_FAIL.getStatus()){
+            return "email/failEmailModel.html";
+        }
+        // 能力组审核通过，交给客户组进行备案
+        else if (orderStatus == ExamineProgressState.POWER_GROUP_EXAMINE_SUCCESS.getStatus()){
+            return "email/capacityGroupCheckEmailModel.html";
+        }
+        // 客户组审核不通过，终止排期
+        else if (orderStatus == ExamineProgressState.SERVICES_GROUP_EXAMINE_FAIL.getStatus()){
+            return "email/failEmailModel.html";
+        }
+        // 客服组审核通过，交给交给数据组处理
+        else if (orderStatus == ExamineProgressState.SERVICES_GROUP_EXAMINE_SUCCESS.getStatus()){
+            return "email/shujuGroupCheckEmailModel.html";
+        }
+        // 数组组终止处理
+        else if (orderStatus == ExamineProgressState.DATA_GROUP_EXAMINE_FAIL.getStatus()){
+            return "email/failEmailModel.html";
+        }
+        // 数据组处理完成,发邮件给
+        else if (orderStatus == ExamineProgressState.DATA_GROUP_EXAMINE_SUCCESS.getStatus()){
+            return "email/shujuSuccessEmailModel.html";
+        }
+        else {
+            return "email/emdApplyEmailModel.html";
+        }
     }
 }

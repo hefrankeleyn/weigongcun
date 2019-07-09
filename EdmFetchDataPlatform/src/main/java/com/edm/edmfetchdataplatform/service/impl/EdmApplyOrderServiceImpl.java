@@ -174,7 +174,7 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
 
 
             // 给申请组组长发送邮件，并抄送给申请人
-            EdmLiuZhuanEmailParameters edmLiuZhuanEmailParameters = new EdmLiuZhuanEmailParameters();
+            EdmLiuZhuanEmailParameters edmLiuZhuanEmailParameters = new EdmLiuZhuanEmailParameters(edmApplyOrder.getOrderState());
             edmLiuZhuanEmailParameters.setEmailTo(applyGroupEdmer.getEmail());
             //  抄送者
             String[] emailCcs = new String[]{edmer.getEmail()};
@@ -187,6 +187,8 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
             edmLiuZhuanEmailParameters.setPaiQiYiXiang(edmApplyOrder.getPaiQiYiXiang());
             // 添加附件
             edmLiuZhuanEmailParameters.setEdmApplyFiles(edmApplyFileList);
+            // 添加组名
+            edmLiuZhuanEmailParameters.setGroupName(edmApplyOrder.getEdmer().getDepartment());
             // 发邮件
             logger.info(edmLiuZhuanEmailParameters.toString());
             edmSendEmailService.sendThymeleafEmail(edmLiuZhuanEmailParameters);

@@ -40,9 +40,26 @@ public class EdmLiuZhuanEmailParameters {
      */
     private String paiQiYiXiang;
 
+    /**
+     * 流转单的状态
+     */
+    private Integer orderStatus;
+
+    // 发邮件的人所属的组
+    private String groupName;
+
     private List<EdmApplyFile> edmApplyFiles;
 
     public EdmLiuZhuanEmailParameters() {
+        this.orderStatus = 0;
+    }
+
+    // 根据流转单的状态选择 邮件的模板
+    public EdmLiuZhuanEmailParameters(Integer orderStatus) {
+        this.orderStatus = orderStatus;
+        if (this.orderStatus==null){
+            this.orderStatus = 0;
+        }
     }
 
     public EdmLiuZhuanEmailParameters(String emailTo, String[] emailCc, String emailToUserName,
@@ -103,6 +120,21 @@ public class EdmLiuZhuanEmailParameters {
         this.edmApplyFiles = edmApplyFiles;
     }
 
+    public Integer getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(Integer orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
 
     @Override
     public String toString() {
@@ -113,6 +145,8 @@ public class EdmLiuZhuanEmailParameters {
                 ", orderName='" + orderName + '\'' +
                 ", paiQiYiXiang='" + paiQiYiXiang + '\'' +
                 ", edmApplyFiles=" + edmApplyFiles +
+                ", orderStatus=" + orderStatus +
+                ", groupName=" + groupName +
                 '}';
     }
 }
