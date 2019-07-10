@@ -38,6 +38,11 @@
                 th:text="'下载附件：' + ${#strings.arraySplit(edmApplyFile.originalfilename,'.')[0]}">下载附件
         </a>
     </div>
+    <div hidden="hidden" id="someHiddenValue">
+        <input type="hidden" th:name="${_csrf.getParameterName()}" th:value="${_csrf.getToken()}">
+        <input type="hidden" name="oid" th:value="${edmApplyOrder.oid}">
+        <input type="hidden" name="orderState" th:value="${edmApplyOrder.orderState}">
+    </div>
     <table style="table-layout:fixed" class="table table-bordered" th:unless="${edmApplyOrder == null}"
            th:object="${edmApplyOrder}">
         <tr>
@@ -110,62 +115,63 @@
                 </span>
             </td>
         </tr>
-        <tr>
+        <tr id="applyGroupFirstTr" class="table-secondary applyGroupTr">
             <td rowspan="2">申请组组长</td>
             <td>内容初审</td>
             <td></td>
             <td></td>
             <td rowspan="2">发能力组，<br>抄申请人</td>
         </tr>
-        <tr>
+        <tr id="applyGroupSecondTr" class="table-secondary applyGroupTr">
             <td th:text="*{edmApplyOrderCheckResult.firstCheckerUserName}">建伟</td>
             <td></td>
             <td></td>
         </tr>
-        <tr>
+        <tr id="capacityGroupFirstTr" class="table-secondary capacityGroupTr">
             <td rowspan="2">能力组<br><span th:text="*{edmApplyOrderCheckResult.secondCheckerUserName}">葛兴羽</span></td>
             <td>排期结果</td>
             <td>内容复审</td>
             <td></td>
             <td rowspan="2">发客服组，<br>抄申请人</td>
         </tr>
-        <tr>
+        <tr id="capacityGroupSecondTr" class="table-secondary capacityGroupTr">
             <td th:text="*{edmApplyOrderCheckResult.paiQiResult}">10月11日</td>
             <td th:text="*{edmApplyOrderCheckResult.secondCheckerResult}">通过</td>
             <td></td>
         </tr>
-        <tr>
-            <td rowspan="2">客服组<br><span th:text="*{edmApplyOrderCheckResult.thirdCheckerUserName}">梁南</span></td>
+        <tr id="customerServerGroupFirstTr" class="table-secondary customerServerGroupTr">
+            <td rowspan="2"><span>客服组<br><span th:text="*{edmApplyOrderCheckResult.thirdCheckerUserName}">梁南</span></span><br></td>
             <td>排期确认</td>
             <td>群发方案确认</td>
             <td></td>
-            <td rowspan="2">审核通过：<br>发数据组，抄申请人<br>审核不通过：<br>返回申请人</td>
+            <td rowspan="2">
+                <span class="sendEmailSpan">审核通过：<br>发数据组，抄申请人</span><br>
+                <span class="sendFailEmail">审核不通过：<br>返回申请人</span>
+            </td>
         </tr>
-        <tr>
+        <tr id="customerServerGroupSecondTr" class="table-secondary customerServerGroupTr">
             <td th:text="*{edmApplyOrderCheckResult.thirdCheckerPaiQiResult}">确认</td>
             <td th:text="*{edmApplyOrderCheckResult.thirdCheckerQunFaFangAnResult}">确认</td>
             <td th:text="*{edmApplyOrderCheckResult.thirdCheckBeiZhu}">请剔除黑名单用户和省分</td>
         </tr>
-        <tr>
+        <tr id="shujuGroupFirstTr" class="table-secondary shujuGroupTr">
             <td rowspan="2">数据组<br><span th:text="*{edmApplyOrderCheckResult.shuJuUserName}">数据</span><br><span
                     th:text="|(*{edmApplyOrderCheckResult.shuJuEmail})|">(shuju@wo.cn)</span>
             <td>用户数据链接</td>
             <td>实际用户数据属性说明</td>
             <td>实际用户数量</td>
-            <td rowspan="2">发申请人，<br>由申请人执行群发任务</td>
+            <td rowspan="2"><span class="sendEmailSpan">发申请人，<br>由申请人执行群发任务</span></td>
         </tr>
-        <tr>
+        <tr id="shujuGroupSecondTr" class="table-secondary shujuGroupTr">
             <td><a href="#" th:text="*{edmApplyOrderCheckResult.dataCode}"></a></td>
             <td th:text="*{edmApplyOrderCheckResult.dataUsersDescription}"></td>
             <td th:text="*{edmApplyOrderCheckResult.actualUserNum}"></td>
         </tr>
-        <tr>
+        <tr id="endTr" class="table-secondary endTr">
             <td>备注说明</td>
             <td colspan="3"></td>
             <td>结束</td>
         </tr>
-
-
     </table>
 </div>
 </body>
