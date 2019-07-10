@@ -240,7 +240,7 @@ $(document).ready(function () {
     }
 
     /**
-     * 修改可辅助组的tr
+     * 修改客服组的tr
      */
     function updateCustomerServiceGroupTr(concalOrderState, successOrderState) {
 
@@ -304,7 +304,8 @@ $(document).ready(function () {
 
         // 修改内容复审
         var pqiQiTd = $(".container table #capacityGroupSecondTr td:nth-child(2)");
-        addInputRadios(pqiQiTd, "capacityCheckStatue")
+        // addInputRadios(pqiQiTd, "capacityCheckStatue");
+        addInputRadiosTongGuoOrNot(pqiQiTd, "capacityCheckStatue");
         // 备注
         updateBeiZhuTd();
 
@@ -383,6 +384,40 @@ $(document).ready(function () {
         tdJqElement.children("div").children("input[type='radio']").unbind("click", buttionDisableEvent);
         tdJqElement.children("div").children("input[type='radio']").bind("click", buttionDisableEvent);
     }
+
+    /**
+     * 添加radio
+     * @param {通过jquery获取到的td元素} tdJqElement
+     * @param {input 元素的name属性值} inputName
+     */
+    function addInputRadiosTongGuoOrNot(tdJqElement, inputName) {
+        var successIdValue = inputName + "Success";
+        var failIdValue = inputName + "Fail";
+        // 添加选择成功的radio
+        var divOne = $("<div class='custom-control custom-radio custom-control-inline mt-2'></div>");
+        var inputRadioSuccess = $("<input type='radio' class='custom-control-input success-radio'>")
+            .attr("name", inputName)
+            .attr("value", 0)
+            .attr("id", successIdValue);
+        var raidoLabelSuc = $("<label class='custom-control-label'>通过</label>").attr("for", successIdValue);
+        divOne.append(inputRadioSuccess);
+        divOne.append(raidoLabelSuc);
+        var divTwo = $("<div class='custom-control custom-radio custom-control-inline'></div>");
+        // 添加 选择失败的radio
+        var inputRadioFail = $("<input type='radio' class='custom-control-input fail-radio'>")
+            .attr("name", inputName)
+            .attr("value", 1)
+            .attr("id", failIdValue);
+        var raidoLabelFail = $("<label class='custom-control-label'>不通过</label>").attr("for", failIdValue);
+        divTwo.append(inputRadioFail);
+        divTwo.append(raidoLabelFail);
+        tdJqElement.append(divOne);
+        tdJqElement.append(divTwo);
+        // 对该点选框添加监听事件
+        tdJqElement.children("div").children("input[type='radio']").unbind("click", buttionDisableEvent);
+        tdJqElement.children("div").children("input[type='radio']").bind("click", buttionDisableEvent);
+    }
+
 
     /**
      * 按钮失效事件

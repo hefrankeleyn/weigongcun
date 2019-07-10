@@ -358,4 +358,33 @@ public class EdmApplyOrderCheckResult implements Serializable {
     public void setThirdCheckerQunFaFangAnResult(String thirdCheckerQunFaFangAnResult) {
         this.thirdCheckerQunFaFangAnResult = thirdCheckerQunFaFangAnResult;
     }
+
+    @Override
+    public String toString() {
+        return "EdmApplyOrderCheckResult{" +
+                "ocId='" + ocId + '\'' +
+                ", firstCheckerUserName='" + firstCheckerUserName + '\'' +
+                ", applyGroupCheckStatus=" + applyGroupCheckStatus +
+                ", firstCheckerResult='" + firstCheckerResult + '\'' +
+                ", secondCheckerUserName='" + secondCheckerUserName + '\'' +
+                ", capacityCheckStatus=" + capacityCheckStatus +
+                ", secondCheckerResult='" + secondCheckerResult + '\'' +
+                ", paiQiResult='" + paiQiResult + '\'' +
+                ", thirdCheckerUserName='" + thirdCheckerUserName + '\'' +
+                ", paiQiQueRenStatus=" + paiQiQueRenStatus +
+                ", thirdCheckerPaiQiResult='" + thirdCheckerPaiQiResult + '\'' +
+                ", qunFaFangAnQueRenStatus=" + qunFaFangAnQueRenStatus +
+                ", thirdCheckerQunFaFangAnResult='" + thirdCheckerQunFaFangAnResult + '\'' +
+                ", thirdCheckBeiZhu='" + thirdCheckBeiZhu + '\'' +
+                ", shuJuUserName='" + shuJuUserName + '\'' +
+                ", shuJuEmail='" + shuJuEmail + '\'' +
+                ", dataCode='" + dataCode + '\'' +
+                ", fetchResultSheetName='" + fetchResultSheetName + '\'' +
+                ", dataUsersDescription='" + dataUsersDescription + '\'' +
+                ", actualUserNum='" + actualUserNum + '\'' +
+                ", endBeiZhu='" + endBeiZhu + '\'' +
+                ", updateTime=" + updateTime +
+                ", oid='" + oid + '\'' +
+                '}';
+    }
 }

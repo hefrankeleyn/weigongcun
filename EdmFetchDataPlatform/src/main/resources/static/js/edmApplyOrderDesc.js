@@ -94,6 +94,22 @@ $(document).ready(function () {
             addTableTrClass(tr, "table-danger");
         } else if (orderState == 6) {
             // 等待数据组处理
+            var tr = $(".container table .shujuGroupTr");
+            removeTableTrClass(tr, "table-secondary");
+            addTableTrClass(tr, "table-warning");
+
+            // 设置备注的样式
+            updateBeiZhuTd();
+            // 将样式设置为
+            var tr = $(".container table .applyGroupTr");
+            removeTableTrClass(tr, "table-secondary");
+            addTableTrClass(tr, "table-success");
+            var tr = $(".container table .capacityGroupTr");
+            removeTableTrClass(tr, "table-secondary");
+            addTableTrClass(tr, "table-success");
+            var tr = $(".container table .customerServerGroupTr");
+            removeTableTrClass(tr, "table-secondary");
+            addTableTrClass(tr, "table-success");
         } else if (orderState == 7) {
             // 数据组处理完成
             // 设置当前tr的样式

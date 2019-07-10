@@ -203,15 +203,27 @@ public class EdmApplyOrderCheckResultServiceImpl implements EdmApplyOrderCheckRe
                     // 申请组组长审核通过
                     edmApplyOrderCheckResult.setApplyGroupCheckStatus(CheckResultStatue.CHECK_SUCCESS.getState());
                 }
+                //  能力组审核不通过
+                else if (ExamineProgressState.POWER_GROUP_EXAMINE_FAIL.getStatus() == orderState) {
+                    // 审批不通过
+                    edmApplyOrderCheckResult.setCapacityCheckStatus(CheckResultStatue.CHECK_FAIL.getState());
+                }
+                // 客服组审核不通过
+                else if (ExamineProgressState.SERVICES_GROUP_EXAMINE_FAIL.getStatus() == orderState){
+                    edmApplyOrderCheckResult.setPaiQiQueRenStatus(CheckResultStatue.CHECK_CANCEL.getState());
+                    edmApplyOrderCheckResult.setQunFaFangAnQueRenStatus(CheckResultStatue.CHECK_CANCEL.getState());
+                }
             }
             // 申请组组长姓名
             if (edmApplyOrderResultQuery.getFirstCheckerUserName() != null) {
                 edmApplyOrderCheckResult.setFirstCheckerUserName(edmApplyOrderResultQuery.getFirstCheckerUserName());
             }
+
             // 能力组确认结果
             if (edmApplyOrderResultQuery.getCapacityCheckStatue() != null) {
                 edmApplyOrderCheckResult.setCapacityCheckStatus(edmApplyOrderResultQuery.getCapacityCheckStatue());
             }
+
             // 排期结果
             if (edmApplyOrderResultQuery.getPaiQiResult() != null) {
                 edmApplyOrderCheckResult.setPaiQiResult(edmApplyOrderResultQuery.getPaiQiResult());
