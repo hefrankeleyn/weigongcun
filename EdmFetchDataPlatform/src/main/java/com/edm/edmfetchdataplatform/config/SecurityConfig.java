@@ -1,5 +1,6 @@
 package com.edm.edmfetchdataplatform.config;
 
+import com.edm.edmfetchdataplatform.domain.UserDetailsLogin;
 import com.edm.edmfetchdataplatform.service.EdmerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -32,7 +33,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                return edmerService.findUserDetailsByEmail(username);
+                UserDetailsLogin userDetail = edmerService.findUserDetailsByEmail(username);
+                return userDetail;
             }
         };
     }
