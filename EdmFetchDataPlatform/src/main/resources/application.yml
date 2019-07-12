@@ -16,7 +16,15 @@ spring:
           auth: true
           starttls:
             enable: true
-
+  # rabbitmq 配置
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+#    rabbitmq 的消息确认
+#    publisher-returns: true
+#    publisher-confirms: true
 ---
 spring:
   profiles: development
