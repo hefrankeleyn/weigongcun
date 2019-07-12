@@ -36,6 +36,15 @@ public class EdmApplyOrderCheckResultController {
 
         logger.info(edmApplyOrderResultQuery.toString());
         edmApplyOrderCheckResultService.updateEdmApplyOrderCheckResult(edmApplyOrderResultQuery);
+        return "redirect:/edmApplyOrderCheckResultController/redirectUpdateEdmOrderCheckSuccessView";
+    }
+
+    /**
+     * 展示更新成功的页面
+     * @return
+     */
+    @RequestMapping(value = "/redirectUpdateEdmOrderCheckSuccessView")
+    public String redirectUpdateEdmOrderCheckSuccessView(){
         return "edmApplyOrderCheckSuccess";
     }
 }

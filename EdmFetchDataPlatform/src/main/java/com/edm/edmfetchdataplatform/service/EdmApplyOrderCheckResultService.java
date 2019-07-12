@@ -35,4 +35,5 @@ public interface EdmApplyOrderCheckResultService {
      * @return
      */
     EdmApplyOrderCheckResult findEdmApplyOrderCheckResultOcid(String ocid);
+
 }

@@ -164,5 +164,16 @@ public class EdmConditionServiceImpl implements EdmConditionService {
         }
     }
 
+    /**
+     * 根据oid查询 EdmCondition
+     * @param oid
+     * @return
+     */
+    @Override
+    public List<EdmCondition> findEdmConditionsByOid(String oid) {
+        List<EdmCondition> edmConditions = edmConditionMapper.findEdmConditionsByOid(oid);
+        return edmConditions;
+    }
+
 
 }

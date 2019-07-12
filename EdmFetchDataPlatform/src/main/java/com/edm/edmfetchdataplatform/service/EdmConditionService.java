@@ -45,4 +45,11 @@ public interface EdmConditionService {
      * @param edmConditions
      */
     void updateEdmConditions(List<EdmCondition> edmConditions);
+
+    /**
+     * 根据oid 查询所有的condition
+     * @param oid
+     * @return
+     */
+    List<EdmCondition> findEdmConditionsByOid(String oid);
 }

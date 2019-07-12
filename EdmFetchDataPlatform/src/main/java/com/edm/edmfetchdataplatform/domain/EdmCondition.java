@@ -2,6 +2,7 @@ package com.edm.edmfetchdataplatform.domain;
 
 import com.edm.edmfetchdataplatform.tools.MyArrayUtil;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -9,8 +10,9 @@ import java.util.List;
  * @Date 2019-06-15
  * @Author lifei
  */
-public class EdmCondition {
+public class EdmCondition implements Serializable {
 
+    private static final Long serialVersionUID = -2362L;
     // 主键, 自增
     private Integer conId;
 

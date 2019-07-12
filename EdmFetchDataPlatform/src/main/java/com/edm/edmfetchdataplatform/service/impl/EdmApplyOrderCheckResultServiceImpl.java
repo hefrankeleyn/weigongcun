@@ -1,19 +1,16 @@
 package com.edm.edmfetchdataplatform.service.impl;
 
-import com.edm.edmfetchdataplatform.base.query.EdmApplyOrderQuery;
 import com.edm.edmfetchdataplatform.base.query.EdmApplyOrderResultQuery;
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrder;
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrderCheckResult;
+import com.edm.edmfetchdataplatform.domain.EdmCondition;
 import com.edm.edmfetchdataplatform.domain.Edmer;
 import com.edm.edmfetchdataplatform.domain.status.CheckResultStatue;
 import com.edm.edmfetchdataplatform.domain.status.ExamineProgressState;
 import com.edm.edmfetchdataplatform.domain.status.GroupRole;
 import com.edm.edmfetchdataplatform.domain.translate.EdmLiuZhuanEmailParameters;
 import com.edm.edmfetchdataplatform.mapper.EdmApplyOrderCheckResultMapper;
-import com.edm.edmfetchdataplatform.service.EdmApplyOrderCheckResultService;
-import com.edm.edmfetchdataplatform.service.EdmApplyOrderService;
-import com.edm.edmfetchdataplatform.service.EdmSendEmailService;
-import com.edm.edmfetchdataplatform.service.EdmerService;
+import com.edm.edmfetchdataplatform.service.*;
 import com.edm.edmfetchdataplatform.tools.MyIdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,6 +42,12 @@ public class EdmApplyOrderCheckResultServiceImpl implements EdmApplyOrderCheckRe
 
     @Autowired
     private EdmSendEmailService edmSendEmailService;
+
+    @Autowired
+    private EdmConditionService edmConditionService;
+
+    @Autowired
+    private EdmAlertService edmAlertService;
 
     /**
      * 保存流转单的结果
@@ -131,9 +134,18 @@ public class EdmApplyOrderCheckResultServiceImpl implements EdmApplyOrderCheckRe
 //            // 发邮件
             logger.info(edmLiuZhuanEmailParameters.toString());
             edmSendEmailService.sendThymeleafEmail(edmLiuZhuanEmailParameters);
+
+            // 当流转单的状态为： 客服组审核成功的时候，将流转单对应的申请项作为消息发送到
+            if (edmApplyOrder.getOrderState() == ExamineProgressState.SERVICES_GROUP_EXAMINE_SUCCESS.getStatus()){
+                // 根据oid 查出对应的EdmCondition
+                List<EdmCondition> edmConditions = edmConditionService.findEdmConditionsByOid(edmApplyOrder.getOid());
+                // 将 edmConditions 依次发送到消息队列，进行提数处理
+                edmAlertService.sendEdmConditions(edmConditions);
+            }
         }
 
     }
+
 
     /**
      * 根据订单的状态获取“发送邮件，抄送者的权限名称”

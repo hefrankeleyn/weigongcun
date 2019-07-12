@@ -49,4 +49,16 @@ public class EdmConditionServiceTest {
             }
         }
     }
+
+    @Test
+    public void findEdmConditionsByOidTest(){
+        String oid = "92ae756a0961413d98dc041d94efbf02";
+        List<EdmCondition> edmConditions = edmConditionService.findEdmConditionsByOid(oid);
+        if (edmConditions!=null && !edmConditions.isEmpty()){
+            for (EdmCondition edmCondition :
+                    edmConditions) {
+                System.out.println(edmCondition);
+            }
+        }
+    }
 }

@@ -56,7 +56,11 @@ public class EdmerServiceImpl implements EdmerService {
     @Override
     public UserDetailsLogin findUserDetailsByEmail(String email) {
         Edmer edmer = edmerMapper.findEdmerByEmail(email);
-        return new UserDetailsLogin(edmer);
+        if (edmer == null) {
+            return null;
+        } else {
+            return new UserDetailsLogin(edmer);
+        }
     }
 
     @Override
@@ -161,6 +165,7 @@ public class EdmerServiceImpl implements EdmerService {
 
     /**
      * 查询用户的邮箱
+     *
      * @param roleNames
      * @return
      */
