@@ -16,12 +16,12 @@ public interface EdmConditionMapper {
      * @param edmCondition
      */
     @Insert("INSERT INTO edm_conditions(conid,dimension,province_if,provincecodes,province_opt,city_if,citycodes," +
-            "city_opt,limitnum,eid) VALUES(#{conId},#{dimension},#{provinceIf},#{provinceCodes},#{provinceOpt}," +
-            "#{cityIf},#{cityCodes},#{cityOpt},#{limitNum},#{edmer.eid})")
+            "city_opt,limitnum,oid,eid) VALUES(#{conId},#{dimension},#{provinceIf},#{provinceCodes},#{provinceOpt}," +
+            "#{cityIf},#{cityCodes},#{cityOpt},#{limitNum},#{oid},#{edmer.eid})")
     void saveEdmCondition(EdmCondition edmCondition);
 
     /**
-     * 根据Eid查询 EdmCondition
+     * 根据Eid查询 oid 为null 的 EdmCondition
      * @param eid
      * @return
      */
@@ -34,10 +34,11 @@ public interface EdmConditionMapper {
                       @Result(column = "citycodes", property = "cityCodes"),
                       @Result(column = "city_opt", property = "cityOpt"),
                       @Result(column = "limitnum", property = "limitNum"),
-                      @Result(property = "edmer", column = "eid", javaType = List.class,
-                              many = @Many(select = "com.edm.edmfetchdataplatform.mapper.EdmerMapper.findEdmerByEid"))})
+                      @Result(column = "oid", property = "oid"),
+                      @Result(property = "edmer", column = "eid",
+                              one = @One(select = "com.edm.edmfetchdataplatform.mapper.EdmerMapper.findEdmerByEid"))})
     @Select("select conid,dimension,province_if,provincecodes,province_opt,city_if,citycodes," +
-            "city_opt,limitnum from edm_conditions where 1=1 and oid is null and eid=#{eid}")
+            "city_opt,limitnum,oid,eid from edm_conditions where 1=1 and oid is null and eid=#{eid}")
     List<EdmCondition> findEdmConditionsByEid(@Param("eid") Integer eid);
 
 
@@ -57,10 +58,10 @@ public interface EdmConditionMapper {
             @Result(column = "city_opt", property = "cityOpt"),
             @Result(column = "limitnum", property = "limitNum"),
             @Result(column = "oid", property = "oid"),
-            @Result(property = "edmer", column = "eid", javaType = List.class,
-                    many = @Many(select = "com.edm.edmfetchdataplatform.mapper.EdmerMapper.findEdmerByEid"))})
+            @Result(property = "edmer", column = "eid",
+                    one = @One(select = "com.edm.edmfetchdataplatform.mapper.EdmerMapper.findEdmerByEid"))})
     @Select({"<script>",
-            "select conid,dimension,province_if,provincecodes,province_opt,city_if,citycodes,city_opt,limitnum,oid ",
+            "select conid,dimension,province_if,provincecodes,province_opt,city_if,citycodes,city_opt,limitnum,oid,eid ",
              "from edm_conditions where 1=1 and eid=#{eid} and conid in ",
             "<foreach item='item' index='index' collection='list' open='(' separator=',' close=')'>",
             "#{item}",
@@ -94,6 +95,26 @@ public interface EdmConditionMapper {
     })
     List<EdmCondition> findEdmConditionsByConIds(@Param("list") Integer[] conId);
 
+
+    /**
+     * 根据oid查询对应的 所有 EdmCondition
+     * @param oid
+     * @return
+     */
+    @Results(value = {@Result(column = "conid", property = "conId"),
+            @Result(column = "dimension", property = "dimension"),
+            @Result(column = "province_if", property = "provinceIf"),
+            @Result(column = "provincecodes", property = "provinceCodes"),
+            @Result(column = "province_opt", property = "provinceOpt"),
+            @Result(column = "city_if", property = "cityIf"),
+            @Result(column = "citycodes", property = "cityCodes"),
+            @Result(column = "city_opt", property = "cityOpt"),
+            @Result(column = "limitnum", property = "limitNum"),
+            @Result(column = "oid", property = "oid")
+    })
+    @Select("select conid,dimension,province_if,provincecodes,province_opt,city_if,citycodes," +
+            "city_opt,limitnum,oid,eid from edm_conditions where 1=1 and oid=#{oid}")
+    List<EdmCondition> findEdmConditionsByOid(String oid);
 
 
 
