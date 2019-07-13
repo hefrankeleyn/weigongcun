@@ -318,7 +318,7 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
                 } else if (GroupRole.ROLE_CAPACITY.getRoleName().equals(roles.get(i).getRoleName())) {
                     // 等待能力组审核
                     optStateList.add(ExamineProgressState.APPLY_GROUP_EXAMINE_SUCCESS.getStatus());
-                } else if (GroupRole.ROLE_OPERATION.getRoleName().equals(roles.get(i).getRoleName())) {
+                } else if (GroupRole.ROLE_CUSTOMER_SERVICE.getRoleName().equals(roles.get(i).getRoleName())) {
                     // 等待客户组审核
                     optStateList.add(ExamineProgressState.POWER_GROUP_EXAMINE_SUCCESS.getStatus());
                 } else if (GroupRole.ROLE_SHUJU.getRoleName().equals(roles.get(i).getRoleName())) {
