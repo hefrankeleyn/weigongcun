@@ -24,13 +24,13 @@ public class EdmAlertHandlerImpl implements EdmAlertHandler {
      */
     @Override
     public void handlEdmConditionAlert(EdmCondition edmCondition) {
-        logger.info("handler begin....");
         try {
+            logger.info("handler begin....");
             Thread.sleep(30000L);
+            System.out.println(edmCondition);
+            logger.info("handler end....");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println(edmCondition);
-        logger.info("handler end....");
     }
 }

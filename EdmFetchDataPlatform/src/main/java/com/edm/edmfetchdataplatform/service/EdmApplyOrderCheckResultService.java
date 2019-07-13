@@ -19,7 +19,7 @@ public interface EdmApplyOrderCheckResultService {
      * 修改 edmApplyOrderResultQuery
      * @param edmApplyOrderResultQuery
      */
-    void updateEdmApplyOrderCheckResult(EdmApplyOrderResultQuery edmApplyOrderResultQuery);
+    void updateEdmApplyOrderCheckResult(EdmApplyOrderResultQuery edmApplyOrderResultQuery, String currentLoginUserEmail);
 
     /**
      * 根据oid查询EdmApplyOrderCheckResult
