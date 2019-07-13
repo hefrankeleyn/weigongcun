@@ -6,7 +6,7 @@ $(document).ready(function () {
      */
     function init() {
         // 对响应页面的text进行初始化
-        addText("正在发送邮件...", "审核已经提交，正在发送邮件", "bg-warning");
+        addText("正在发送邮件...", "流转单申请已经提交，正在发送邮件", "bg-warning");
         // 连接 topic/sendemailfeed 端点
         listenMessage();
     }
@@ -64,10 +64,10 @@ $(document).ready(function () {
 
         // 邮件发送成功
         if (status == 0){
-            addText("审核提交成功", "审核已经提交，邮件发送成功", "bg-success");
+            addText("流转单申请提交成功", "流转单申请提交成功，邮件发送成功", "bg-success");
         }else {
             // 邮件发送失败
-            addText("邮件发送失败！", "审核已经提交，邮件发送失败", "bg-danger");
+            addText("邮件发送失败！", "流转单申请已经提交，邮件发送失败", "bg-danger");
         }
         console.log("Receive message success!");
     }

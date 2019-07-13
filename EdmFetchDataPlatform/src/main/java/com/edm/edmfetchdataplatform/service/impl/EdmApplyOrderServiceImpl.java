@@ -58,14 +58,17 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
     private EdmExcelService edmExcelService;
 
     /**
-     * 用于发邮件
+     * 流转单的结果
      */
     @Autowired
-    private EdmSendEmailService edmSendEmailService;
-
-    // 流转单的结果
-    @Autowired
     private EdmApplyOrderCheckResultService edmApplyOrderCheckResultService;
+
+    /**
+     * 用于开启一个线程发送邮件，并发送STOMP消息
+     */
+    @Autowired
+    private StompSendEmailService stompSendEmailService;
+
 
     /**
      * 对申请的订单进行初始化
@@ -189,11 +192,8 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
             edmLiuZhuanEmailParameters.setEdmApplyFiles(edmApplyFileList);
             // 添加组名
             edmLiuZhuanEmailParameters.setGroupName(edmApplyOrder.getEdmer().getDepartment());
-            // 发邮件
-            logger.info(edmLiuZhuanEmailParameters.toString());
-            edmSendEmailService.sendThymeleafEmail(edmLiuZhuanEmailParameters);
-
-
+            // 启动一个线程发邮件
+            stompSendEmailService.sendEmailWithRunnerAndSTOMPMessage(edmerEmail, edmLiuZhuanEmailParameters);
         } catch (IOException e) {
             logger.info("文件上传失败。");
             throw new RuntimeException(e);
@@ -204,6 +204,7 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
 
     /**
      * 修改流转单的状态
+     *
      * @param edmApplyOrder
      */
     @Override

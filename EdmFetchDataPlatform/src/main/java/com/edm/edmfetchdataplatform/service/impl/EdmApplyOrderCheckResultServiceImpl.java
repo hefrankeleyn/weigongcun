@@ -5,21 +5,17 @@ import com.edm.edmfetchdataplatform.domain.*;
 import com.edm.edmfetchdataplatform.domain.status.CheckResultStatue;
 import com.edm.edmfetchdataplatform.domain.status.ExamineProgressState;
 import com.edm.edmfetchdataplatform.domain.status.GroupRole;
-import com.edm.edmfetchdataplatform.domain.status.ResultStatus;
 import com.edm.edmfetchdataplatform.domain.translate.EdmLiuZhuanEmailParameters;
 import com.edm.edmfetchdataplatform.mapper.EdmApplyOrderCheckResultMapper;
 import com.edm.edmfetchdataplatform.service.*;
 import com.edm.edmfetchdataplatform.tools.MyIdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 /**
@@ -42,23 +38,16 @@ public class EdmApplyOrderCheckResultServiceImpl implements EdmApplyOrderCheckRe
     private EdmerService edmerService;
 
     @Autowired
-    private EdmSendEmailService edmSendEmailService;
-
-    @Autowired
     private EdmConditionService edmConditionService;
 
     @Autowired
     private EdmAlertService edmAlertService;
 
-    // 用户发布消息，客户端通过订阅接收消息
-    @Autowired
-    private SimpMessageSendingOperations simpMessageSendingOperations;
-
     /**
-     * 初始化一个发送邮件的线程池
-     * 创建一个带缓存的线程吹， 该池在必要的时候创建线程，在线程空闲60秒之后终止线程
+     * 用于开启一个线程发送邮件，并发送STOMP消息
      */
-    private static final ExecutorService sendEmailPool = Executors.newCachedThreadPool();
+    @Autowired
+    private StompSendEmailService stompSendEmailService;
 
     /**
      * 保存流转单的结果
@@ -143,24 +132,7 @@ public class EdmApplyOrderCheckResultServiceImpl implements EdmApplyOrderCheckRe
 //            // 添加当前发件人的组别
             edmLiuZhuanEmailParameters.setGroupName(currentEdmer.getDepartment());
 //            // 发邮件
-            // 启动一个线程发邮件
-            // 使用lambda 表示时创建一个实例
-            Runnable sendEmailRun = () -> {
-                logger.info(edmLiuZhuanEmailParameters.toString());
-                try{
-                    edmSendEmailService.sendThymeleafEmail(edmLiuZhuanEmailParameters);
-                    // 发布主题消息
-                    simpMessageSendingOperations.convertAndSendToUser(currentLoginUserEmail,
-                            "/queue/sendemailfeed",
-                            new ResponseResult(ResultStatus.SUCCESS, "邮件发送成功"));
-                }catch (RuntimeException e){
-                    simpMessageSendingOperations.convertAndSendToUser(currentLoginUserEmail,
-                            "/queue/sendemailfeed",
-                            new ResponseResult(ResultStatus.FAIL, "邮件发送失败"));
-                }
-
-            };
-            sendEmailPool.submit(sendEmailRun);
+            stompSendEmailService.sendEmailWithRunnerAndSTOMPMessage(currentLoginUserEmail, edmLiuZhuanEmailParameters);
 
             // 当流转单的状态为： 客服组审核成功的时候，将流转单对应的申请项作为消息发送到
             if (edmApplyOrder.getOrderState() == ExamineProgressState.SERVICES_GROUP_EXAMINE_SUCCESS.getStatus()) {

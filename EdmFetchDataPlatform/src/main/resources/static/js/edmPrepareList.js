@@ -125,7 +125,7 @@ $(document).ready(function () {
      */
     function submitButtonDisabled() {
         var inputs = $("#edmApplyForm input[type='text']");
-        console.log(inputs.length);
+        // console.log(inputs.length);
         if (inputs.length > 0) {
             var disabledIfExists = $("#edmApplyForm .btn").attr("disabled");
             if (typeof disabledIfExists !== undefined && disabledIfExists !== false) {

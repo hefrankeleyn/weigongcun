@@ -141,7 +141,16 @@ public class EdmFetchDataConditionController {
         // 获取用户名的邮箱
         String userEmail = authentication.getName();
         edmApplyOrderService.saveEdmApplyOrder(userEmail, edmFiles, edmApplyOrder);
-        return "redirect:/home";
+        return "redirect:/edmFetchDataConditionController/showSubmitSuccessView";
+    }
+
+    /**
+     * 展示申请单提交成功的页面
+     * @return
+     */
+    @RequestMapping(value = "/showSubmitSuccessView", method = RequestMethod.GET)
+    public String showSubmitSuccessView(){
+        return "edmApplyOrderSubmitSuccess";
     }
 
 }
