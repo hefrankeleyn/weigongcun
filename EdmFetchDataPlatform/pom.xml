@@ -21,6 +21,13 @@
         <mysql-connector-java.version>5.1.37</mysql-connector-java.version>
         <thymeleaf-extras-springsecurity5.version>3.0.4.RELEASE</thymeleaf-extras-springsecurity5.version>
         <poi.version>3.17</poi.version>
+        <reactor-core.version>3.2.8.RELEASE</reactor-core.version>
+        <reactor-net.version>2.0.8.RELEASE</reactor-net.version>
+        <netty-all.version>4.1.22.Final</netty-all.version>
+        <reactor-netty.version>0.8.3.RELEASE</reactor-netty.version>
+        <jquery.version>2.1.4</jquery.version>
+        <sockjs-client.version>1.1.2</sockjs-client.version>
+        <stomp-websocket.version>2.3.3-1</stomp-websocket.version>
     </properties>
 
     <dependencies>
@@ -100,6 +107,55 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+
+<!--     集成WebSocket, 集成STOMP消息功能需要   -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+<!--     集成STOMP消息功能需要   -->
+
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-net</artifactId>
+            <version>${reactor-net.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>${netty-all.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-core</artifactId>
+            <version>${reactor-core.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.projectreactor.netty</groupId>
+            <artifactId>reactor-netty</artifactId>
+            <version>${reactor-netty.version}</version>
+        </dependency>
+
+
+        <!-- 使用sockJS，应对不支持WebSocket的情景 webjars-->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jquery</artifactId>
+            <version>${jquery.version}</version>
+        </dependency>
+        <!-- ,使用sockJS，应对不支持WebSocket的情景 -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>sockjs-client</artifactId>
+            <version>${sockjs-client.version}</version>
+        </dependency>
+
+        <!-- 使用sockJS，应对不支持WebSocket的情景 -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>stomp-websocket</artifactId>
+            <version>${stomp-websocket.version}</version>
         </dependency>
 
     </dependencies>
