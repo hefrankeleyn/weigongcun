@@ -60,7 +60,10 @@
         </tbody>
     </table>
     <div th:if="${#lists.isEmpty(pageEdmApplyOrders.getPageObjList())}">
-        <h2>暂时没有流转单可查询~</h2>
+        <div class="jumbotron">
+            <h1 class="display-4">列表为空</h1>
+            <p class="lead">暂时没有待审核列表</p>
+        </div>
     </div>
     <nav>
         <ul hidden id="pageValue">

@@ -8,10 +8,12 @@ $(document).ready(function () {
      * 初始化函数
      */
     function init() {
-        // 初始化分页html
-        initPageHtml();
-
-
+        // 查看table是否存在，如果存在，对分页信息进行初始化
+        var tableElement = $(".container table");
+        if (tableElement.length >0){
+            // 初始化分页html
+            initPageHtml();
+        }
     }
 
     /**

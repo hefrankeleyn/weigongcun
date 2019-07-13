@@ -358,6 +358,8 @@ $(document).ready(function () {
      * @param {input 元素的name属性值} inputName
      */
     function addInputRadios(tdJqElement, inputName) {
+        // 将td中的text清空
+        tdJqElement.text("");
         var successIdValue = inputName + "Success";
         var failIdValue = inputName + "Fail";
         // 添加选择成功的radio
@@ -391,6 +393,8 @@ $(document).ready(function () {
      * @param {input 元素的name属性值} inputName
      */
     function addInputRadiosTongGuoOrNot(tdJqElement, inputName) {
+        // 将td中的text清空
+        tdJqElement.text("");
         var successIdValue = inputName + "Success";
         var failIdValue = inputName + "Fail";
         // 添加选择成功的radio
