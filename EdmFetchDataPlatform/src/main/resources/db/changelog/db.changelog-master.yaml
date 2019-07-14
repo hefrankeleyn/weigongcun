@@ -127,6 +127,44 @@ databaseChangeLog:
                     nullable: false
                   remarks: 可发维度描述
         - createTable:
+            tableName: qunfa_business
+            remarks: 群发业务的描述
+            columns:
+              - column:
+                  name: bid
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                  remarks: 群发业务的主键，自增
+              - column:
+                  name: bus_type
+                  type: int
+                  constraints:
+                    nullable: false
+                    unique: true
+                  remarks: 群发业务类型的标识
+              - column:
+                  name: bus_name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+                    unique: true
+                  remarks: 群发业务类型名称
+              - column:
+                  name: status
+                  type: int
+                  constraints:
+                    nullable: false
+                  remarks: 当前业务是否可用： 0 可用， 1 不可用
+              - column:
+                  name: hive_table
+                  type: varchar(300)
+                  constraints:
+                    nullable: true
+                  remarks: 使用的hive表明
+        - createTable:
             tableName: edm_zone
             remarks: 省份和城市代码
             columns:
@@ -174,6 +212,12 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
                   remarks: 可发项的id，自增
+              - column:
+                  name: bus_type
+                  type: int
+                  constraints:
+                    nullable: true
+                  remarks: 群发业务类型标识
               - column:
                   name: dimension
                   type: varchar(100)

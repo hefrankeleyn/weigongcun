@@ -13,8 +13,16 @@ import java.util.Arrays;
  */
 public class EdmFetchDataCondition implements Serializable {
 
+
+    private static final Long serialVersionUID = -995125L;
+
     // 主键, 自增
     private Integer conId;
+
+    /**
+     * 提数的业务类型
+     */
+    private QunFaBusiness qunFaBusiness;
     /**
      * 用户维度
      * 不能为空
@@ -100,6 +108,14 @@ public class EdmFetchDataCondition implements Serializable {
         this.conId = conId;
     }
 
+    public QunFaBusiness getQunFaBusiness() {
+        return qunFaBusiness;
+    }
+
+    public void setQunFaBusiness(QunFaBusiness qunFaBusiness) {
+        this.qunFaBusiness = qunFaBusiness;
+    }
+
     public String getDimension() {
         return dimension;
     }
@@ -172,10 +188,19 @@ public class EdmFetchDataCondition implements Serializable {
         this.edmer = edmer;
     }
 
+    public String getOid() {
+        return oid;
+    }
+
+    public void setOid(String oid) {
+        this.oid = oid;
+    }
+
     @Override
     public String toString() {
         return "EdmFetchDataCondition{" +
                 "conId=" + conId +
+                ", qunFaBusiness=" + qunFaBusiness +
                 ", dimension='" + dimension + '\'' +
                 ", provinceIf=" + provinceIf +
                 ", provinceCodes=" + Arrays.toString(provinceCodes) +
@@ -184,6 +209,7 @@ public class EdmFetchDataCondition implements Serializable {
                 ", cityCodes=" + Arrays.toString(cityCodes) +
                 ", cityOpt=" + cityOpt +
                 ", limitNum=" + limitNum +
+                ", oid='" + oid + '\'' +
                 ", edmer=" + edmer +
                 '}';
     }

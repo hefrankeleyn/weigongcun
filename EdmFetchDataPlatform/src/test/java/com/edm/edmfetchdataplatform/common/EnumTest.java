@@ -1,6 +1,6 @@
 package com.edm.edmfetchdataplatform.common;
 
-import com.edm.edmfetchdataplatform.domain.Dimension;
+import com.edm.edmfetchdataplatform.domain.status.Dimension;
 import org.junit.Test;
 
 /**

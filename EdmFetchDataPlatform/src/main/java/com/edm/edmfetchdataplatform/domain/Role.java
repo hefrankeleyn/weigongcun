@@ -1,11 +1,16 @@
 package com.edm.edmfetchdataplatform.domain;
 
+import java.io.Serializable;
+
 /**
  * 角色
  * @Date 2019-05-16
  * @Author lifei
  */
-public class Role {
+public class Role implements Serializable {
+
+    private static final Long serialVersionUID = -29996125L;
+
     // 角色id
     private Integer rid;
     // 角色名称

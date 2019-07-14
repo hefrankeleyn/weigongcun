@@ -12,6 +12,9 @@ import java.util.Date;
  */
 public class EdmApplyOrderCheckResult implements Serializable {
 
+
+    private static final Long serialVersionUID = -1206125L;
+
     /**
      * 流转单审核结果的id
      * UUID

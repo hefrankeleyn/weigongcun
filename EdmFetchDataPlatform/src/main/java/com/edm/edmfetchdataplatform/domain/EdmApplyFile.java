@@ -1,11 +1,15 @@
 package com.edm.edmfetchdataplatform.domain;
 
+import java.io.Serializable;
+
 /**
  * edm 流转单的附件
  * @Date 2019-06-20
  * @Author lifei
  */
-public class EdmApplyFile {
+public class EdmApplyFile implements Serializable {
+
+    private static final Long serialVersionUID = -16125L;
 
     /**
      * 主键， 自增

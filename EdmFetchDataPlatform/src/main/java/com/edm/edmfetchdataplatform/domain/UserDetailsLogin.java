@@ -4,6 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -12,7 +13,10 @@ import java.util.List;
  * @Date 2019-05-16
  * @Author lifei
  */
-public class UserDetailsLogin implements UserDetails {
+public class UserDetailsLogin implements UserDetails, Serializable {
+
+    private static final Long serialVersionUID = -211186125L;
+
 
     private Edmer edmer;
 

@@ -2,6 +2,7 @@ package com.edm.edmfetchdataplatform.domain.translate;
 
 import com.edm.edmfetchdataplatform.domain.EdmApplyFile;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -9,7 +10,9 @@ import java.util.List;
  * @Date 2019-06-24
  * @Author lifei
  */
-public class EdmLiuZhuanEmailParameters {
+public class EdmLiuZhuanEmailParameters implements Serializable {
+
+    private static final Long serialVersionUID = -236006145L;
 
     /**
      * 邮件发送者

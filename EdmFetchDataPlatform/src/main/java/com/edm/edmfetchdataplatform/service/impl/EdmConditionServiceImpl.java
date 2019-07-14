@@ -3,11 +3,9 @@ package com.edm.edmfetchdataplatform.service.impl;
 import com.edm.edmfetchdataplatform.domain.EdmCondition;
 import com.edm.edmfetchdataplatform.domain.EdmFetchDataCondition;
 import com.edm.edmfetchdataplatform.domain.Edmer;
+import com.edm.edmfetchdataplatform.domain.QunFaBusiness;
 import com.edm.edmfetchdataplatform.mapper.EdmConditionMapper;
-import com.edm.edmfetchdataplatform.service.EdmConditionService;
-import com.edm.edmfetchdataplatform.service.EdmTargetDescriptionService;
-import com.edm.edmfetchdataplatform.service.EdmZoneService;
-import com.edm.edmfetchdataplatform.service.EdmerService;
+import com.edm.edmfetchdataplatform.service.*;
 import com.edm.edmfetchdataplatform.tools.MyArrayUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +32,9 @@ public class EdmConditionServiceImpl implements EdmConditionService {
     @Autowired(required = false)
     private EdmTargetDescriptionService edmTargetDescriptionService;
 
+    @Autowired
+    private QunFaBusinessService qunFaBusinessService;
+
     /**
      * 保存提数项
      *
@@ -59,8 +60,14 @@ public class EdmConditionServiceImpl implements EdmConditionService {
 
     @Override
     @Transactional
-    public void savEdmCondition(EdmFetchDataCondition edmFetchDataCondition, String userEmail) {
+    public void saveEdmCondition(EdmFetchDataCondition edmFetchDataCondition, String userEmail) {
         Edmer edmer = edmerService.findEdmerByEmail(userEmail);
+        // 根据businessType 查询 QunFaBusiness
+        if (edmFetchDataCondition != null && edmFetchDataCondition.getQunFaBusiness() != null) {
+            Integer businessType = edmFetchDataCondition.getQunFaBusiness().getBusinessType();
+            QunFaBusiness qunFaBusiness = qunFaBusinessService.findQunFaBusinessByBusinessType(businessType);
+            edmFetchDataCondition.setQunFaBusiness(qunFaBusiness);
+        }
         saveEdmCondition(edmFetchDataCondition, edmer);
     }
 
@@ -151,12 +158,13 @@ public class EdmConditionServiceImpl implements EdmConditionService {
 
     /**
      * 更新多个edmCondition
+     *
      * @param edmConditions
      */
     @Override
     @Transactional
     public void updateEdmConditions(List<EdmCondition> edmConditions) {
-        if (edmConditions != null && !edmConditions.isEmpty()){
+        if (edmConditions != null && !edmConditions.isEmpty()) {
             for (EdmCondition edmCondition :
                     edmConditions) {
                 edmConditionMapper.updateEdmConditionByConId(edmCondition);
@@ -166,6 +174,7 @@ public class EdmConditionServiceImpl implements EdmConditionService {
 
     /**
      * 根据oid查询 EdmCondition
+     *
      * @param oid
      * @return
      */

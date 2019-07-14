@@ -40,6 +40,7 @@ spring:
        - classpath:sql/edmers.sql
        - classpath:sql/edm_roles.sql
        - classpath:sql/edmer_role_relation.sql
+       - classpath:sql/qunfa_business.sql
 #    initialization-mode: always
   jpa:
     hibernate:

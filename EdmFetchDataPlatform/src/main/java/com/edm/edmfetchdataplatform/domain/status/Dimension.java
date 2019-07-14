@@ -1,4 +1,4 @@
-package com.edm.edmfetchdataplatform.domain;
+package com.edm.edmfetchdataplatform.domain.status;
 
 /**
  * 用于匹配指标的中文名称

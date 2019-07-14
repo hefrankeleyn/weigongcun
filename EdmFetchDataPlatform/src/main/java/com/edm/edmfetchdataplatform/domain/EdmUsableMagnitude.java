@@ -1,5 +1,6 @@
 package com.edm.edmfetchdataplatform.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -7,7 +8,9 @@ import java.util.Date;
  * @Date 2019-05-16
  * @Author lifei
  */
-public class EdmUsableMagnitude {
+public class EdmUsableMagnitude implements Serializable {
+
+    private static final Long serialVersionUID = -200625L;
 
     // 目标的名称
     private String target;

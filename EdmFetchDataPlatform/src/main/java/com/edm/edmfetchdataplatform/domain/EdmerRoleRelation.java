@@ -1,10 +1,14 @@
 package com.edm.edmfetchdataplatform.domain;
 
+import java.io.Serializable;
+
 /**
  * @Date 2019-06-23
  * @Author lifei
  */
-public class EdmerRoleRelation {
+public class EdmerRoleRelation implements Serializable {
+
+    private static final Long serialVersionUID = -9766125L;
 
     private Integer eid;
     private Integer rid;

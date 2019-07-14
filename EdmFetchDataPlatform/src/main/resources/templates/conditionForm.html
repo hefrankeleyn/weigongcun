@@ -23,6 +23,14 @@
 <div class="container">
     <h2>EDM 数据提取</h2>
     <form th:action="@{/edmFetchDataConditionController/applyFetchData}" method="POST">
+        <div class="form-group" th:unless="${#lists.isEmpty(qunFaBusinessList)}">
+            <label for="businessType">群发业务类型：</label>
+            <select id="businessType" name="qunFaBusiness.businessType" class="form-control">
+                <option th:each="qunFaBusiness : ${qunFaBusinessList}"
+                        th:value="${qunFaBusiness.getBusinessType()}"
+                        th:text="${qunFaBusiness.getBusinessName()}">EDM群发</option>
+            </select>
+        </div>
         <div class="form-group">
             <label for="dimension">选择用户维度：</label>
             <select id="dimension" name="dimension" class="form-control">

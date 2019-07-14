@@ -4,6 +4,7 @@ import com.edm.edmfetchdataplatform.domain.status.QunFaTypeFactory;
 import com.edm.edmfetchdataplatform.domain.status.UsersSupplementStrategyFactory;
 import com.edm.edmfetchdataplatform.tools.MyArrayUtil;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -13,7 +14,9 @@ import java.util.List;
  * @Date 2019-06-17
  * @Author lifei
  */
-public class EdmApplyOrder {
+public class EdmApplyOrder implements Serializable {
+
+    private static final Long serialVersionUID = -211125L;
 
     /**
      * 申请编号

@@ -3,6 +3,7 @@ package com.edm.edmfetchdataplatform.domain;
 import com.edm.edmfetchdataplatform.domain.status.LevelState;
 import com.edm.edmfetchdataplatform.domain.status.LevelStateFactory;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -10,7 +11,9 @@ import java.util.List;
  * @Date 2019-05-16
  * @Author lifei
  */
-public class Edmer {
+public class Edmer implements Serializable {
+
+    private static final Long serialVersionUID = -236125L;
 
     // 唯一的id
     private Integer eid;

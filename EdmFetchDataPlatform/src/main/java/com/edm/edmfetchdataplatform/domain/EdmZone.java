@@ -1,11 +1,15 @@
 package com.edm.edmfetchdataplatform.domain;
 
+import java.io.Serializable;
+
 /**
  * 省份和城市的名称及代码
  * @Date 2019-06-11
  * @Author lifei
  */
-public class EdmZone {
+public class EdmZone implements Serializable {
+
+    private static final Long serialVersionUID = -888522125L;
 
     private long zoneid;
     private String provincecode;

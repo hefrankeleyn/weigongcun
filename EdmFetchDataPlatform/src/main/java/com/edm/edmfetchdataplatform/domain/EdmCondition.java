@@ -3,7 +3,6 @@ package com.edm.edmfetchdataplatform.domain;
 import com.edm.edmfetchdataplatform.tools.MyArrayUtil;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * 提数条件
@@ -15,6 +14,11 @@ public class EdmCondition implements Serializable {
     private static final Long serialVersionUID = -2362L;
     // 主键, 自增
     private Integer conId;
+
+    /**
+     * 提数的业务类型
+     */
+    private QunFaBusiness qunFaBusiness;
 
     // 所要提取的用户维度
     private String dimension;
@@ -106,6 +110,22 @@ public class EdmCondition implements Serializable {
         this.limitNum = condition.getLimitNum()==null || condition.getLimitNum() <0 ? 0: condition.getLimitNum();
 
         this.edmer = edmer;
+        this.qunFaBusiness = condition.getQunFaBusiness();
+    }
+
+    public EdmCondition(EdmFetchDataCondition condition, Edmer edmer, QunFaBusiness qunFaBusiness){
+        this.dimension = condition.getDimension();
+        this.provinceIf = condition.getProvinceIf()==null? 0: condition.getProvinceIf();
+        this.provinceCodes = MyArrayUtil.arrayToStr(condition.getProvinceCodes());
+        this.provinceOpt = condition.getProvinceOpt();
+        this.cityIf = condition.getCityIf()==null? 0: condition.getCityIf();
+        this.cityCodes = MyArrayUtil.arrayToStr(condition.getCityCodes());
+        this.cityOpt = condition.getCityOpt();
+        this.limitNum = condition.getLimitNum()==null || condition.getLimitNum() <0 ? 0: condition.getLimitNum();
+
+        this.edmer = edmer;
+
+        this.qunFaBusiness = qunFaBusiness;
     }
 
     public Integer getConId() {
@@ -114,6 +134,14 @@ public class EdmCondition implements Serializable {
 
     public void setConId(Integer conId) {
         this.conId = conId;
+    }
+
+    public QunFaBusiness getQunFaBusiness() {
+        return qunFaBusiness;
+    }
+
+    public void setQunFaBusiness(QunFaBusiness qunFaBusiness) {
+        this.qunFaBusiness = qunFaBusiness;
     }
 
     public String getDimension() {
@@ -226,6 +254,7 @@ public class EdmCondition implements Serializable {
     public String toString() {
         return "EdmCondition{" +
                 "conId=" + conId +
+                ", qunFaBusiness=" + qunFaBusiness +
                 ", dimension='" + dimension + '\'' +
                 ", description='" + description + '\'' +
                 ", provinceIf=" + provinceIf +
