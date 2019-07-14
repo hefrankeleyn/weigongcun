@@ -7,6 +7,11 @@ $(document).ready(function () {
      */
     function init() {
 
+        /**
+         * 启动bootstrap的 popover功能
+         */
+        $('[data-toggle="popover"]').popover();
+
         // 对表单提交按钮进行初始化
         submitButtonDisabled();
         // 为td的复选框添加添加监听事件

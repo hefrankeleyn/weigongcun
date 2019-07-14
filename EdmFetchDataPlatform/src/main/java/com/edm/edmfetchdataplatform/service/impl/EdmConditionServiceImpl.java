@@ -1,9 +1,6 @@
 package com.edm.edmfetchdataplatform.service.impl;
 
-import com.edm.edmfetchdataplatform.domain.EdmCondition;
-import com.edm.edmfetchdataplatform.domain.EdmFetchDataCondition;
-import com.edm.edmfetchdataplatform.domain.Edmer;
-import com.edm.edmfetchdataplatform.domain.QunFaBusiness;
+import com.edm.edmfetchdataplatform.domain.*;
 import com.edm.edmfetchdataplatform.mapper.EdmConditionMapper;
 import com.edm.edmfetchdataplatform.service.*;
 import com.edm.edmfetchdataplatform.tools.MyArrayUtil;
@@ -108,8 +105,15 @@ public class EdmConditionServiceImpl implements EdmConditionService {
             edmCondition.setCityNames(MyArrayUtil.arrayToStr(cityNames));
 
             // 查询维度名称
-            String description = edmTargetDescriptionService.findDescriptionByTarget(edmCondition.getDimension());
-            edmCondition.setDescription(description);
+            String[] dimensions = MyArrayUtil.strToArray(edmCondition.getDimensions());
+            List<EdmTargetDescription> edmTargetDescriptions = edmTargetDescriptionService.findEdmTargetDescriptionsByTargets(dimensions);
+            if (edmTargetDescriptions != null && !edmTargetDescriptions.isEmpty()) {
+                String[] descriptions = new String[edmTargetDescriptions.size()];
+                for (int i = 0; i < edmTargetDescriptions.size(); i++) {
+                    descriptions[i] = edmTargetDescriptions.get(i).getDescription();
+                }
+                edmCondition.setDescriptions(MyArrayUtil.arrayToStr(descriptions));
+            }
         }
     }
 

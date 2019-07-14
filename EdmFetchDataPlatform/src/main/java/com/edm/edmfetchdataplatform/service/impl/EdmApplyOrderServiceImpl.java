@@ -11,6 +11,7 @@ import com.edm.edmfetchdataplatform.domain.translate.EdmLiuZhuanEmailParameters;
 import com.edm.edmfetchdataplatform.base.EdmPage;
 import com.edm.edmfetchdataplatform.mapper.EdmApplyOrderMapper;
 import com.edm.edmfetchdataplatform.service.*;
+import com.edm.edmfetchdataplatform.tools.MyArrayUtil;
 import com.edm.edmfetchdataplatform.tools.MyDateUtil;
 import com.edm.edmfetchdataplatform.tools.MyFileUtil;
 import com.edm.edmfetchdataplatform.tools.MyIdGenerator;
@@ -467,25 +468,14 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
         }
         // 创建 edmApplyOrder
         EdmApplyOrder edmApplyOrder = new EdmApplyOrder();
-        // 查询数据目标描述
-        String[] targets = new String[edmConditions.size()];
         // 申请项的Id
         Integer[] conIds = new Integer[edmConditions.size()];
         for (int i = 0; i < edmConditions.size(); i++) {
-            targets[i] = edmConditions.get(i).getDimension();
             conIds[i] = edmConditions.get(i).getConId();
         }
 
         // 将申请项的id 添加到 edmConditions中
         edmApplyOrder.setConIds(conIds);
-        // 查询 EdmTargetDescription
-        List<EdmTargetDescription> edmTargetDescriptions = edmTargetDescriptionService.findEdmTargetDescriptionsByTargets(targets);
-
-
-        Map<String, String> targetDescription = new HashMap<>();
-        for (int i = 0; i < edmTargetDescriptions.size(); i++) {
-            targetDescription.put(edmTargetDescriptions.get(i).getTarget(), edmTargetDescriptions.get(i).getDescription());
-        }
 
         // 申请人
         edmApplyOrder.setEdmer(edmer);
@@ -515,7 +505,12 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
             usersDataCondition.append("目标用户" + (i + 1) + ": ");
 
             // 根据
-            usersDataCondition.append(targetDescription.get(edmCondition.getDimension()));
+            String[] dimensions = MyArrayUtil.strToArray(edmCondition.getDimensions());
+            String[] descriptions = new String[dimensions.length];
+            for (int x=0; x<dimensions.length; x++){
+                descriptions[x] = edmTargetDescriptionService.findDescriptionByTarget(dimensions[x]);
+            }
+            usersDataCondition.append(MyArrayUtil.arrayToStr(descriptions));
             usersDataCondition.append(", 提取 " + edmCondition.getLimitNum() + ";");
             usersDataCondition.append("\r\n");
 

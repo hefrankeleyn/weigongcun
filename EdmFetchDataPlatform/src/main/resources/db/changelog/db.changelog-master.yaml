@@ -219,8 +219,8 @@ databaseChangeLog:
                     nullable: true
                   remarks: 群发业务类型标识
               - column:
-                  name: dimension
-                  type: varchar(100)
+                  name: dimensions
+                  type: varchar(500)
                   constraints:
                     nullable: false
                   remarks: 维度名称

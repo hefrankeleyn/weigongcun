@@ -23,11 +23,11 @@ public class EdmFetchDataCondition implements Serializable {
      * 提数的业务类型
      */
     private QunFaBusiness qunFaBusiness;
+
     /**
-     * 用户维度
-     * 不能为空
+     * 多个用户维度
      */
-    private String dimension;
+    private String[] dimensions;
 
     /**
      * 是否拼接省份条件
@@ -89,7 +89,7 @@ public class EdmFetchDataCondition implements Serializable {
 
     public EdmFetchDataCondition(EdmCondition edmCondition){
         this.conId = edmCondition.getConId();
-        this.dimension = edmCondition.getDimension();
+        this.dimensions = MyArrayUtil.strToArray(edmCondition.getDimensions());
         this.provinceIf = edmCondition.getProvinceIf();
         this.provinceCodes = MyArrayUtil.strToArray(edmCondition.getProvinceCodes());
         this.provinceOpt = edmCondition.getProvinceOpt();
@@ -116,12 +116,12 @@ public class EdmFetchDataCondition implements Serializable {
         this.qunFaBusiness = qunFaBusiness;
     }
 
-    public String getDimension() {
-        return dimension;
+    public String[] getDimensions() {
+        return dimensions;
     }
 
-    public void setDimension(String dimension) {
-        this.dimension = dimension;
+    public void setDimensions(String[] dimensions) {
+        this.dimensions = dimensions;
     }
 
     public Integer getProvinceIf() {
@@ -201,7 +201,7 @@ public class EdmFetchDataCondition implements Serializable {
         return "EdmFetchDataCondition{" +
                 "conId=" + conId +
                 ", qunFaBusiness=" + qunFaBusiness +
-                ", dimension='" + dimension + '\'' +
+                ", dimensions='" + dimensions + '\'' +
                 ", provinceIf=" + provinceIf +
                 ", provinceCodes=" + Arrays.toString(provinceCodes) +
                 ", provinceOpt=" + provinceOpt +

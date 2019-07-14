@@ -32,8 +32,8 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="dimension">选择用户维度：</label>
-            <select id="dimension" name="dimension" class="form-control">
+            <label for="dimensions">选择用户维度：</label>
+            <select multiple id="dimensions" name="dimensions" class="form-control">
                 <option th:each="edmTargetDescription : ${edmTargetDescriptions}" th:value="${edmTargetDescription.getTarget()}" th:text="${edmTargetDescription.getDescription()}">用户维度</option>
             </select>
         </div>

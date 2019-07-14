@@ -21,10 +21,10 @@ public class EdmCondition implements Serializable {
     private QunFaBusiness qunFaBusiness;
 
     // 所要提取的用户维度
-    private String dimension;
+    private String dimensions;
 
     // 用户维度描述
-    private String description;
+    private String descriptions;
 
     /**
      * 是否拼接省份条件
@@ -100,7 +100,7 @@ public class EdmCondition implements Serializable {
     }
 
     public EdmCondition(EdmFetchDataCondition condition, Edmer edmer){
-        this.dimension = condition.getDimension();
+        this.dimensions = MyArrayUtil.arrayToStr(condition.getDimensions());
         this.provinceIf = condition.getProvinceIf()==null? 0: condition.getProvinceIf();
         this.provinceCodes = MyArrayUtil.arrayToStr(condition.getProvinceCodes());
         this.provinceOpt = condition.getProvinceOpt();
@@ -114,7 +114,7 @@ public class EdmCondition implements Serializable {
     }
 
     public EdmCondition(EdmFetchDataCondition condition, Edmer edmer, QunFaBusiness qunFaBusiness){
-        this.dimension = condition.getDimension();
+        this.dimensions = MyArrayUtil.arrayToStr(condition.getDimensions());
         this.provinceIf = condition.getProvinceIf()==null? 0: condition.getProvinceIf();
         this.provinceCodes = MyArrayUtil.arrayToStr(condition.getProvinceCodes());
         this.provinceOpt = condition.getProvinceOpt();
@@ -144,12 +144,12 @@ public class EdmCondition implements Serializable {
         this.qunFaBusiness = qunFaBusiness;
     }
 
-    public String getDimension() {
-        return dimension;
+    public String getDimensions() {
+        return dimensions;
     }
 
-    public void setDimension(String dimension) {
-        this.dimension = dimension;
+    public void setDimensions(String dimensions) {
+        this.dimensions = dimensions;
     }
 
     public Integer getProvinceIf() {
@@ -232,14 +232,13 @@ public class EdmCondition implements Serializable {
         this.cityNames = cityNames;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDescriptions() {
+        return descriptions;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescriptions(String descriptions) {
+        this.descriptions = descriptions;
     }
-
 
     public String getOid() {
         return oid;
@@ -255,8 +254,8 @@ public class EdmCondition implements Serializable {
         return "EdmCondition{" +
                 "conId=" + conId +
                 ", qunFaBusiness=" + qunFaBusiness +
-                ", dimension='" + dimension + '\'' +
-                ", description='" + description + '\'' +
+                ", dimensions='" + dimensions + '\'' +
+                ", descriptions='" + descriptions + '\'' +
                 ", provinceIf=" + provinceIf +
                 ", provinceCodes='" + provinceCodes + '\'' +
                 ", provinceNames='" + provinceNames + '\'' +

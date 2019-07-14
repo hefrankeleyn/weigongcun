@@ -56,7 +56,13 @@
                            th:text="${edmConditionState.count}">状态变量： count</label>
                 </div>
             </td>
-            <td th:text="${edmCondition.getDescription()}">中高级活跃用户一（连续六个月有邮短阅读（点击URL）行为用户）</td>
+            <td>
+                <span th:text="${edmCondition.getDescriptions()!=null && #strings.length(edmCondition.getDescriptions())>35}?${#strings.substring(edmCondition.getDescriptions(), 0, 35)}:${edmCondition.getDescriptions()}"></span>
+                <span th:if="${edmCondition.getDescriptions()!=null && #strings.length(edmCondition.getDescriptions())>35}">
+                    <button data-toggle="popover" title="用户维度" class="btn btn-link py-0 px-0"
+                            th:data-content="${edmCondition.getDescriptions()}" data-html="true">查看全文</button>
+                </span>
+            </td>
             <td th:text="${edmCondition.getProvinceOpt() == null}? '-' : (${edmCondition.getProvinceOpt() == 0}? '包含' : '排除')">包含</td>
             <td th:text="${edmCondition.getProvinceNames() == null}? '-': ${edmCondition.getProvinceNames()}">北京、天津</td>
             <td th:text="${edmCondition.getCityOpt() == null}? '-' : (${edmCondition.getCityOpt() == 0}? '包含' : '排除')">排除</td>
