@@ -136,10 +136,8 @@ public class EdmApplyOrderCheckResultServiceImpl implements EdmApplyOrderCheckRe
 
             // 当流转单的状态为： 客服组审核成功的时候，将流转单对应的申请项作为消息发送到
             if (edmApplyOrder.getOrderState() == ExamineProgressState.SERVICES_GROUP_EXAMINE_SUCCESS.getStatus()) {
-                // 根据oid 查出对应的EdmCondition
-                List<EdmCondition> edmConditions = edmConditionService.findEdmConditionsByOid(edmApplyOrder.getOid());
-                // 将 edmConditions 依次发送到消息队列，进行提数处理
-                edmAlertService.sendEdmConditions(edmConditions);
+                // 将该订单发送到消息队列，进行处理
+                edmAlertService.sendEdmApplyOrder(edmApplyOrder);
             }
         }
 

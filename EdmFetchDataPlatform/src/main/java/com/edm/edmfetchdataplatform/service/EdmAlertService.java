@@ -1,9 +1,6 @@
 package com.edm.edmfetchdataplatform.service;
 
-import com.edm.edmfetchdataplatform.domain.EdmCondition;
-
-import java.util.List;
-
+import com.edm.edmfetchdataplatform.domain.EdmApplyOrder;
 /**
  *
  * 发送消息到消息队列
@@ -12,15 +9,11 @@ import java.util.List;
  */
 public interface EdmAlertService {
 
-    /**
-     * 将 EdmCondition 发送到消息中间件
-     * @param edmCondition
-     */
-    void sendEdmCondition(EdmCondition edmCondition);
 
     /**
-     * 将多个EdmCondition发送到消息中间件
-     * @param edmConditions
+     * 将 edmApplyOrder 发送到消息中间件
+     * @param edmApplyOrder
      */
-    void sendEdmConditions(List<EdmCondition> edmConditions);
+    void sendEdmApplyOrder(EdmApplyOrder edmApplyOrder);
+
 }

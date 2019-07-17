@@ -119,6 +119,11 @@ public class EdmApplyOrder implements Serializable {
      */
     private List<EdmApplyFile> edmApplyFiles;
 
+    /**
+     * 一个流转单对应多个提数项
+     */
+    private List<EdmCondition> edmConditions;
+
     public String getOrderName() {
         return orderName;
     }
@@ -312,6 +317,14 @@ public class EdmApplyOrder implements Serializable {
         this.orderStateDescription = orderStateDescription;
     }
 
+    public List<EdmCondition> getEdmConditions() {
+        return edmConditions;
+    }
+
+    public void setEdmConditions(List<EdmCondition> edmConditions) {
+        this.edmConditions = edmConditions;
+    }
+
     @Override
     public String toString() {
         return "EdmApplyOrder{" +
@@ -333,10 +346,11 @@ public class EdmApplyOrder implements Serializable {
                 ", messageContext='" + messageContext + '\'' +
                 ", conIds=" + Arrays.toString(conIds) +
                 ", orderState=" + orderState +
+                ", orderStateDescription='" + orderStateDescription + '\'' +
                 ", nextEdmerId=" + nextEdmerId +
                 ", edmApplyOrderCheckResult=" + edmApplyOrderCheckResult +
                 ", edmApplyFiles=" + edmApplyFiles +
-                ", orderStateDescription=" + orderStateDescription +
+                ", edmConditions=" + edmConditions +
                 '}';
     }
 }

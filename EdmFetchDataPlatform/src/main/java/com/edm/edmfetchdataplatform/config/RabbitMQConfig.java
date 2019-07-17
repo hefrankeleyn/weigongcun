@@ -73,6 +73,6 @@ public class RabbitMQConfig {
      */
     @Bean
     public MessageListenerAdapter listenerAdapter(EdmAlertHandler edmAlertHandler){
-        return new MessageListenerAdapter(edmAlertHandler, "handlEdmConditionAlert");
+        return new MessageListenerAdapter(edmAlertHandler, "handlEdmApplyOrderAlert");
     }
 }

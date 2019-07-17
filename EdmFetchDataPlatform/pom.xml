@@ -158,6 +158,12 @@
             <version>${stomp-websocket.version}</version>
         </dependency>
 
+<!--        SpringBoot 整合hive-->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-jdbc</artifactId>-->
+<!--        </dependency>-->
+
     </dependencies>
 
     <build>

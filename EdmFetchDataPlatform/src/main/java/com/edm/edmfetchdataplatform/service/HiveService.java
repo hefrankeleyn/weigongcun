@@ -1,6 +1,7 @@
 package com.edm.edmfetchdataplatform.service;
 
-import com.edm.edmfetchdataplatform.domain.EdmCondition;
+import com.edm.edmfetchdataplatform.domain.EdmTaskResult;
+import com.edm.edmfetchdataplatform.domain.translate.EdmConditionOfOrder;
 
 /**
  * 用于操作hive
@@ -9,9 +10,9 @@ public interface HiveService {
 
 
     /**
-     * 根据 EdmCondition 创造数据编码
-     * @param edmCondition
+     * 通过操作hive，获取EdmTaskResult
+     * @param edmConditionOfOrder
      * @return
      */
-    String createDataCodeByEdmCondition(EdmCondition edmCondition);
+    EdmTaskResult optHiveFetchEdmTaskResult(EdmConditionOfOrder edmConditionOfOrder);
 }
