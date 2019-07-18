@@ -417,6 +417,84 @@ databaseChangeLog:
                     nullable: false
                   remarks: 转发流转单的id
         - createTable:
+            tableName: edm_task_result
+            remarks: 群发流转单的其他附件
+            columns:
+              - column:
+                  name: task_id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                  remarks: 任务id,自增
+              - column:
+                  name: conid
+                  type: int
+                  constraints:
+                    nullable: true
+                  remarks: edmcondition 的id
+              - column:
+                  name: user_name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+                  remarks: 任务发起人的姓名
+              - column:
+                  name: status
+                  type: int
+                  constraints:
+                    nullable: false
+                  remarks: 数据编码是否可用， 1 为不可用， 2 为可用
+              - column:
+                  name: submit_time
+                  type: date
+                  constraints:
+                    nullable: true
+                  remarks: 创建时间
+              - column:
+                  name: finish_time
+                  type: date
+                  constraints:
+                    nullable: true
+                  remarks: 任务提取完成时间
+              - column:
+                  name: file_path
+                  type: varchar(200)
+                  constraints:
+                    nullable: true
+                  remarks: 文件名称或文件绝对路径
+              - column:
+                  name: data_code
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+                  remarks: 数据编码
+              - column:
+                  name: filelinenum
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+                  remarks: 文件的行数
+              - column:
+                  name: topic
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+                  remarks: 该编码对应的活动名称
+              - column:
+                  name: business_type
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+                  remarks: 业务类型，EDM，账单
+              - column:
+                  name: provincenumsinfo
+                  type: varchar(1000)
+                  constraints:
+                    nullable: true
+                  remarks: 各个省份数据量信息
+        - createTable:
             tableName: edm_order_result
             remarks: 群发流转单结果
             columns:
