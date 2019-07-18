@@ -40,7 +40,7 @@ public interface EdmTaskResultMapper {
      * @return
      */
     @Select("select `task_id`,`conid`,`user_name`,`status`,`submit_time`,`finish_time`,`file_path`,`data_code`," +
-            "filelinenum`,`topic`,`business_type`,`provincenumsinfo` " +
+            "`filelinenum`,`topic`,`business_type`,`provincenumsinfo` " +
             "from `edm_task_result` where 1=1 and `status`=2 order by `finish_time`")
     @Results(value = {@Result(column = "task_id", property = "taskId"),
             @Result(column = "conid", property = "conId"),
@@ -64,7 +64,7 @@ public interface EdmTaskResultMapper {
      * @return
      */
     @Select("select `task_id`,`conid`,`user_name`,`status`,`submit_time`,`finish_time`,`file_path`,`data_code`," +
-            "filelinenum`,`topic`,`business_type`,`provincenumsinfo` " +
+            "`filelinenum`,`topic`,`business_type`,`provincenumsinfo` " +
             "from `edm_task_result` where 1=1 and `task_id`=#{taskId}")
     @Results(value = {@Result(column = "task_id", property = "taskId"),
             @Result(column = "conid", property = "conId"),
@@ -87,7 +87,7 @@ public interface EdmTaskResultMapper {
      * @return
      */
     @Select("select `task_id`,`conid`,`user_name`,`status`,`submit_time`,`finish_time`,`file_path`,`data_code`," +
-            "filelinenum`,`topic`,`business_type`,`provincenumsinfo` " +
+            "`filelinenum`,`topic`,`business_type`,`provincenumsinfo` " +
             "from `edm_task_result` where 1=1 and `conid`=#{conId}")
     @Results(value = {@Result(column = "task_id", property = "taskId"),
             @Result(column = "conid", property = "conId"),
@@ -112,7 +112,7 @@ public interface EdmTaskResultMapper {
      */
     @Select({"<script>",
             "select `task_id`,`conid`,`user_name`,`status`,`submit_time`,`finish_time`,`file_path`,`data_code`," +
-            "filelinenum`,`topic`,`business_type`,`provincenumsinfo` " +
+            "`filelinenum`,`topic`,`business_type`,`provincenumsinfo` " +
             "from `edm_task_result` where 1=1 and `conid` in ",
             "<foreach item='item' index='index' collection='list' open='(' separator=',' close=')'>",
             "#{item}",
@@ -142,7 +142,7 @@ public interface EdmTaskResultMapper {
      */
     @Select({"<script>",
             "select `task_id`,`conid`,`user_name`,`status`,`submit_time`,`finish_time`,`file_path`,`data_code`," +
-            "filelinenum`,`topic`,`business_type`,`provincenumsinfo` " +
+            "`filelinenum`,`topic`,`business_type`,`provincenumsinfo` " +
             "from `edm_task_result` where 1=1 and `status`=2 and `conid` in ",
             "<foreach item='item' index='index' collection='list' open='(' separator=',' close=')'>",
             "#{item}",
@@ -172,8 +172,8 @@ public interface EdmTaskResultMapper {
      * @return
      */
     @Select("select `task_id`,`conid`,`user_name`,`status`,`submit_time`,`finish_time`,`file_path`,`data_code`," +
-            "filelinenum`,`topic`,`business_type`,`provincenumsinfo` " +
-            "from `edm_task_result` where 1=1 and `data_code`=#{dataCode}")
+            "`filelinenum`,`topic`,`business_type`,`provincenumsinfo` " +
+            "from `edm_task_result` where 1=1 and `data_code`='${dataCode}'")
     @Results(value = {@Result(column = "task_id", property = "taskId"),
             @Result(column = "conid", property = "conId"),
             @Result(column = "user_name", property = "userName"),
@@ -187,7 +187,7 @@ public interface EdmTaskResultMapper {
             @Result(column = "business_type", property = "businessType"),
             @Result(column = "provincenumsinfo", property = "provinceNumsInfo")
     })
-    EdmTaskResult findEdmTaskResultByDataCode(String dataCode);
+    EdmTaskResult findEdmTaskResultByDataCode(@Param("dataCode") String dataCode);
 
 
 }
