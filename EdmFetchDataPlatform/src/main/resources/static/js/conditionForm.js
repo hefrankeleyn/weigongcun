@@ -42,7 +42,6 @@ $(document).ready(function () {
         // 获取addDataCode input中的内容
         var dataCodeInput = $(this).parent().siblings("#addDataCode");
         var dataCode = dataCodeInput.val();
-        console.log("dataCode: " + dataCode);
         var parentFormGroup = $(this).parent().parent().parent();
         // 拼接data参数
         var data = {"dataCode" : dataCode};
