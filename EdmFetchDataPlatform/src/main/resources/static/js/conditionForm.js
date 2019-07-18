@@ -63,7 +63,7 @@ $(document).ready(function () {
                 if(status == 0){
                     // 进行ajax请求，查询该datacode是否存在， 如果存在添加一个checkbox
                     var label = $("<label class='form-check-label'></label>").text(dataCode);
-                    var inputCheckbox = $("<input type='checkbox' class='form-check-input' name='dataCode'>")
+                    var inputCheckbox = $("<input type='checkbox' class='form-check-input' name='dataCodes'>")
                         .attr("value", dataCode)
                         .prop("checked", true);
                     var dataCodeCheckBox = $("<div class='form-check-inline'></div>")

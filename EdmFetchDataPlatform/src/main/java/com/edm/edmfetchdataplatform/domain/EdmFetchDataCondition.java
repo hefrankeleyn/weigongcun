@@ -67,6 +67,11 @@ public class EdmFetchDataCondition implements Serializable {
     private Integer cityOpt;
 
     /**
+     * 数据编码
+     */
+    private String[] dataCodes;
+
+    /**
      * 所要提取的数据量
      * 不能为空
      */
@@ -96,6 +101,7 @@ public class EdmFetchDataCondition implements Serializable {
         this.cityIf = edmCondition.getCityIf();
         this.cityCodes = MyArrayUtil.strToArray(edmCondition.getCityCodes());
         this.cityOpt = edmCondition.getCityOpt();
+        this.dataCodes = MyArrayUtil.strToArray(edmCondition.getDataCodes());
         this.limitNum = edmCondition.getLimitNum();
         this.edmer = edmCondition.getEdmer();
     }
@@ -172,6 +178,14 @@ public class EdmFetchDataCondition implements Serializable {
         this.cityOpt = cityOpt;
     }
 
+    public String[] getDataCodes() {
+        return dataCodes;
+    }
+
+    public void setDataCodes(String[] dataCodes) {
+        this.dataCodes = dataCodes;
+    }
+
     public Integer getLimitNum() {
         return limitNum;
     }
@@ -201,13 +215,14 @@ public class EdmFetchDataCondition implements Serializable {
         return "EdmFetchDataCondition{" +
                 "conId=" + conId +
                 ", qunFaBusiness=" + qunFaBusiness +
-                ", dimensions='" + dimensions + '\'' +
+                ", dimensions=" + Arrays.toString(dimensions) +
                 ", provinceIf=" + provinceIf +
                 ", provinceCodes=" + Arrays.toString(provinceCodes) +
                 ", provinceOpt=" + provinceOpt +
                 ", cityIf=" + cityIf +
                 ", cityCodes=" + Arrays.toString(cityCodes) +
                 ", cityOpt=" + cityOpt +
+                ", dataCodes=" + Arrays.toString(dataCodes) +
                 ", limitNum=" + limitNum +
                 ", oid='" + oid + '\'' +
                 ", edmer=" + edmer +

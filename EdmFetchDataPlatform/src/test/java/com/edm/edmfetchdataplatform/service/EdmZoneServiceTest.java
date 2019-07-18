@@ -30,9 +30,11 @@ public class EdmZoneServiceTest {
     @Test
     public void finCityByProvincecode(){
         List<EdmZone> cities = edmZoneService.findCitiesByProvinceCode("100");
-        for (EdmZone city :
-                cities) {
-            System.out.println(city);
+        if (cities!=null && !cities.isEmpty()){
+            for (EdmZone city :
+                    cities) {
+                System.out.println(city);
+            }
         }
     }
 

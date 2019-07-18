@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -75,8 +74,8 @@ public class EdmFetchDataConditionController {
      * @return
      */
     @RequestMapping(value = "/findCitiesByProvinceCode", method = RequestMethod.POST)
-    public @ResponseBody
-    ResponseResult findCitiesByProvinceCode(String provincecode) {
+    @ResponseBody
+    public ResponseResult findCitiesByProvinceCode(String provincecode) {
         List<EdmZone> cities = edmZoneService.findCitiesByProvinceCode(provincecode);
         if (cities != null && !cities.isEmpty()) {
             return new ResponseResult(ResultStatus.SUCCESS, cities);

@@ -261,6 +261,12 @@ databaseChangeLog:
                     nullable: true
                   remarks: 对城市条件进行包含或排除操作（0 排除，1 包含）
               - column:
+                  name: data_codes
+                  type: varchar(1000)
+                  constraints:
+                    nullable: true
+                  remarks: 要排除的数据编码
+              - column:
                   name: limitnum
                   type: int
                   constraints:
@@ -433,6 +439,7 @@ databaseChangeLog:
                   type: int
                   constraints:
                     nullable: true
+                    unique: true
                   remarks: edmcondition 的id
               - column:
                   name: user_name
@@ -469,6 +476,7 @@ databaseChangeLog:
                   type: varchar(100)
                   constraints:
                     nullable: false
+                    unique: true
                   remarks: 数据编码
               - column:
                   name: filelinenum

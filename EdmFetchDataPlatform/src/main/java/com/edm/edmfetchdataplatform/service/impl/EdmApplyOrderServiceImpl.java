@@ -511,6 +511,10 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
                 descriptions[x] = edmTargetDescriptionService.findDescriptionByTarget(dimensions[x]);
             }
             usersDataCondition.append(MyArrayUtil.arrayToStr(descriptions));
+            // 判断是否需要排除数据编码
+            if (edmCondition.getDataCodes()!=null && !edmCondition.getDataCodes().trim().equals("")){
+                usersDataCondition.append(",排除数据编码\""+edmCondition.getDataCodes()+"\"" );
+            }
             usersDataCondition.append(", 提取 " + edmCondition.getLimitNum() + ";");
             usersDataCondition.append("\r\n");
 

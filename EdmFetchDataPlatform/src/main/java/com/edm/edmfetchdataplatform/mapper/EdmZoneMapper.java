@@ -27,7 +27,7 @@ public interface EdmZoneMapper {
      * @return
      */
     @Select("select provincecode,provincename,citycode,cityname from edm_zone " +
-            "where provincecode=${provincecode} " +
+            "where provincecode='${provincecode}' " +
             "group by provincecode,provincename,citycode,cityname")
     List<EdmZone> findCitysByProvinceCode(@Param("provincecode") String provincecode);
 

@@ -75,6 +75,11 @@ public class EdmCondition implements Serializable {
      */
     private Integer cityOpt;
 
+    /**
+     * 数据编码，
+     */
+    private String dataCodes;
+
 
     /**
      * 所要提取的数据量
@@ -107,6 +112,7 @@ public class EdmCondition implements Serializable {
         this.cityIf = condition.getCityIf()==null? 0: condition.getCityIf();
         this.cityCodes = MyArrayUtil.arrayToStr(condition.getCityCodes());
         this.cityOpt = condition.getCityOpt();
+        this.dataCodes = MyArrayUtil.arrayToStr(condition.getDataCodes());
         this.limitNum = condition.getLimitNum()==null || condition.getLimitNum() <0 ? 0: condition.getLimitNum();
 
         this.edmer = edmer;
@@ -121,6 +127,7 @@ public class EdmCondition implements Serializable {
         this.cityIf = condition.getCityIf()==null? 0: condition.getCityIf();
         this.cityCodes = MyArrayUtil.arrayToStr(condition.getCityCodes());
         this.cityOpt = condition.getCityOpt();
+        this.dataCodes = MyArrayUtil.arrayToStr(condition.getDataCodes());
         this.limitNum = condition.getLimitNum()==null || condition.getLimitNum() <0 ? 0: condition.getLimitNum();
 
         this.edmer = edmer;
@@ -200,6 +207,14 @@ public class EdmCondition implements Serializable {
         this.cityOpt = cityOpt;
     }
 
+    public String getDataCodes() {
+        return dataCodes;
+    }
+
+    public void setDataCodes(String dataCodes) {
+        this.dataCodes = dataCodes;
+    }
+
     public Integer getLimitNum() {
         return limitNum;
     }
@@ -264,6 +279,7 @@ public class EdmCondition implements Serializable {
                 ", cityCodes='" + cityCodes + '\'' +
                 ", cityNames='" + cityNames + '\'' +
                 ", cityOpt=" + cityOpt +
+                ", dataCodes='" + dataCodes + '\'' +
                 ", limitNum=" + limitNum +
                 ", oid='" + oid + '\'' +
                 ", edmer=" + edmer +
