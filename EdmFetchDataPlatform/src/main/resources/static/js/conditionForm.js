@@ -25,6 +25,133 @@ $(document).ready(function () {
 
         // 开启表单验证
         addFormValidationEvent();
+
+        // 监听要排除的数据编码按钮
+        $(".form-group .input-group .addDataCode:button").unbind("click", addDataCodeCheckBox);
+        $(".form-group .input-group .addDataCode:button").bind("click", addDataCodeCheckBox);
+        // 将添加要排除的数据编码按钮置为不可用
+        addDataCodeButtonEnableOrDisAble(true);
+        $(".form-group .input-group #addDataCode").unbind("input propertychange", listenAddDataCodeInput);
+        $(".form-group .input-group #addDataCode").bind("input propertychange", listenAddDataCodeInput);
+    }
+
+    /**
+     * 检查要排除的数据编码是否存在，如果存在添加checkout
+     */
+    function addDataCodeCheckBox() {
+        // 获取addDataCode input中的内容
+        var dataCodeInput = $(this).parent().siblings("#addDataCode");
+        var dataCode = dataCodeInput.val();
+        console.log("dataCode: " + dataCode);
+        var parentFormGroup = $(this).parent().parent().parent();
+        // 拼接data参数
+        var data = {"dataCode" : dataCode};
+        // 获取 token
+        var token = $("input[name='_csrf']").val();
+        var headers = {"X-CSRF-TOKEN": token}
+        // 获取项目路径
+        var url = $.projectRootUrl() + "/edmTaskResultController/judgeDataCodeIfExists";
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: url,
+            data: data,
+            headers:headers,
+            success: function (response) {
+                // 获取请求结果
+                var status = response.status;
+                if(status == 0){
+                    // 进行ajax请求，查询该datacode是否存在， 如果存在添加一个checkbox
+                    var label = $("<label class='form-check-label'></label>").text(dataCode);
+                    var inputCheckbox = $("<input type='checkbox' class='form-check-input' name='dataCode'>")
+                        .attr("value", dataCode)
+                        .prop("checked", true);
+                    var dataCodeCheckBox = $("<div class='form-check-inline'></div>")
+                        .append(inputCheckbox).append(label);
+                    parentFormGroup.append(dataCodeCheckBox);
+                    // 清除input的内容
+                    dataCodeInput.val("");
+                    // 添加监听checked 看是否选中
+                    inputCheckbox.unbind("click", removeDataCodeCheckBox);
+                    inputCheckbox.bind("click", removeDataCodeCheckBox);
+
+                    // 移除并移除invalid-feedback
+                    var invalidDiv = dataCodeInput.parent().children(".invalid-feedback");
+                    if (invalidDiv.length == 1) {
+                        invalidDiv.remove();
+                        if (dataCodeInput.hasClass("is-invalid")) {
+                            dataCodeInput.removeClass("is-invalid");
+                        }
+                    }
+                }else {
+                    // 数据编码不存在，添加错误消息
+                    var invalidDataCode = $("<div class='invalid-feedback'>数据编码不存在</div>");
+                    dataCodeInput.parent().append(invalidDataCode);
+                    dataCodeInput.addClass("is-invalid");
+                }
+            }
+        });
+
+
+    }
+
+    /**
+     * 判断是否移除datacode的checkedbox
+     */
+    function removeDataCodeCheckBox() {
+        var checkedIf = $(this).is(":checked");
+        if (!checkedIf) {
+            $(this).parent().remove();
+        }
+    }
+
+
+    /**
+     * 检查 addDataCode 的input中是否存在内容
+     */
+    function listenAddDataCodeInput() {
+        // 将按钮置为可用
+        var dataValue = $(this).val();
+        if (dataValue != "") {
+            // 将添加要排除的数据编码按钮置为可用
+            addDataCodeButtonEnableOrDisAble(false);
+        }
+    }
+
+    /**
+     * 将添加排除数据编码按钮置为可用或不可用
+     * true为不可用
+     * false为可用
+     * @param {boolean值} flag
+     */
+    function addDataCodeButtonEnableOrDisAble(flag) {
+        var addDataCodeButton = $(".form-group .input-group .addDataCode:button");
+        if (flag) {
+            if (addDataCodeButton.length == 1) {
+                addDataCodeButton.prop("disabled", true);
+                // 如果btn-info 存在，删除 该类 添加 btn-secondary
+                if (addDataCodeButton.hasClass("btn-info")) {
+                    addDataCodeButton.removeClass("btn-info");
+                }
+                // 如果 btn-secondary 不存在 添加 btn-secondary
+                if (!addDataCodeButton.hasClass("btn-secondary")) {
+                    addDataCodeButton.removeClass("btn-secondary");
+                }
+            }
+        } else {
+            if (addDataCodeButton.length == 1) {
+                addDataCodeButton.prop("disabled", false);
+                // 如果btn-secondary 存在，删除 该类 添加 btn-info
+                if (addDataCodeButton.hasClass("btn-secondary")) {
+                    addDataCodeButton.removeClass("btn-secondary");
+                }
+                // 如果 btn-info 不存在 添加 btn-info
+                if (!addDataCodeButton.hasClass("btn-info")) {
+                    addDataCodeButton.addClass("btn-info");
+                }
+            }
+        }
+
     }
 
     /**
