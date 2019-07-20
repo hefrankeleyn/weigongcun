@@ -3,6 +3,9 @@ package com.edm.edmfetchdataplatform.service;
 import com.edm.edmfetchdataplatform.domain.EdmApplyFile;
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrder;
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrderCheckResult;
+import com.edm.edmfetchdataplatform.domain.EdmTaskResult;
+
+import java.util.List;
 
 /**
  * edm 群发流转单 excel service
@@ -20,6 +23,5 @@ public interface EdmExcelService {
                                           EdmApplyOrderCheckResult edmApplyOrderCheckResult,
                                           String filePath,
                                           String fileName);
-
 
 }

@@ -4,7 +4,9 @@ import com.edm.edmfetchdataplatform.config.DataConfig;
 import com.edm.edmfetchdataplatform.domain.EdmApplyFile;
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrder;
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrderCheckResult;
+import com.edm.edmfetchdataplatform.domain.EdmTaskResult;
 import com.edm.edmfetchdataplatform.service.EdmExcelService;
+import com.edm.edmfetchdataplatform.tools.MyArrayUtil;
 import com.edm.edmfetchdataplatform.tools.MyDateUtil;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -17,7 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.util.Arrays;
-import java.util.Date;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -95,7 +97,7 @@ public class EdmExcelServiceImpl implements EdmExcelService {
         row.setHeight((short) (19.5 * 20));
         // 创建单元格, 编号
         cell = row.createCell(0);
-        cell.setCellValue("编号: " + edmApplyOrder.getOid());
+        cell.setCellValue("编号: " + (edmApplyOrder.getOid() == null ? "" : edmApplyOrder.getOid()));
         // 设置单元格样式
         // 左右居左， 加粗，字号14
         cell.setCellStyle(setCellStyle(workbook, HorizontalAlignment.LEFT, true, (short) 11));
@@ -209,12 +211,20 @@ public class EdmExcelServiceImpl implements EdmExcelService {
         // 创建第十三行， "数据组
         //数据
         //(shuju@wo.cn)"
+        // 用户数据编码
+        String[] dataCodeArray = edmApplyOrderCheckResult.getDataCodeArray();
+        StringBuilder dataCodeSb = new StringBuilder();
+        if (dataCodeArray != null && dataCodeArray.length > 0) {
+            for (int i = 0; i < dataCodeArray.length; i++) {
+                dataCodeSb.append("目标用户一： " + dataCodeArray[i] + " \r\n");
+            }
+        }
         createCheckAndResultRows(workbook, HorizontalAlignment.CENTER, true, (short) 12,
                 sheet, 16,
                 "数据组" + "\r\n" + edmApplyOrderCheckResult.getShuJuUserName() + "\r\n (" + edmApplyOrderCheckResult.getShuJuEmail() + ")", "发申请人，由申请人执行群发任务",
                 "用户数据链接" + "\r\n" +
                         "（分省用户明细可附表）", "实际用户数据属性说明", "实际用户数量",
-                edmApplyOrderCheckResult.getFetchResultSheetName(), edmApplyOrderCheckResult.getDataUsersDescription(), edmApplyOrderCheckResult.getActualUserNum());
+                dataCodeSb.toString(), edmApplyOrderCheckResult.getDataUsersDescription(), edmApplyOrderCheckResult.getActualUserNum() == null ? "" : edmApplyOrderCheckResult.getActualUserNum() + "");
 
         // 第十四行
         CellRangeAddress cellRangeAddress5 = new CellRangeAddress(18, 18, 1, 3);
@@ -225,6 +235,53 @@ public class EdmExcelServiceImpl implements EdmExcelService {
         createFirstCellAndLastCell(workbook, HorizontalAlignment.CENTER, true, (short) 12, row, "备注说明", "结束");
         // 为合并单元格添加样式
         addBorderForRegion(cellRangeAddress5, sheet);
+
+        // 如果数据编码存在，添加数据编码的sheet
+        List<EdmTaskResult> edmTaskResults = edmApplyOrderCheckResult.getEdmTaskResults();
+        if (edmTaskResults != null && !edmTaskResults.isEmpty()) {
+            HSSFSheet dataCodeSheet = null;
+            // 行对象
+            HSSFRow dataCodeRow = null;
+            // 单元格对象
+            HSSFCell dataCodeCell = null;
+            EdmTaskResult edmTaskResult = null;
+            for (int i = 0; i < edmTaskResults.size(); i++) {
+                edmTaskResult = edmTaskResults.get(i);
+                // 创建另外一个sheet
+                dataCodeSheet = workbook.createSheet("目标用户" + (i+1) + "的数据编码");
+                // 设置行宽
+                setDataCodeColumnWidthAndHeigth(dataCodeSheet);
+                // 创建第一行
+                dataCodeRow = dataCodeSheet.createRow(0);
+                // 设置行高
+                dataCodeRow.setHeight((short) (23.25 * 20));
+                // 创建第一个单元格, 存放活动名称
+                dataCodeCellCreate(dataCodeRow, 0, edmApplyOrder.getOrderName(), workbook, HorizontalAlignment.LEFT);
+                // 创建第二个单元格，存放申请人
+                dataCodeCellCreate(dataCodeRow, 1, edmApplyOrder.getEdmer().getUsername(), workbook, HorizontalAlignment.LEFT);
+                // 创建第三个单元格，存放实际数据量
+                dataCodeCellCreate(dataCodeRow, 2, edmTaskResult.getDataCode(), workbook, HorizontalAlignment.LEFT);
+                // 创建第四个单元格，存放实际数据量
+                dataCodeCellCreate(dataCodeRow, 3, edmTaskResult.getFileLineNum() + "", workbook, HorizontalAlignment.LEFT);
+                // 创建第五个单元格，存放数据编码产生的日期
+                dataCodeCellCreate(dataCodeRow, 4, MyDateUtil.excelDate(edmTaskResult.getSubmitTime()), workbook, HorizontalAlignment.LEFT);
+
+                // 将各省份的数据量写到excel中
+                String[] provinceNameAndNums = MyArrayUtil.strToArray(edmTaskResult.getProvinceNumsInfo());
+                if (provinceNameAndNums != null && provinceNameAndNums.length > 0) {
+                    for (int j = 0, rowNum = 1; j < provinceNameAndNums.length; j++, rowNum++) {
+                        String[] provinceNum = provinceNameAndNums[j].split(":");
+                        dataCodeRow = dataCodeSheet.createRow(rowNum);
+                        // 设置行高
+                        dataCodeRow.setHeight((short) (23.25 * 20));
+                        // 创建一个单元格存放省份
+                        dataCodeCellCreate(dataCodeRow, 0, provinceNum[0], workbook, HorizontalAlignment.LEFT);
+                        // 创建一个单元格存放改省份对应的数据量
+                        dataCodeCellCreate(dataCodeRow, 1, provinceNum[1], workbook, HorizontalAlignment.RIGHT);
+                    }
+                }
+            }
+        }
 
         // 生成excel
         // 文件路径
@@ -262,6 +319,41 @@ public class EdmExcelServiceImpl implements EdmExcelService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * 为数据编码也的excel创建 Cell 并设置样式
+     *
+     * @param dataCodeRow
+     * @param column
+     * @param cellValue
+     * @param workbook
+     * @param horizontalAlignment
+     */
+    private void dataCodeCellCreate(HSSFRow dataCodeRow,
+                                    int column,
+                                    String cellValue,
+                                    HSSFWorkbook workbook,
+                                    HorizontalAlignment horizontalAlignment) {
+        HSSFCell dataCodeCell = dataCodeRow.createCell(column);
+        dataCodeCell.setCellValue(cellValue);
+        // 左右居中， 加粗，字号11
+        dataCodeCell.setCellStyle(setCellStyle(workbook, horizontalAlignment, false, (short) 12));
+    }
+
+
+    /**
+     * 设置数据编码sheet的长和宽
+     *
+     * @param sheet
+     */
+    private void setDataCodeColumnWidthAndHeigth(HSSFSheet sheet) {
+        // 第一列
+        sheet.setColumnWidth(0, 28 * 255);
+        sheet.setColumnWidth(1, 16 * 255);
+        sheet.setColumnWidth(2, 28 * 255);
+        sheet.setColumnWidth(3, 8 * 255);
+        sheet.setColumnWidth(4, 16 * 255);
     }
 
     /**
