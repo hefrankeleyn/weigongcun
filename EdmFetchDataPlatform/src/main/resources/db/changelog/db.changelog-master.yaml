@@ -520,6 +520,12 @@ databaseChangeLog:
                     nullable: true
                   remarks: 初审人的姓名
               - column:
+                  name: first_checker_email
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+                  remarks: 初审人的邮箱
+              - column:
                   name: firstcheck_status
                   type: int
                   constraints:
@@ -531,6 +537,12 @@ databaseChangeLog:
                   constraints:
                     nullable: true
                   remarks: 二次审核，能力组，审核人姓名
+              - column:
+                  name: second_checker_email
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+                  remarks: 二次审核，能力组，审核人邮箱
               - column:
                   name: secondcheck_status
                   type: int
@@ -549,6 +561,12 @@ databaseChangeLog:
                   constraints:
                     nullable: true
                   remarks: 第三次审核人姓名，客服组审核
+              - column:
+                  name: third_checker_email
+                  type: varchar(100)
+                  constraints:
+                    nullable: true
+                  remarks: 第三次审核人邮箱，客服组审核
               - column:
                   name: paiqicheck_status
                   type: int
@@ -580,8 +598,8 @@ databaseChangeLog:
                     nullable: true
                   remarks: 数据组的邮箱
               - column:
-                  name: datacode
-                  type: varchar(100)
+                  name: datacodes
+                  type: varchar(500)
                   constraints:
                     nullable: true
                   remarks: 数据编码
@@ -599,7 +617,7 @@ databaseChangeLog:
                   remarks: 用户数据说明
               - column:
                   name: actual_usernum
-                  type: varchar(500)
+                  type: int
                   constraints:
                     nullable: true
                   remarks: 实际的用户量

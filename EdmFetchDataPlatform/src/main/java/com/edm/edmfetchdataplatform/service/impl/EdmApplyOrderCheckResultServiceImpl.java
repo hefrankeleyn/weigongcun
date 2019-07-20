@@ -66,6 +66,21 @@ public class EdmApplyOrderCheckResultServiceImpl implements EdmApplyOrderCheckRe
     }
 
     /**
+     * 更新EdmApplyOrderCheckResult
+     * @param edmApplyOrderCheckResult
+     */
+    @Override
+    public void updateEdmApplyOrderCheckResult(EdmApplyOrderCheckResult edmApplyOrderCheckResult) {
+        if (edmApplyOrderCheckResult!=null && edmApplyOrderCheckResult.getOcId()!=null){
+            EdmApplyOrderCheckResult edmApplyOrderCheckResultOld =
+                    edmApplyOrderCheckResultMapper.findEdmApplyOrderCheckResultByOcid(edmApplyOrderCheckResult.getOcId());
+            if (edmApplyOrderCheckResultOld!=null){
+                edmApplyOrderCheckResultMapper.updateEdmApplyOrderCheckResult(edmApplyOrderCheckResult);
+            }
+        }
+    }
+
+    /**
      * 修改 edmApplyOrderResult
      *
      * @param edmApplyOrderResultQuery
@@ -223,14 +238,38 @@ public class EdmApplyOrderCheckResultServiceImpl implements EdmApplyOrderCheckRe
                     edmApplyOrderCheckResult.setQunFaFangAnQueRenStatus(CheckResultStatue.CHECK_CANCEL.getState());
                 }
             }
-            // 申请组组长姓名
+            // 申请组组长姓名， 邮箱
             if (edmApplyOrderResultQuery.getFirstCheckerUserName() != null) {
                 edmApplyOrderCheckResult.setFirstCheckerUserName(edmApplyOrderResultQuery.getFirstCheckerUserName());
+            }
+            if (edmApplyOrderResultQuery.getFirstCheckerEmail() != null){
+                edmApplyOrderCheckResult.setFirstCheckerEmail(edmApplyOrderResultQuery.getFirstCheckerEmail());
             }
 
             // 能力组确认结果
             if (edmApplyOrderResultQuery.getCapacityCheckStatue() != null) {
                 edmApplyOrderCheckResult.setCapacityCheckStatus(edmApplyOrderResultQuery.getCapacityCheckStatue());
+            }
+            // 能力组 姓名 邮箱
+            if (edmApplyOrderResultQuery.getSecondCheckerUserName()!=null){
+                edmApplyOrderCheckResult.setSecondCheckerUserName(edmApplyOrderResultQuery.getSecondCheckerUserName());
+            }
+            if (edmApplyOrderResultQuery.getSecondCheckerEmail()!=null){
+                edmApplyOrderCheckResult.setSecondCheckerEmail(edmApplyOrderResultQuery.getSecondCheckerEmail());
+            }
+            // 客服组 姓名 邮箱
+            if (edmApplyOrderResultQuery.getThirdCheckerUserName()!=null){
+                edmApplyOrderCheckResult.setThirdCheckerUserName(edmApplyOrderResultQuery.getThirdCheckerUserName());
+            }
+            if (edmApplyOrderResultQuery.getThirdCheckerEmail()!=null){
+                edmApplyOrderCheckResult.setThirdCheckerEmail(edmApplyOrderResultQuery.getThirdCheckerEmail());
+            }
+            // 数据组处理人姓名和邮箱
+            if (edmApplyOrderResultQuery.getShuJuUserName()!=null){
+                edmApplyOrderCheckResult.setShuJuUserName(edmApplyOrderResultQuery.getShuJuUserName());
+            }
+            if (edmApplyOrderResultQuery.getShuJuEmail()!=null){
+                edmApplyOrderCheckResult.setShuJuEmail(edmApplyOrderResultQuery.getShuJuEmail());
             }
 
             // 排期结果
@@ -250,8 +289,8 @@ public class EdmApplyOrderCheckResultServiceImpl implements EdmApplyOrderCheckRe
                 edmApplyOrderCheckResult.setThirdCheckBeiZhu(edmApplyOrderResultQuery.getThirdCheckBeiZhu());
             }
             // 数据编码
-            if (edmApplyOrderResultQuery.getDataCode() != null) {
-                edmApplyOrderCheckResult.setDataCode(edmApplyOrderResultQuery.getDataCode());
+            if (edmApplyOrderResultQuery.getDataCodes() != null) {
+                edmApplyOrderCheckResult.setDataCodes(edmApplyOrderResultQuery.getDataCodes());
             }
             // 用户数据描述
             if (edmApplyOrderResultQuery.getDataUsersDescription() != null) {

@@ -58,14 +58,15 @@ public class HiveServiceImpl implements HiveService {
         String deleteTempTableSql = deleteTempTableSql(tempTableName);
         // @TODO 连接hive执行删除操作
         logger.info(deleteTempTableSql);
+
         // 创建临时表
         // @TODO 连接hive, 执行创建临时表操作
         String createTempTableSql = createTempTableSql(tempTableName);
         logger.info(createTempTableSql);
-
         // @TODO 将EdmCondition解析成SQL语句， 连接hive， 执行查询语句，将查出的数据存放到临时表中
         String selectDataSql = createSqlByEdmCondition(edmConditionOfOrder, tempTableName);
         logger.info(selectDataSql);
+
         // @TODO 执行hive查询， 查询临时表数据，将数据存放到特定目录下的一个文件中
         String selectUserAndMailroot = selectUserDeviceAndMailroot(tempTableName);
         logger.info(selectUserAndMailroot);
@@ -78,6 +79,10 @@ public class HiveServiceImpl implements HiveService {
         logger.info(selectProNum);
         // 将text文件传到服务器特定的目录上
         Map<String, Integer> provinceNums = edmTaskResult.getProvinceNums();
+        // 测试例子
+        provinceNums.put("100", 1000);
+        provinceNums.put("200", 1500);
+        provinceNums.put("311", 10000);
 
 
         // @TODO 执行hive查询， 临时表总的数据量
@@ -85,6 +90,8 @@ public class HiveServiceImpl implements HiveService {
         logger.info(selectTotalNum);
         // 查询实际的数据量
         Integer fileLineNum = 0;
+        // 测试
+        fileLineNum = 12500;
 
         // 生成一个数据编码
         // 当前时间，精准到时分秒

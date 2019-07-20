@@ -641,6 +641,8 @@ $(document).ready(function () {
         // 获取当前的按钮的父元素元素
         var trElement = $(this).parent().parent("tr");
         if (trElement.hasClass("applyGroupTr")) {
+            data.firstCheckerUserName = currentUserName;
+            data.firstCheckerEmail = currentUserEmail;
             // 只有在 点击的是取消流转按钮并且，备注为空的情况下，才不让提交
             if (!($(this).hasClass("cancelLiuZhuan") && validBeiZhuIfIsEmpty())) {
                 // 创建form表单并且提交form表单
@@ -648,6 +650,8 @@ $(document).ready(function () {
             }
 
         } else if (trElement.hasClass("capacityGroupTr")) {
+            data.secondCheckerUserName = currentUserName;
+            data.secondCheckerEmail = currentUserEmail;
             // 只有在 点击的是取消流转按钮并且，备注为空的情况下，才不让提交
             if (!($(this).hasClass("cancelLiuZhuan") && validBeiZhuIfIsEmpty())) {
                 // 点击取消流转，结束for循环
@@ -688,6 +692,8 @@ $(document).ready(function () {
                 }
             }
         } else if (trElement.hasClass("customerServerGroupTr")) {
+            data.thirdCheckerUserName = currentUserName;
+            data.thirdCheckerUserName = currentUserEmail;
             // 只有在 点击的是取消流转按钮并且，备注为空的情况下，才不让提交
             if (!($(this).hasClass("cancelLiuZhuan") && validBeiZhuIfIsEmpty())) {
                 // 点击取消流转，结束for循环
@@ -732,6 +738,8 @@ $(document).ready(function () {
                 }
             }
         } else if (trElement.hasClass("shujuGroupTr")) {
+            data.shuJuUserName = currentUserName;
+            data.shuJuEmail = currentUserEmail;
             // 只有在 点击的是取消流转按钮并且，备注为空的情况下，才不让提交
             if (!($(this).hasClass("cancelLiuZhuan") && validBeiZhuIfIsEmpty())) {
                 // 点击取消流转，结束for循环

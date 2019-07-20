@@ -14,12 +14,27 @@ public class EdmApplyOrderResultQuery {
 
     // 申请组组长的姓名
     private String firstCheckerUserName;
+    private String firstCheckerEmail;
+
+    /**
+     *
+     * 能力组审核，审核人的姓名
+     */
+    private String secondCheckerUserName;
+
+    private String secondCheckerEmail;
 
     // 能力组审核的状态
     private Integer capacityCheckStatue;
 
     // 排期结果
     private String paiQiResult;
+
+    /**
+     * 客服组核查的状态，客服组的姓名
+     */
+    private String thirdCheckerUserName;
+    private String thirdCheckerEmail;
 
     // 排期确认的结果
     private Integer paiQiQueRenStatue;
@@ -33,9 +48,15 @@ public class EdmApplyOrderResultQuery {
     private String thirdCheckBeiZhu;
 
     /**
+     * 数据组
+     */
+    private String shuJuUserName;
+    private String shuJuEmail;
+
+    /**
      * 数据编码
      */
-    private String dataCode;
+    private String dataCodes;
 
     /**
      * 用户属性说明
@@ -45,7 +66,7 @@ public class EdmApplyOrderResultQuery {
     /**
      * 实际的用户量
      */
-    private String actualUserNum;
+    private Integer actualUserNum;
 
     /**
      * 最后的备注
@@ -137,12 +158,12 @@ public class EdmApplyOrderResultQuery {
         this.thirdCheckBeiZhu = thirdCheckBeiZhu;
     }
 
-    public String getDataCode() {
-        return dataCode;
+    public String getDataCodes() {
+        return dataCodes;
     }
 
-    public void setDataCode(String dataCode) {
-        this.dataCode = dataCode;
+    public void setDataCodes(String dataCodes) {
+        this.dataCodes = dataCodes;
     }
 
     public String getDataUsersDescription() {
@@ -153,11 +174,11 @@ public class EdmApplyOrderResultQuery {
         this.dataUsersDescription = dataUsersDescription;
     }
 
-    public String getActualUserNum() {
+    public Integer getActualUserNum() {
         return actualUserNum;
     }
 
-    public void setActualUserNum(String actualUserNum) {
+    public void setActualUserNum(Integer actualUserNum) {
         this.actualUserNum = actualUserNum;
     }
 
@@ -201,20 +222,83 @@ public class EdmApplyOrderResultQuery {
         this.currentUserName = currentUserName;
     }
 
+    public String getFirstCheckerEmail() {
+        return firstCheckerEmail;
+    }
+
+    public void setFirstCheckerEmail(String firstCheckerEmail) {
+        this.firstCheckerEmail = firstCheckerEmail;
+    }
+
+    public String getSecondCheckerUserName() {
+        return secondCheckerUserName;
+    }
+
+    public void setSecondCheckerUserName(String secondCheckerUserName) {
+        this.secondCheckerUserName = secondCheckerUserName;
+    }
+
+    public String getSecondCheckerEmail() {
+        return secondCheckerEmail;
+    }
+
+    public void setSecondCheckerEmail(String secondCheckerEmail) {
+        this.secondCheckerEmail = secondCheckerEmail;
+    }
+
+    public String getThirdCheckerUserName() {
+        return thirdCheckerUserName;
+    }
+
+    public void setThirdCheckerUserName(String thirdCheckerUserName) {
+        this.thirdCheckerUserName = thirdCheckerUserName;
+    }
+
+    public String getThirdCheckerEmail() {
+        return thirdCheckerEmail;
+    }
+
+    public void setThirdCheckerEmail(String thirdCheckerEmail) {
+        this.thirdCheckerEmail = thirdCheckerEmail;
+    }
+
+    public String getShuJuUserName() {
+        return shuJuUserName;
+    }
+
+    public void setShuJuUserName(String shuJuUserName) {
+        this.shuJuUserName = shuJuUserName;
+    }
+
+    public String getShuJuEmail() {
+        return shuJuEmail;
+    }
+
+    public void setShuJuEmail(String shuJuEmail) {
+        this.shuJuEmail = shuJuEmail;
+    }
+
     @Override
     public String toString() {
         return "EdmApplyOrderResultQuery{" +
                 "oid='" + oid + '\'' +
                 ", orderState=" + orderState +
                 ", firstCheckerUserName='" + firstCheckerUserName + '\'' +
+                ", firstCheckerEmail='" + firstCheckerEmail + '\'' +
+                ", secondCheckerUserName='" + secondCheckerUserName + '\'' +
+                ", secondCheckerEmail='" + secondCheckerEmail + '\'' +
                 ", capacityCheckStatue=" + capacityCheckStatue +
                 ", paiQiResult='" + paiQiResult + '\'' +
+                ", thirdCheckerUserName='" + thirdCheckerUserName + '\'' +
+                ", thirdCheckerEmail='" + thirdCheckerEmail + '\'' +
                 ", paiQiQueRenStatue=" + paiQiQueRenStatue +
                 ", qunFaFangAnQueRenState=" + qunFaFangAnQueRenState +
                 ", thirdCheckBeiZhu='" + thirdCheckBeiZhu + '\'' +
-                ", dataCode='" + dataCode + '\'' +
+                ", shuJuUserName='" + shuJuUserName + '\'' +
+                ", shuJuEmail='" + shuJuEmail + '\'' +
+                ", dataCodes='" + dataCodes + '\'' +
                 ", dataUsersDescription='" + dataUsersDescription + '\'' +
-                ", actualUserNum='" + actualUserNum + '\'' +
+                ", actualUserNum=" + actualUserNum +
                 ", endBeiZhu='" + endBeiZhu + '\'' +
                 ", emailTo='" + emailTo + '\'' +
                 ", emailToUserName='" + emailToUserName + '\'' +

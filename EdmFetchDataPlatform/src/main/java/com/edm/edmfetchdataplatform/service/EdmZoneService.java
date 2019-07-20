@@ -27,10 +27,28 @@ public interface EdmZoneService {
     String[] findProvinceNamesByProvinceCodes(String[] provinceCodes);
 
     /**
+     * 根据省份代码信息查询EdmZone， 只查询省份名称和省份代码信息
+     * @param provinceCodes
+     * @return
+     */
+    List<EdmZone> findEdmZoneOnlyWithProvinceNameAndProvinceCodeByProvinceCodes(String[] provinceCodes);
+
+    /**
      * 根据城市代码查询城市名称
      * @param cityCodes
      * @return
      */
     String[] findCityNamesByCityCodes(String[] cityCodes);
+
+
+    /**
+     * 根据省份代码查询省份名称
+     * @param provinceCode
+     * @return
+     */
+    String findProvinceNameByProvinceCode(String provinceCode);
+
+
+
 
 }

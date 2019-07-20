@@ -16,6 +16,7 @@ public interface EdmZoneMapper {
 
     /**
      * 查询所有的省份数据
+     *
      * @return
      */
     @Select("select provincecode,provincename from edm_zone group by provincecode,provincename order by provincecode")
@@ -23,6 +24,7 @@ public interface EdmZoneMapper {
 
     /**
      * 根据省份代码查询所有的城市
+     *
      * @param provincecode
      * @return
      */
@@ -33,6 +35,7 @@ public interface EdmZoneMapper {
 
     /**
      * 根据省份代码查询省份名称
+     *
      * @param provinceCode
      * @return
      */
@@ -46,7 +49,32 @@ public interface EdmZoneMapper {
     String[] findProvinceNameByProvinceCodes(@Param("list") String[] provinceCode);
 
     /**
+     * 根据省份代码查询省份名称
+     * @param provinceCode
+     * @return
+     */
+    @Select("select provincename from edm_zone " +
+            "where provincecode='${provincecode}' " +
+            "group by provincename")
+    String findProvinceNameByProvinceCode(@Param("provincecode") String provinceCode);
+
+    /**
+     * 根据省份代码，只查询省份名称和省份代码
+     * @param provinceCode
+     * @return
+     */
+    @Select({"<script>",
+            "SELECT provincecode,provincename FROM edm_zone  WHERE provincecode IN",
+            "<foreach item='item' index='index' collection='list' open='(' separator=',' close=')'>",
+            "#{item}",
+            "</foreach>",
+            "group by provincename",
+            "</script>"})
+    List<EdmZone> findProvinceNameAndCodesByProvinceCodes(@Param("list") String[] provinceCode);
+
+    /**
      * 根据城市代码查询城市名称
+     *
      * @param CityCode
      * @return
      */
@@ -58,7 +86,6 @@ public interface EdmZoneMapper {
             "group by cityname",
             "</script>"})
     String[] findCityNameByCityCodes(@Param("list") String[] CityCode);
-
 
 
 }

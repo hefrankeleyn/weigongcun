@@ -1,9 +1,12 @@
 package com.edm.edmfetchdataplatform.domain;
 
 import com.edm.edmfetchdataplatform.domain.status.CheckResultStatueFactory;
+import com.edm.edmfetchdataplatform.tools.MyArrayUtil;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 /**
  * EDM 流转单 审核结果
@@ -26,6 +29,7 @@ public class EdmApplyOrderCheckResult implements Serializable {
      * 申请组初审
      */
     private String firstCheckerUserName;
+    private String firstCheckerEmail;
 
     /**
      * 初审的状态
@@ -42,6 +46,8 @@ public class EdmApplyOrderCheckResult implements Serializable {
      * 能力组审核，审核人的姓名
      */
     private String secondCheckerUserName;
+
+    private String secondCheckerEmail;
 
     /**
      * 第二次审核的状态
@@ -62,6 +68,7 @@ public class EdmApplyOrderCheckResult implements Serializable {
      * 客服组核查的状态，客服组的姓名
      */
     private String thirdCheckerUserName;
+    private String thirdCheckerEmail;
 
     /**
      * 第三位核查排期确认结果，排期的确认结果
@@ -101,8 +108,13 @@ public class EdmApplyOrderCheckResult implements Serializable {
     /**
      * 数据编码
      */
-    private String dataCode;
+    private String dataCodes;
+    private String[] dataCodeArray;
 
+    /**
+     * 数据编码结果
+     */
+    private List<EdmTaskResult> edmTaskResults;
     /**
      * 数据提取结果 附属sheet
      */
@@ -116,7 +128,7 @@ public class EdmApplyOrderCheckResult implements Serializable {
     /**
      * 实际的用户量
      */
-    private String actualUserNum;
+    private Integer actualUserNum;
 
     /**
      * 最后的备注
@@ -148,10 +160,10 @@ public class EdmApplyOrderCheckResult implements Serializable {
         this.secondCheckerResult = "";
         this.thirdCheckerPaiQiResult = "";
         this.thirdCheckerQunFaFangAnResult = "";
-        this.dataCode = "";
+        this.dataCodes = "";
         this.fetchResultSheetName = "";
         this.dataUsersDescription = "";
-        this.actualUserNum = "";
+//        this.actualUserNum = null;
         this.updateTime = new Date();
         this.endBeiZhu = "";
 
@@ -289,12 +301,26 @@ public class EdmApplyOrderCheckResult implements Serializable {
         this.shuJuEmail = shuJuEmail;
     }
 
-    public String getDataCode() {
-        return dataCode;
+    public String getDataCodes() {
+        return dataCodes;
     }
 
-    public void setDataCode(String dataCode) {
-        this.dataCode = dataCode;
+    public void setDataCodes(String dataCodes) {
+        this.dataCodes = dataCodes;
+        if (dataCodes!=null && !dataCodes.trim().equals("")){
+            this.dataCodeArray = MyArrayUtil.strToArray(dataCodes);
+        }
+    }
+
+    public String[] getDataCodeArray() {
+        return dataCodeArray;
+    }
+
+    public void setDataCodeArray(String[] dataCodeArray) {
+        this.dataCodeArray = dataCodeArray;
+        if (dataCodeArray!=null && dataCodeArray.length>0){
+            this.dataCodes = MyArrayUtil.arrayToStr(dataCodeArray);
+        }
     }
 
     public String getFetchResultSheetName() {
@@ -313,11 +339,11 @@ public class EdmApplyOrderCheckResult implements Serializable {
         this.dataUsersDescription = dataUsersDescription;
     }
 
-    public String getActualUserNum() {
+    public Integer getActualUserNum() {
         return actualUserNum;
     }
 
-    public void setActualUserNum(String actualUserNum) {
+    public void setActualUserNum(Integer actualUserNum) {
         this.actualUserNum = actualUserNum;
     }
 
@@ -362,18 +388,53 @@ public class EdmApplyOrderCheckResult implements Serializable {
         this.thirdCheckerQunFaFangAnResult = thirdCheckerQunFaFangAnResult;
     }
 
+    public String getFirstCheckerEmail() {
+        return firstCheckerEmail;
+    }
+
+    public void setFirstCheckerEmail(String firstCheckerEmail) {
+        this.firstCheckerEmail = firstCheckerEmail;
+    }
+
+    public String getSecondCheckerEmail() {
+        return secondCheckerEmail;
+    }
+
+    public void setSecondCheckerEmail(String secondCheckerEmail) {
+        this.secondCheckerEmail = secondCheckerEmail;
+    }
+
+    public String getThirdCheckerEmail() {
+        return thirdCheckerEmail;
+    }
+
+    public void setThirdCheckerEmail(String thirdCheckerEmail) {
+        this.thirdCheckerEmail = thirdCheckerEmail;
+    }
+
+    public List<EdmTaskResult> getEdmTaskResults() {
+        return edmTaskResults;
+    }
+
+    public void setEdmTaskResults(List<EdmTaskResult> edmTaskResults) {
+        this.edmTaskResults = edmTaskResults;
+    }
+
     @Override
     public String toString() {
         return "EdmApplyOrderCheckResult{" +
                 "ocId='" + ocId + '\'' +
                 ", firstCheckerUserName='" + firstCheckerUserName + '\'' +
+                ", firstCheckerEmail='" + firstCheckerEmail + '\'' +
                 ", applyGroupCheckStatus=" + applyGroupCheckStatus +
                 ", firstCheckerResult='" + firstCheckerResult + '\'' +
                 ", secondCheckerUserName='" + secondCheckerUserName + '\'' +
+                ", secondCheckerEmail='" + secondCheckerEmail + '\'' +
                 ", capacityCheckStatus=" + capacityCheckStatus +
                 ", secondCheckerResult='" + secondCheckerResult + '\'' +
                 ", paiQiResult='" + paiQiResult + '\'' +
                 ", thirdCheckerUserName='" + thirdCheckerUserName + '\'' +
+                ", thirdCheckerEmail='" + thirdCheckerEmail + '\'' +
                 ", paiQiQueRenStatus=" + paiQiQueRenStatus +
                 ", thirdCheckerPaiQiResult='" + thirdCheckerPaiQiResult + '\'' +
                 ", qunFaFangAnQueRenStatus=" + qunFaFangAnQueRenStatus +
@@ -381,10 +442,12 @@ public class EdmApplyOrderCheckResult implements Serializable {
                 ", thirdCheckBeiZhu='" + thirdCheckBeiZhu + '\'' +
                 ", shuJuUserName='" + shuJuUserName + '\'' +
                 ", shuJuEmail='" + shuJuEmail + '\'' +
-                ", dataCode='" + dataCode + '\'' +
+                ", dataCodes='" + dataCodes + '\'' +
+                ", dataCodeArray=" + Arrays.toString(dataCodeArray) +
+                ", edmTaskResults=" + edmTaskResults +
                 ", fetchResultSheetName='" + fetchResultSheetName + '\'' +
                 ", dataUsersDescription='" + dataUsersDescription + '\'' +
-                ", actualUserNum='" + actualUserNum + '\'' +
+                ", actualUserNum=" + actualUserNum +
                 ", endBeiZhu='" + endBeiZhu + '\'' +
                 ", updateTime=" + updateTime +
                 ", oid='" + oid + '\'' +

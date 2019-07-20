@@ -14,6 +14,11 @@ public interface EdmApplyOrderCheckResultService {
      */
     void saveEdmApplyOrderCheckResult(EdmApplyOrderCheckResult edmApplyOrderCheckResult);
 
+    /**
+     * 更新 流转单的结果
+     * @param edmApplyOrderCheckResult
+     */
+    void updateEdmApplyOrderCheckResult(EdmApplyOrderCheckResult edmApplyOrderCheckResult);
 
     /**
      * 修改 edmApplyOrderResultQuery
