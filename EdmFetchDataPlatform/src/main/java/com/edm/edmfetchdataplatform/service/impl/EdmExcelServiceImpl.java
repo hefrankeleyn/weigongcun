@@ -216,10 +216,10 @@ public class EdmExcelServiceImpl implements EdmExcelService {
         StringBuilder dataCodeSb = new StringBuilder();
         if (dataCodeArray != null && dataCodeArray.length > 0) {
             for (int i = 0; i < dataCodeArray.length; i++) {
-                dataCodeSb.append("目标用户一： " + dataCodeArray[i] + " \r\n");
+                dataCodeSb.append("目标用户" + i + "： " + dataCodeArray[i] + " \r\n");
             }
         }
-        createCheckAndResultRows(workbook, HorizontalAlignment.CENTER, true, (short) 12,
+        createCheckAndResultRows(workbook, HorizontalAlignment.LEFT, true, (short) 12,
                 sheet, 16,
                 "数据组" + "\r\n" + edmApplyOrderCheckResult.getShuJuUserName() + "\r\n (" + edmApplyOrderCheckResult.getShuJuEmail() + ")", "发申请人，由申请人执行群发任务",
                 "用户数据链接" + "\r\n" +
@@ -248,7 +248,7 @@ public class EdmExcelServiceImpl implements EdmExcelService {
             for (int i = 0; i < edmTaskResults.size(); i++) {
                 edmTaskResult = edmTaskResults.get(i);
                 // 创建另外一个sheet
-                dataCodeSheet = workbook.createSheet("目标用户" + (i+1) + "的数据编码");
+                dataCodeSheet = workbook.createSheet("目标用户" + (i + 1) + "的数据编码");
                 // 设置行宽
                 setDataCodeColumnWidthAndHeigth(dataCodeSheet);
                 // 创建第一行

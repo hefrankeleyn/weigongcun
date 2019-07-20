@@ -13,6 +13,7 @@ public class MyDateUtil {
     private static SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("yyyyMMddHHmmss");
     private static SimpleDateFormat simpleDateFormat3 = new SimpleDateFormat("yyyy");
     private static SimpleDateFormat simpleDateFormat4 = new SimpleDateFormat("yyyy-MM-dd");
+    private static SimpleDateFormat simpleDateFormat5 = new SimpleDateFormat("yyyyMM");
 
     /**
      * 将时间类型转换成字符串
@@ -38,6 +39,14 @@ public class MyDateUtil {
      */
     public static String currentYearStr(){
         return simpleDateFormat3.format(new Date());
+    }
+
+    /**
+     * 获取当前年月字符串
+     * @return
+     */
+    public static String currentYearMonthStr(){
+        return simpleDateFormat5.format(new Date());
     }
 
     /**

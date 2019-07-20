@@ -81,6 +81,11 @@ public class EdmConditionOfOrder implements Serializable {
      */
     private Integer cityOpt;
 
+    /**
+     * 数据编码
+     */
+    private String dataCodes;
+
 
     /**
      * 所要提取的数据量
@@ -126,6 +131,7 @@ public class EdmConditionOfOrder implements Serializable {
         this.cityCodes = edmCondition.getCityCodes();
         this.cityNames = edmCondition.getCityNames();
         this.cityOpt = edmCondition.getCityOpt();
+        this.dataCodes = edmCondition.getDataCodes();
         this.limitNum = edmCondition.getLimitNum();
         this.oid = edmCondition.getOid();
         this.edmer = edmCondition.getEdmer();
@@ -229,6 +235,14 @@ public class EdmConditionOfOrder implements Serializable {
 
     public void setCityOpt(Integer cityOpt) {
         this.cityOpt = cityOpt;
+    }
+
+    public String getDataCodes() {
+        return dataCodes;
+    }
+
+    public void setDataCodes(String dataCodes) {
+        this.dataCodes = dataCodes;
     }
 
     public Integer getLimitNum() {

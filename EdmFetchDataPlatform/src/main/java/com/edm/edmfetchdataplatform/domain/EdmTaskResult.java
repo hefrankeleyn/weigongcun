@@ -25,6 +25,12 @@ public class EdmTaskResult implements Serializable {
     private Integer conId;
 
     /**
+     * EdmApplyOrderCheckResult 转单审核结果的id
+     * UUID
+     */
+    private String ocId;
+
+    /**
      * 创建EdmCondition 者的姓名
      */
     private String userName;
@@ -97,6 +103,14 @@ public class EdmTaskResult implements Serializable {
 
     public void setConId(Integer conId) {
         this.conId = conId;
+    }
+
+    public String getOcId() {
+        return ocId;
+    }
+
+    public void setOcId(String ocId) {
+        this.ocId = ocId;
     }
 
     public String getUserName() {
@@ -192,6 +206,7 @@ public class EdmTaskResult implements Serializable {
         return "EdmTaskResult{" +
                 "taskId=" + taskId +
                 ", conId=" + conId +
+                ", ocId='" + ocId + '\'' +
                 ", userName='" + userName + '\'' +
                 ", status=" + status +
                 ", submitTime=" + submitTime +

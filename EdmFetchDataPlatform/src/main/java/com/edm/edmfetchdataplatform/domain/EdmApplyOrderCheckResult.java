@@ -116,11 +116,6 @@ public class EdmApplyOrderCheckResult implements Serializable {
      */
     private List<EdmTaskResult> edmTaskResults;
     /**
-     * 数据提取结果 附属sheet
-     */
-    private String fetchResultSheetName;
-
-    /**
      * 用户属性说明
      */
     private String dataUsersDescription;
@@ -161,7 +156,6 @@ public class EdmApplyOrderCheckResult implements Serializable {
         this.thirdCheckerPaiQiResult = "";
         this.thirdCheckerQunFaFangAnResult = "";
         this.dataCodes = "";
-        this.fetchResultSheetName = "";
         this.dataUsersDescription = "";
 //        this.actualUserNum = null;
         this.updateTime = new Date();
@@ -323,13 +317,6 @@ public class EdmApplyOrderCheckResult implements Serializable {
         }
     }
 
-    public String getFetchResultSheetName() {
-        return fetchResultSheetName;
-    }
-
-    public void setFetchResultSheetName(String fetchResultSheetName) {
-        this.fetchResultSheetName = fetchResultSheetName;
-    }
 
     public String getDataUsersDescription() {
         return dataUsersDescription;
@@ -445,7 +432,6 @@ public class EdmApplyOrderCheckResult implements Serializable {
                 ", dataCodes='" + dataCodes + '\'' +
                 ", dataCodeArray=" + Arrays.toString(dataCodeArray) +
                 ", edmTaskResults=" + edmTaskResults +
-                ", fetchResultSheetName='" + fetchResultSheetName + '\'' +
                 ", dataUsersDescription='" + dataUsersDescription + '\'' +
                 ", actualUserNum=" + actualUserNum +
                 ", endBeiZhu='" + endBeiZhu + '\'' +

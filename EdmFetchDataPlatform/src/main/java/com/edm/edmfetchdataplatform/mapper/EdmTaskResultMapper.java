@@ -18,9 +18,9 @@ public interface EdmTaskResultMapper {
      * 保存EdmTaskResult
      * @param edmTaskResult
      */
-    @Insert("INSERT INTO `edm_task_result` (`conid`,`user_name`,`status`,`submit_time`,`finish_time`," +
+    @Insert("INSERT INTO `edm_task_result` (`conid`,`ocid`,`user_name`,`status`,`submit_time`,`finish_time`," +
             "`file_path`,`data_code`,`filelinenum`,`topic`,`business_type`,`provincenumsinfo`) " +
-            "VALUES (#{conId},#{userName},#{status},#{submitTime},#{finishTime}," +
+            "VALUES (#{conId},#{ocId},#{userName},#{status},#{submitTime},#{finishTime}," +
             "#{filePath},#{dataCode},#{fileLineNum},#{topic},#{businessType},#{provinceNumsInfo})")
     void saveEdmTaskResult(EdmTaskResult edmTaskResult);
 
@@ -28,7 +28,7 @@ public interface EdmTaskResultMapper {
      * 更新EdmTaskResult
      * @param edmTaskResult
      */
-    @Update("UPDATE `edm_task_result` SET `conid` = #{conId}, `user_name` = #{userName}," +
+    @Update("UPDATE `edm_task_result` SET `conid` = #{conId},`ocid` = #{ocId},`user_name` = #{userName}," +
             "`status` = #{status},`submit_time` = #{submitTime},`finish_time` = #{finishTime}," +
             "`file_path` = #{filePath},`data_code` = #{dataCode},`filelinenum` = #{fileLineNum}," +
             "`topic` = #{topic},`business_type` = #{businessType},`provincenumsinfo` = #{provinceNumsInfo} " +
@@ -39,11 +39,12 @@ public interface EdmTaskResultMapper {
      * 查询所有可用的数据编码
      * @return
      */
-    @Select("select `task_id`,`conid`,`user_name`,`status`,`submit_time`,`finish_time`,`file_path`,`data_code`," +
+    @Select("select `task_id`,`conid`,`ocid`,`user_name`,`status`,`submit_time`,`finish_time`,`file_path`,`data_code`," +
             "`filelinenum`,`topic`,`business_type`,`provincenumsinfo` " +
             "from `edm_task_result` where 1=1 and `status`=2 order by `finish_time`")
     @Results(value = {@Result(column = "task_id", property = "taskId"),
             @Result(column = "conid", property = "conId"),
+            @Result(column = "ocid", property = "ocId"),
             @Result(column = "user_name", property = "userName"),
             @Result(column = "status", property = "status"),
             @Result(column = "submit_time", property = "submitTime"),
@@ -63,11 +64,12 @@ public interface EdmTaskResultMapper {
      * @param taskId
      * @return
      */
-    @Select("select `task_id`,`conid`,`user_name`,`status`,`submit_time`,`finish_time`,`file_path`,`data_code`," +
+    @Select("select `task_id`,`conid`,`ocid`,`user_name`,`status`,`submit_time`,`finish_time`,`file_path`,`data_code`," +
             "`filelinenum`,`topic`,`business_type`,`provincenumsinfo` " +
             "from `edm_task_result` where 1=1 and `task_id`=#{taskId}")
     @Results(value = {@Result(column = "task_id", property = "taskId"),
             @Result(column = "conid", property = "conId"),
+            @Result(column = "ocid", property = "ocId"),
             @Result(column = "user_name", property = "userName"),
             @Result(column = "status", property = "status"),
             @Result(column = "submit_time", property = "submitTime"),
@@ -82,15 +84,40 @@ public interface EdmTaskResultMapper {
     EdmTaskResult findEdmTaskResultByTaskId(Integer taskId);
 
     /**
+     * 根据ocid查询所有的EdmTaskResult 查询 EdmTaskResult
+     * @param ocId
+     * @return
+     */
+    @Select("select `task_id`,`conid`,`ocid`,`user_name`,`status`,`submit_time`,`finish_time`,`file_path`,`data_code`," +
+            "`filelinenum`,`topic`,`business_type`,`provincenumsinfo` " +
+            "from `edm_task_result` where 1=1 and ocid=#{ocId}")
+    @Results(value = {@Result(column = "task_id", property = "taskId"),
+            @Result(column = "conid", property = "conId"),
+            @Result(column = "ocid", property = "ocId"),
+            @Result(column = "user_name", property = "userName"),
+            @Result(column = "status", property = "status"),
+            @Result(column = "submit_time", property = "submitTime"),
+            @Result(column = "finish_time", property = "finishTime"),
+            @Result(column = "file_path", property = "filePath"),
+            @Result(column = "data_code", property = "dataCode"),
+            @Result(column = "filelinenum", property = "fileLineNum"),
+            @Result(column = "topic", property = "topic"),
+            @Result(column = "business_type", property = "businessType"),
+            @Result(column = "provincenumsinfo", property = "provinceNumsInfo")
+    })
+    List<EdmTaskResult> findEdmTaskResultByOcId(String ocId);
+
+    /**
      * 根据 conId 查询 EdmTaskResult
      * @param conId
      * @return
      */
-    @Select("select `task_id`,`conid`,`user_name`,`status`,`submit_time`,`finish_time`,`file_path`,`data_code`," +
+    @Select("select `task_id`,`conid`,`ocid`,`user_name`,`status`,`submit_time`,`finish_time`,`file_path`,`data_code`," +
             "`filelinenum`,`topic`,`business_type`,`provincenumsinfo` " +
             "from `edm_task_result` where 1=1 and `conid`=#{conId}")
     @Results(value = {@Result(column = "task_id", property = "taskId"),
             @Result(column = "conid", property = "conId"),
+            @Result(column = "ocid", property = "ocId"),
             @Result(column = "user_name", property = "userName"),
             @Result(column = "status", property = "status"),
             @Result(column = "submit_time", property = "submitTime"),
@@ -111,7 +138,7 @@ public interface EdmTaskResultMapper {
      * @return
      */
     @Select({"<script>",
-            "select `task_id`,`conid`,`user_name`,`status`,`submit_time`,`finish_time`,`file_path`,`data_code`," +
+            "select `task_id`,`conid`,`ocid`,`user_name`,`status`,`submit_time`,`finish_time`,`file_path`,`data_code`," +
             "`filelinenum`,`topic`,`business_type`,`provincenumsinfo` " +
             "from `edm_task_result` where 1=1 and `conid` in ",
             "<foreach item='item' index='index' collection='list' open='(' separator=',' close=')'>",
@@ -122,6 +149,7 @@ public interface EdmTaskResultMapper {
     })
     @Results(value = {@Result(column = "task_id", property = "taskId"),
             @Result(column = "conid", property = "conId"),
+            @Result(column = "ocid", property = "ocId"),
             @Result(column = "user_name", property = "userName"),
             @Result(column = "status", property = "status"),
             @Result(column = "submit_time", property = "submitTime"),
@@ -141,7 +169,7 @@ public interface EdmTaskResultMapper {
      * @return
      */
     @Select({"<script>",
-            "select `task_id`,`conid`,`user_name`,`status`,`submit_time`,`finish_time`,`file_path`,`data_code`," +
+            "select `task_id`,`conid`,`ocid`,`user_name`,`status`,`submit_time`,`finish_time`,`file_path`,`data_code`," +
             "`filelinenum`,`topic`,`business_type`,`provincenumsinfo` " +
             "from `edm_task_result` where 1=1 and `status`=2 and `conid` in ",
             "<foreach item='item' index='index' collection='list' open='(' separator=',' close=')'>",
@@ -152,6 +180,7 @@ public interface EdmTaskResultMapper {
     })
     @Results(value = {@Result(column = "task_id", property = "taskId"),
             @Result(column = "conid", property = "conId"),
+            @Result(column = "ocid", property = "ocId"),
             @Result(column = "user_name", property = "userName"),
             @Result(column = "status", property = "status"),
             @Result(column = "submit_time", property = "submitTime"),
@@ -171,11 +200,12 @@ public interface EdmTaskResultMapper {
      * @param dataCode
      * @return
      */
-    @Select("select `task_id`,`conid`,`user_name`,`status`,`submit_time`,`finish_time`,`file_path`,`data_code`," +
+    @Select("select `task_id`,`conid`,`ocid`,`user_name`,`status`,`submit_time`,`finish_time`,`file_path`,`data_code`," +
             "`filelinenum`,`topic`,`business_type`,`provincenumsinfo` " +
             "from `edm_task_result` where 1=1 and `data_code`='${dataCode}'")
     @Results(value = {@Result(column = "task_id", property = "taskId"),
             @Result(column = "conid", property = "conId"),
+            @Result(column = "ocid", property = "ocId"),
             @Result(column = "user_name", property = "userName"),
             @Result(column = "status", property = "status"),
             @Result(column = "submit_time", property = "submitTime"),

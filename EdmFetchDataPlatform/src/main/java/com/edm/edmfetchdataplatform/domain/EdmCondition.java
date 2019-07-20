@@ -76,7 +76,7 @@ public class EdmCondition implements Serializable {
     private Integer cityOpt;
 
     /**
-     * 数据编码，
+     * 数据编码
      */
     private String dataCodes;
 

@@ -440,7 +440,13 @@ databaseChangeLog:
                   constraints:
                     nullable: true
                     unique: true
-                  remarks: edmcondition 的id
+                  remarks: edm_conditions 的id
+              - column:
+                  name: ocid
+                  type: varchar(200)
+                  constraints:
+                    nullable: true
+                  remarks: edm_order_result 的id
               - column:
                   name: user_name
                   type: varchar(100)
@@ -603,12 +609,6 @@ databaseChangeLog:
                   constraints:
                     nullable: true
                   remarks: 数据编码
-              - column:
-                  name: datares_sheet
-                  type: varchar(200)
-                  constraints:
-                    nullable: true
-                  remarks: 提数结果附属sheet的名称
               - column:
                   name: datausers_des
                   type: varchar(500)

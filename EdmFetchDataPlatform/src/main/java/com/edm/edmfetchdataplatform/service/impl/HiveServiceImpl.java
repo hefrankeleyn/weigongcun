@@ -8,6 +8,7 @@ import com.edm.edmfetchdataplatform.domain.translate.EdmConditionOfOrder;
 import com.edm.edmfetchdataplatform.service.HiveService;
 import com.edm.edmfetchdataplatform.tools.MyArrayUtil;
 import com.edm.edmfetchdataplatform.tools.MyDateUtil;
+import com.edm.edmfetchdataplatform.tools.MyStrUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -63,7 +64,7 @@ public class HiveServiceImpl implements HiveService {
         // @TODO 连接hive, 执行创建临时表操作
         String createTempTableSql = createTempTableSql(tempTableName);
         logger.info(createTempTableSql);
-        // @TODO 将EdmCondition解析成SQL语句， 连接hive， 执行查询语句，将查出的数据存放到临时表中
+        // @TODO 将EdmCondition解析成SQL语句， 连接hive， 执行查询语句，将查出的数据存放到临时表中,排除当前的黑名单用户
         String selectDataSql = createSqlByEdmCondition(edmConditionOfOrder, tempTableName);
         logger.info(selectDataSql);
 
@@ -96,7 +97,7 @@ public class HiveServiceImpl implements HiveService {
         // 生成一个数据编码
         // 当前时间，精准到时分秒
         String yearMonthDayHourMinuteSecond = MyDateUtil.currentDatetimeStr();
-        String datacode = edmConditionOfOrder.getQunFaBusiness().getBusinessType() + ":" + yearMonthDayHourMinuteSecond;
+        String datacode = edmConditionOfOrder.getQunFaBusiness().getBusinessType() + ":" + yearMonthDayHourMinuteSecond + random.nextInt(100) + random.nextInt(100);
 
         // 任务结束时间
         edmTaskResult.setConId(edmConditionOfOrder.getConId());
@@ -118,8 +119,8 @@ public class HiveServiceImpl implements HiveService {
 
         // @TODO 更新可发数据库，将临时表中的数据从可发数据库中排除
         String[] dimensions = MyArrayUtil.strToArray(edmConditionOfOrder.getDimensions());
-        if (dimensions!=null && dimensions.length>0){
-            for (String dimension: dimensions){
+        if (dimensions != null && dimensions.length > 0) {
+            for (String dimension : dimensions) {
                 String overwriteHistoryTable = overwriteEnableTableData(tempTableName, dimension);
                 logger.info(overwriteHistoryTable);
             }
@@ -293,6 +294,7 @@ public class HiveServiceImpl implements HiveService {
 
     /**
      * 根据 EdmCondition 创建sql语句
+     * 由于当天添加的黑名单用户在可发库中没有被排除，所有在这里手动排除当前月（没有天分区，所有使用月分区）的黑名单用户
      *
      * @param edmConditionOfOrder
      * @return
@@ -303,6 +305,7 @@ public class HiveServiceImpl implements HiveService {
         QunFaBusiness qunFaBusiness = edmConditionOfOrder.getQunFaBusiness();
         // 拼接将数据存到临时表中
         sb.append("insert into " + tempTableName + " ");
+        sb.append("select t1.user_device,t1.mailroot,t1.provincecode from (");
         // 查询用户号码、mailroot、对应的省份代码
         sb.append("select user_device, mailroot, provincecode from " + qunFaBusiness.getHiveTable());
         sb.append(" where 1=1 ");
@@ -348,6 +351,25 @@ public class HiveServiceImpl implements HiveService {
         }
         // 拼接 group by
         sb.append(" group by user_device, mailroot, provincecode ");
+        sb.append(") t1 ");
+        sb.append("left outer join ( ");
+        // 排除当前月所有的黑名单
+        sb.append("select phone_num as user_device from dw_black_shield where month='" + MyDateUtil.currentYearMonthStr() + "' group by phone_num ");
+        //判断需要排除数据编码
+        String[] dataCodeArray = MyArrayUtil.strToArray(edmConditionOfOrder.getDataCodes());
+        if (dataCodeArray != null && dataCodeArray.length > 0) {
+            for (int x = 0; x < dataCodeArray.length; x++) {
+               // 获取数据编码的month， 获取数据编码的月份，
+                sb.append("union ");
+                sb.append("select split(user_device,',')[0] user_device from dw_user_sendrecords_new where 1=1 " +
+                        "and month='"+dataCodeArray[x].substring(2, 8)+"' " +
+                        "and day='"+dataCodeArray[x].substring(2, 10)+"' " +
+                        "and datacode in ('"+dataCodeArray[x]+"') ");
+            }
+        }
+        sb.append(")t2 ");
+        sb.append("on t1.user_device=t2.user_device where t2.user_device is null ");
+        sb.append("group by t1.user_device,t1.mailroot,t1.provincecode ");
         // 拼接要查询的数据量
         if (edmConditionOfOrder.getLimitNum() != null && edmConditionOfOrder.getLimitNum() > 0) {
             sb.append(" limit " + edmConditionOfOrder.getLimitNum());

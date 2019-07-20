@@ -3,6 +3,8 @@ package com.edm.edmfetchdataplatform.mapper;
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrderCheckResult;
 import org.apache.ibatis.annotations.*;
 
+import java.util.List;
+
 /**
  * @Date 2019-06-27
  * @Author lifei
@@ -16,11 +18,11 @@ public interface EdmApplyOrderCheckResultMapper {
      */
     @Insert("INSERT INTO `edm_order_result` (`ocid`,`first_checker`,`first_checker_email`,`firstcheck_status`,`second_checker`,`second_checker_email`,`secondcheck_status`," +
             "`paiqi_result`,`third_checker`,`third_checker_email`,`paiqicheck_status`,`fangancheck_status`,`third_beizhu`,`shuju_username`," +
-            "`shuju_email`,`datacodes`,`datares_sheet`,`datausers_des`,`actual_usernum`,`end_beizhu`,`update_time`,`oid`) " +
+            "`shuju_email`,`datacodes`,`datausers_des`,`actual_usernum`,`end_beizhu`,`update_time`,`oid`) " +
             "VALUES (#{ocId},#{firstCheckerUserName},#{firstCheckerEmail},#{applyGroupCheckStatus},#{secondCheckerUserName},#{secondCheckerEmail}," +
             "#{capacityCheckStatus},#{paiQiResult},#{thirdCheckerUserName},#{thirdCheckerEmail},#{paiQiQueRenStatus}," +
             "#{qunFaFangAnQueRenStatus},#{thirdCheckBeiZhu},#{shuJuUserName},#{shuJuEmail},#{dataCodes}," +
-            "#{fetchResultSheetName},#{dataUsersDescription},#{actualUserNum},#{endBeiZhu},#{updateTime},#{oid})")
+            "#{dataUsersDescription},#{actualUserNum},#{endBeiZhu},#{updateTime},#{oid})")
     void saveEdmApplyOrderCheckResult(EdmApplyOrderCheckResult edmApplyOrderCheckResult);
 
 
@@ -75,10 +77,7 @@ public interface EdmApplyOrderCheckResultMapper {
             "`shuju_email` = #{shuJuEmail},",
             "</if>",
             "<if test='dataCodes != null'>",
-            "datacode = #{dataCodes},",
-            "</if>",
-            "<if test='fetchResultSheetName != null'>",
-            "`datares_sheet` = #{fetchResultSheetName},",
+            "datacodes = #{dataCodes},",
             "</if>",
             "<if test='dataUsersDescription != null'>",
             "`datausers_des` = #{dataUsersDescription},",
@@ -106,7 +105,7 @@ public interface EdmApplyOrderCheckResultMapper {
      */
     @Select("SELECT `ocid`,`first_checker`,`first_checker_email`,`firstcheck_status`,`second_checker`,`second_checker_email`,`secondcheck_status`,`paiqi_result`," +
             "`third_checker`,`third_checker_email`,`paiqicheck_status`,`fangancheck_status`,`third_beizhu`,`shuju_username`,`shuju_email`," +
-            "`dataCodes`,`datares_sheet`,`datausers_des`,`actual_usernum`,`end_beizhu`,`update_time`,`oid` " +
+            "`datacodes`,`datausers_des`,`actual_usernum`,`end_beizhu`,`update_time`,`oid` " +
             "FROM `edm_order_result` where oid=#{oid}")
     @Results(value = {@Result(column = "ocid", property = "ocId"),
             @Result(column = "first_checker", property = "firstCheckerUserName"),
@@ -123,12 +122,13 @@ public interface EdmApplyOrderCheckResultMapper {
             @Result(column = "third_beizhu", property = "thirdCheckBeiZhu"),
             @Result(column = "shuju_username", property = "shuJuUserName"),
             @Result(column = "shuju_email", property = "shuJuEmail"),
-            @Result(column = "dataCodes", property = "dataCodes"),
-            @Result(column = "datares_sheet", property = "fetchResultSheetName"),
+            @Result(column = "datacodes", property = "dataCodes"),
             @Result(column = "datausers_des", property = "dataUsersDescription"),
             @Result(column = "actual_usernum", property = "actualUserNum"),
             @Result(column = "end_beizhu", property = "endBeiZhu"),
             @Result(column = "update_time", property = "updateTime"),
+            @Result(property = "edmTaskResults", column = "ocid", javaType = List.class,
+                    many = @Many(select = "com.edm.edmfetchdataplatform.mapper.EdmTaskResultMapper.findEdmTaskResultByOcId")),
             @Result(column = "oid", property = "oid")
     })
     EdmApplyOrderCheckResult findEdmApplyOrderCheckResultByOid(String oid);
@@ -142,7 +142,7 @@ public interface EdmApplyOrderCheckResultMapper {
      */
     @Select("SELECT `ocid`,`first_checker`,`first_checker_email`,`firstcheck_status`,`second_checker`,`second_checker_email`,`secondcheck_status`,`paiqi_result`," +
             "`third_checker`,`third_checker_email`,`paiqicheck_status`,`fangancheck_status`,`third_beizhu`,`shuju_username`,`shuju_email`," +
-            "`dataCodes`,`datares_sheet`,`datausers_des`,`actual_usernum`,`end_beizhu`,`update_time`,`oid` " +
+            "`datacodes`,`datausers_des`,`actual_usernum`,`end_beizhu`,`update_time`,`oid` " +
             "FROM `edm_order_result` where ocid=#{ocId}")
     @Results(value = {@Result(column = "ocid", property = "ocId"),
             @Result(column = "first_checker", property = "firstCheckerUserName"),
@@ -159,12 +159,13 @@ public interface EdmApplyOrderCheckResultMapper {
             @Result(column = "third_beizhu", property = "thirdCheckBeiZhu"),
             @Result(column = "shuju_username", property = "shuJuUserName"),
             @Result(column = "shuju_email", property = "shuJuEmail"),
-            @Result(column = "dataCodes", property = "dataCodes"),
-            @Result(column = "datares_sheet", property = "fetchResultSheetName"),
+            @Result(column = "datacodes", property = "dataCodes"),
             @Result(column = "datausers_des", property = "dataUsersDescription"),
             @Result(column = "actual_usernum", property = "actualUserNum"),
             @Result(column = "end_beizhu", property = "endBeiZhu"),
             @Result(column = "update_time", property = "updateTime"),
+            @Result(property = "edmTaskResults", column = "ocid", javaType = List.class,
+                    many = @Many(select = "com.edm.edmfetchdataplatform.mapper.EdmTaskResultMapper.findEdmTaskResultByOcId")),
             @Result(column = "oid", property = "oid")
     })
     EdmApplyOrderCheckResult findEdmApplyOrderCheckResultByOcid(String ocId);

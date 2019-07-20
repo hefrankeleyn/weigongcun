@@ -50,7 +50,9 @@ public class EdmSendEmailServiceImpl implements EdmSendEmailService {
             helper = new MimeMessageHelper(mimeMessage, true);
             helper.setFrom(dataConfig.getEmailFrom());
             helper.setTo(edmLiuZhuanEmailParameters.getEmailTo());
-            helper.setCc(edmLiuZhuanEmailParameters.getEmailCc());
+            if (edmLiuZhuanEmailParameters.getEmailCc() != null && edmLiuZhuanEmailParameters.getEmailCc().length > 0) {
+                helper.setCc(edmLiuZhuanEmailParameters.getEmailCc());
+            }
             String emailSubject = "【" + edmLiuZhuanEmailParameters.getOrderName() + "】内容推广备报材料";
             helper.setSubject(emailSubject);
             // 发送富文本

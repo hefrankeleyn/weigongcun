@@ -142,7 +142,7 @@ public class EdmLiuZhuanEmailParameters implements Serializable {
     @Override
     public String toString() {
         return "EdmLiuZhuanEmailParameters{" +
-                ", emailTo='" + emailTo + '\'' +
+                "emailTo='" + emailTo + '\'' +
                 ", emailCc=" + Arrays.toString(emailCc) +
                 ", emailToUserName='" + emailToUserName + '\'' +
                 ", orderName='" + orderName + '\'' +

@@ -23,4 +23,14 @@ public class StrTest {
         System.out.println(actualNum);
         System.out.println(actualNum + "");
     }
+
+
+    @Test
+    public void dataCodeTest(){
+        String dataCode = "1:20190717100737";
+        String month = dataCode.substring(2, 8);
+        String day = dataCode.substring(2, 10);
+        System.out.println(month);
+        System.out.println(day);
+    }
 }

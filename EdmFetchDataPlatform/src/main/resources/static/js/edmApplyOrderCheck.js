@@ -693,7 +693,7 @@ $(document).ready(function () {
             }
         } else if (trElement.hasClass("customerServerGroupTr")) {
             data.thirdCheckerUserName = currentUserName;
-            data.thirdCheckerUserName = currentUserEmail;
+            data.thirdCheckerEmail = currentUserEmail;
             // 只有在 点击的是取消流转按钮并且，备注为空的情况下，才不让提交
             if (!($(this).hasClass("cancelLiuZhuan") && validBeiZhuIfIsEmpty())) {
                 // 点击取消流转，结束for循环

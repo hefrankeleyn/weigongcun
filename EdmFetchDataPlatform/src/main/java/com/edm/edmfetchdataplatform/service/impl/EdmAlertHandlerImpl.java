@@ -12,6 +12,7 @@ import com.edm.edmfetchdataplatform.tools.MyFileUtil;
 import com.edm.edmfetchdataplatform.tools.MyStrUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -61,25 +62,25 @@ public class EdmAlertHandlerImpl implements EdmAlertHandler {
      * @param edmApplyOrder
      */
     @Override
+    @Transactional
     public void handlEdmApplyOrderAlert(EdmApplyOrder edmApplyOrder) {
         try {
             logger.info("handler begin....");
-            Thread.sleep(10000L);
-            System.out.println(edmApplyOrder);
             List<EdmCondition> edmConditions = edmApplyOrder.getEdmConditions();
-            List<String> dataCodeList = new ArrayList<>();
-            int actualUserNum = 0;
-            StringBuilder userDesc = new StringBuilder();
+            //  更新EDMApplyOrderCheckResult
+            EdmApplyOrderCheckResult edmApplyOrderCheckResult = edmApplyOrder.getEdmApplyOrderCheckResult();
             if (edmConditions != null && !edmConditions.isEmpty()) {
-                EdmTaskResult edmTaskResult = null;
+                List<String> dataCodeList = new ArrayList<>();
+                int actualUserNum = 0;
+                StringBuilder userDesc = new StringBuilder();
+                List<EdmTaskResult> edmTaskResultList = new ArrayList<>();
                 EdmCondition edmCondition = null;
                 for (int i = 0; i < edmConditions.size(); i++) {
                     edmCondition = edmConditions.get(i);
+                    logger.info("edmCondition conid: " + edmCondition.getConId());
                     // 操作hive，生成数据编码等数据
                     EdmConditionOfOrder edmConditionOfOrder = new EdmConditionOfOrder(edmCondition, edmApplyOrder);
-                    edmTaskResult = hiveService.optHiveFetchEdmTaskResult(edmConditionOfOrder);
-                    //  将edmTaskResult 保存在数据表中
-                    logger.info(edmTaskResult.toString());
+                    EdmTaskResult edmTaskResult = hiveService.optHiveFetchEdmTaskResult(edmConditionOfOrder);
                     // 将省份信息转化成字符串
                     Map<String, Integer> provinceNums = edmTaskResult.getProvinceNums();
                     if (provinceNums != null && !provinceNums.isEmpty()) {
@@ -93,6 +94,10 @@ public class EdmAlertHandlerImpl implements EdmAlertHandler {
                         // 设置省份信息
                         edmTaskResult.setProvinceNumsInfo(MyArrayUtil.arrayToStr(provinceInfos));
                     }
+                    // 设置流转单结果的id
+                    edmTaskResult.setOcId(edmApplyOrderCheckResult.getOcId());
+                    //  将edmTaskResult 保存在数据表中
+                    logger.info(edmTaskResult.toString());
                     edmTaskResultService.saveEdmTaskResult(edmTaskResult);
                     // 将dataCode添加到list中
                     dataCodeList.add(edmTaskResult.getDataCode());
@@ -104,74 +109,29 @@ public class EdmAlertHandlerImpl implements EdmAlertHandler {
                     } else {
                         userDesc.append("目标用户" + i + " 提取的数据量与预期的一致" + ";\r\n");
                     }
+                    edmTaskResultList.add(edmTaskResult);
                 }
-            }
-            //  更新EDMApplyOrderCheckResult
-            EdmApplyOrderCheckResult edmApplyOrderCheckResult = edmApplyOrder.getEdmApplyOrderCheckResult();
-            edmApplyOrderCheckResult.setActualUserNum(actualUserNum);
-            //  设置数据编码
-            String[] dataCodes = new String[dataCodeList.size()];
-            edmApplyOrderCheckResult.setDataCodes(MyArrayUtil.arrayToStr(dataCodes));
-            // 设置 提取的用户描述
-            edmApplyOrderCheckResult.setDataUsersDescription(userDesc.toString());
-            edmApplyOrderCheckResultService.updateEdmApplyOrderCheckResult(edmApplyOrderCheckResult);
 
-            // 修改订单的状态, 修改为数据组处理完成
-            edmApplyOrder.setOrderState(ExamineProgressState.DATA_GROUP_EXAMINE_SUCCESS.getStatus());
-            // 修改订单的状态
-            edmApplyOrderService.updateEdmApplyOrderStatus(edmApplyOrder);
-            // 发送邮件， 通知申请者已经处理完毕
-            // 发送邮件
-            // 封装发送邮件所需要的参数
-            EdmLiuZhuanEmailParameters edmLiuZhuanEmailParameters =
-                    new EdmLiuZhuanEmailParameters(edmApplyOrder.getOrderState());
-            // 收件人
-            edmLiuZhuanEmailParameters.setEmailTo(edmApplyOrder.getEdmer().getEmail());
-            // 收件人的姓名
-            edmLiuZhuanEmailParameters.setEmailToUserName(edmApplyOrder.getEdmer().getUsername());
-            // 邮件的抄送者
-            Set<String> emailCcs = new HashSet<>();
-            if (!MyStrUtil.isEmptyOrNull(edmApplyOrderCheckResult.getFirstCheckerEmail())) {
-                emailCcs.add(edmApplyOrderCheckResult.getFirstCheckerEmail());
-            }
-            if (!MyStrUtil.isEmptyOrNull(edmApplyOrderCheckResult.getSecondCheckerEmail())) {
-                emailCcs.add(edmApplyOrderCheckResult.getSecondCheckerEmail());
-            }
-            if (!MyStrUtil.isEmptyOrNull(edmApplyOrderCheckResult.getThirdCheckerEmail())) {
-                emailCcs.add(edmApplyOrderCheckResult.getThirdCheckerEmail());
-            }
-            if (!emailCcs.isEmpty()) {
-                String[] cc = new String[emailCcs.size()];
-                edmLiuZhuanEmailParameters.setEmailCc(cc);
-            }
-            // 群发流转单的名称
-            edmLiuZhuanEmailParameters.setOrderName(edmApplyOrder.getOrderName());
-            // 排期意向
-            edmLiuZhuanEmailParameters.setPaiQiYiXiang(edmApplyOrder.getPaiQiYiXiang());
+                edmApplyOrderCheckResult.setActualUserNum(actualUserNum);
+                //  设置数据编码
+                String[] dataCodes = new String[dataCodeList.size()];
+                edmApplyOrderCheckResult.setDataCodes(MyArrayUtil.arrayToStr(dataCodeList.toArray(dataCodes)));
+                // 设置 提取的用户描述
+                edmApplyOrderCheckResult.setDataUsersDescription(userDesc.toString());
+                edmApplyOrderCheckResultService.updateEdmApplyOrderCheckResult(edmApplyOrderCheckResult);
 
-            // 生成要发送的附件
-            // 创建当前流转单的目录，该流转单及附件保存在同一个目录里面
-            // 上传文件的根目录
-            String rootPath = dataConfig.getUpLoadPath();
-            // 根据根目录创建一个唯一的目录
-            String uniqueFilePath = MyFileUtil.createUniqueFilePath(rootPath);
-            // 将群发流转单生成excel
-            // 当前时间的年月
-            String currentYearMonthDayStr = MyDateUtil.toDateStr(new Date());
-            String originalFilename = "《" + edmApplyOrder.getOrderName() + "》群发流转单-" + currentYearMonthDayStr + ".xlsx";
-            EdmApplyFile edmApplyFile = edmExcelService.createEdmApplyExcelOrder(edmApplyOrder, edmApplyOrderCheckResult, uniqueFilePath, originalFilename);
-            List<EdmApplyFile> edmApplyFiles = new ArrayList<>();
-            edmApplyFiles.add(edmApplyFile);
-            // 添加附件
-            edmLiuZhuanEmailParameters.setEdmApplyFiles(edmApplyFiles);
-            // 添加当前发件人的组别
-            edmLiuZhuanEmailParameters.setGroupName(edmApplyOrder.getEdmer().getDepartment());
-
-            // 发送邮件
-            edmSendEmailService.sendThymeleafEmail(edmLiuZhuanEmailParameters);
+                // 修改订单的状态, 修改为数据组处理完成
+                edmApplyOrder.setOrderState(ExamineProgressState.DATA_GROUP_EXAMINE_SUCCESS.getStatus());
+                // 修改订单的状态
+                edmApplyOrderService.updateEdmApplyOrderStatus(edmApplyOrder);
+                // 设置用于发送邮件写excel
+                edmApplyOrderCheckResult.setEdmTaskResults(edmTaskResultList);
+                // 发送邮件，通知处理完毕
+                sendEmailToSuccessTasks(edmApplyOrder, edmApplyOrderCheckResult);
+            }
 
             logger.info("handler end....");
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -180,7 +140,56 @@ public class EdmAlertHandlerImpl implements EdmAlertHandler {
     /**
      * 发送邮件结束该提数任务
      */
-    private void sendEmailToSuccessTasks(EdmApplyOrder edmApplyOrder) {
+    private void sendEmailToSuccessTasks(EdmApplyOrder edmApplyOrder, EdmApplyOrderCheckResult edmApplyOrderCheckResult) {
+        // 发送邮件， 通知申请者已经处理完毕
+        // 发送邮件
+        // 封装发送邮件所需要的参数
+        EdmLiuZhuanEmailParameters edmLiuZhuanEmailParameters =
+                new EdmLiuZhuanEmailParameters(edmApplyOrder.getOrderState());
+        // 收件人
+        edmLiuZhuanEmailParameters.setEmailTo(edmApplyOrder.getEdmer().getEmail());
+        // 收件人的姓名
+        edmLiuZhuanEmailParameters.setEmailToUserName(edmApplyOrder.getEdmer().getUsername());
+        // 邮件的抄送者
+        Set<String> emailCcs = new HashSet<>();
+        if (!MyStrUtil.isEmptyOrNull(edmApplyOrderCheckResult.getFirstCheckerEmail())) {
+            emailCcs.add(edmApplyOrderCheckResult.getFirstCheckerEmail());
+        }
+        if (!MyStrUtil.isEmptyOrNull(edmApplyOrderCheckResult.getSecondCheckerEmail())) {
+            emailCcs.add(edmApplyOrderCheckResult.getSecondCheckerEmail());
+        }
+        if (!MyStrUtil.isEmptyOrNull(edmApplyOrderCheckResult.getThirdCheckerEmail())) {
+            emailCcs.add(edmApplyOrderCheckResult.getThirdCheckerEmail());
+        }
+        if (!emailCcs.isEmpty()) {
+            String[] cc = new String[emailCcs.size()];
+            edmLiuZhuanEmailParameters.setEmailCc(emailCcs.toArray(cc));
+        }
+        // 群发流转单的名称
+        edmLiuZhuanEmailParameters.setOrderName(edmApplyOrder.getOrderName());
+        // 排期意向
+        edmLiuZhuanEmailParameters.setPaiQiYiXiang(edmApplyOrder.getPaiQiYiXiang());
 
+        // 生成要发送的附件
+        // 创建当前流转单的目录，该流转单及附件保存在同一个目录里面
+        // 上传文件的根目录
+        String rootPath = dataConfig.getUpLoadPath();
+        // 根据根目录创建一个唯一的目录
+        String uniqueFilePath = MyFileUtil.createUniqueFilePath(rootPath);
+        // 将群发流转单生成excel
+        // 当前时间的年月
+        String currentYearMonthDayStr = MyDateUtil.toDateStr(new Date());
+        String originalFilename = "《" + edmApplyOrder.getOrderName() + "》群发流转单-" + currentYearMonthDayStr + ".xlsx";
+        EdmApplyFile edmApplyFile = edmExcelService.createEdmApplyExcelOrder(edmApplyOrder, edmApplyOrderCheckResult, uniqueFilePath, originalFilename);
+        List<EdmApplyFile> edmApplyFiles = new ArrayList<>();
+        edmApplyFiles.add(edmApplyFile);
+        // 添加附件
+        edmLiuZhuanEmailParameters.setEdmApplyFiles(edmApplyFiles);
+        // 添加当前发件人的组别
+        edmLiuZhuanEmailParameters.setGroupName(edmApplyOrder.getEdmer().getDepartment());
+
+        logger.info(edmLiuZhuanEmailParameters.toString());
+        // 发送邮件
+        edmSendEmailService.sendThymeleafEmail(edmLiuZhuanEmailParameters);
     }
 }
