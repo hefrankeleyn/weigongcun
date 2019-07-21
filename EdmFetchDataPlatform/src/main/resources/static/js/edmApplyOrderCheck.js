@@ -128,7 +128,7 @@ $(document).ready(function () {
             // 判断是否有客服组权限
             if (judgeIfHaveSomeRole("ROLE_SHUJU")) {
                 // 展示申请组审核按钮
-                updateShujuGroupTr(8, 7);
+                updateShujuGroupTr(8, 9);
                 // 设置当前tr的样式
                 var tr = $(".container table .shujuGroupTr");
                 removeTableTrClass(tr, "table-secondary");
@@ -159,6 +159,20 @@ $(document).ready(function () {
             var tr = $(".container table .shujuGroupTr");
             removeTableTrClass(tr, "table-secondary");
             addTableTrClass(tr, "table-danger");
+        }else if (orderState == 9){
+            var tr = $(".container table .applyGroupTr");
+            removeTableTrClass(tr, "table-secondary");
+            addTableTrClass(tr, "table-success");
+            var tr = $(".container table .capacityGroupTr");
+            removeTableTrClass(tr, "table-secondary");
+            addTableTrClass(tr, "table-success");
+            var tr = $(".container table .customerServerGroupTr");
+            removeTableTrClass(tr, "table-secondary");
+            addTableTrClass(tr, "table-success");
+
+            var tr = $(".container table .shujuGroupTr");
+            removeTableTrClass(tr, "table-secondary");
+            addTableTrClass(tr, "table-success");
         }
     }
 

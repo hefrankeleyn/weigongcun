@@ -38,9 +38,6 @@ public class EdmApplyOrderCheckResultServiceImpl implements EdmApplyOrderCheckRe
     private EdmerService edmerService;
 
     @Autowired
-    private EdmConditionService edmConditionService;
-
-    @Autowired
     private EdmAlertService edmAlertService;
 
     /**

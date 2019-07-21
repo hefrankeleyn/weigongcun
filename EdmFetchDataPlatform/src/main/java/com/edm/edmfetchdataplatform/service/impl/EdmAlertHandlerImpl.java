@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 /**
@@ -55,6 +57,9 @@ public class EdmAlertHandlerImpl implements EdmAlertHandler {
     @Autowired
     private EdmSendEmailService edmSendEmailService;
 
+    private static final ExecutorService singleThreadService = Executors.newSingleThreadExecutor();
+
+
     /**
      * 当消息到达时触发该方法
      * 注意，如果要修改该方法名， RabbitMQConfig.java 文件中的内容也要修改
@@ -62,8 +67,19 @@ public class EdmAlertHandlerImpl implements EdmAlertHandler {
      * @param edmApplyOrder
      */
     @Override
-    @Transactional
     public void handlEdmApplyOrderAlert(EdmApplyOrder edmApplyOrder) {
+        Runnable r = () ->{singleRunMethodHandlEdmApplyOrderAlert(edmApplyOrder);};
+        singleThreadService.submit(r);
+    }
+
+    /**
+     * 当消息到达时触发该方法
+     * 注意，如果要修改该方法名， RabbitMQConfig.java 文件中的内容也要修改
+     * 开启一个单线程来做这件事件，让消息驱动对消息处理依次进行
+     * @param edmApplyOrder
+     */
+    @Transactional
+    public void singleRunMethodHandlEdmApplyOrderAlert(EdmApplyOrder edmApplyOrder) {
         try {
             logger.info("handler begin....");
             List<EdmCondition> edmConditions = edmApplyOrder.getEdmConditions();
@@ -128,11 +144,17 @@ public class EdmAlertHandlerImpl implements EdmAlertHandler {
                 edmApplyOrderCheckResult.setEdmTaskResults(edmTaskResultList);
                 // 发送邮件，通知处理完毕
                 sendEmailToSuccessTasks(edmApplyOrder, edmApplyOrderCheckResult);
+                // 邮件发送完成，流转任务结束，修改流转单的状态
+                edmApplyOrder.setOrderState(ExamineProgressState.ORDER_SUCCESS.getStatus());
+                edmApplyOrderService.updateEdmApplyOrderStatus(edmApplyOrder);
+                logger.info("handler end....");
             }
-
-            logger.info("handler end....");
         } catch (Exception e) {
-            e.printStackTrace();
+            // 修改流转状态，数据组处理失败
+            edmApplyOrder.setOrderState(ExamineProgressState.DATA_GROUP_EXAMINE_FAIL.getStatus());
+            edmApplyOrderService.updateEdmApplyOrderStatus(edmApplyOrder);
+            logger.warning(e.toString());
+            throw new RuntimeException(e);
         }
     }
 

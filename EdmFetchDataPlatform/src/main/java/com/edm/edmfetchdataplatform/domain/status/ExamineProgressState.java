@@ -16,6 +16,7 @@ public enum  ExamineProgressState {
     SERVICES_GROUP_EXAMINE_SUCCESS(6, "客服组审核通过，等待数据组处理"),
     DATA_GROUP_EXAMINE_SUCCESS(7, "数据组处理完成"),
     DATA_GROUP_EXAMINE_FAIL(8, "数据组处理失败"),
+    ORDER_SUCCESS(9, "流转单处理完毕，结束流转"),
     ;
 
 
