@@ -143,6 +143,24 @@ $(document).ready(function () {
             var tr = $(".container table .shujuGroupTr");
             removeTableTrClass(tr, "table-secondary");
             addTableTrClass(tr, "table-danger");
+        }else if (orderState == 9){
+            var tr = $(".container table .applyGroupTr");
+            removeTableTrClass(tr, "table-secondary");
+            addTableTrClass(tr, "table-success");
+            var tr = $(".container table .capacityGroupTr");
+            removeTableTrClass(tr, "table-secondary");
+            addTableTrClass(tr, "table-success");
+            var tr = $(".container table .customerServerGroupTr");
+            removeTableTrClass(tr, "table-secondary");
+            addTableTrClass(tr, "table-success");
+
+            var tr = $(".container table .shujuGroupTr");
+            removeTableTrClass(tr, "table-secondary");
+            addTableTrClass(tr, "table-success");
+
+            var tr = $(".container table .endTr");
+            removeTableTrClass(tr, "table-secondary");
+            addTableTrClass(tr, "table-success");
         }
     }
 

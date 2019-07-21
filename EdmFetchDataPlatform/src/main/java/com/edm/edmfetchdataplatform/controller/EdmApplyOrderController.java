@@ -3,6 +3,7 @@ package com.edm.edmfetchdataplatform.controller;
 import com.edm.edmfetchdataplatform.base.EdmPage;
 import com.edm.edmfetchdataplatform.base.query.EdmApplyOrderQuery;
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrder;
+import com.edm.edmfetchdataplatform.domain.EdmApplyOrderCheckResult;
 import com.edm.edmfetchdataplatform.domain.Edmer;
 import com.edm.edmfetchdataplatform.domain.ResponseResult;
 import com.edm.edmfetchdataplatform.domain.status.ExamineProgressStateFactory;
@@ -10,6 +11,7 @@ import com.edm.edmfetchdataplatform.domain.status.ResultStatus;
 import com.edm.edmfetchdataplatform.service.DownLoadFileService;
 import com.edm.edmfetchdataplatform.service.EdmApplyOrderService;
 import com.edm.edmfetchdataplatform.service.EdmerService;
+import com.edm.edmfetchdataplatform.tools.MyStrUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -159,6 +161,14 @@ public class EdmApplyOrderController {
         if (edmApplyOrder.getUserConditions() != null) {
             edmApplyOrder.setUserConditions(edmApplyOrder.getUserConditions().replaceAll("\r\n", "<br>"));
         }
+        // 将\r\n 换成 <br>
+        if (edmApplyOrder.getUserConditions() != null) {
+            EdmApplyOrderCheckResult edmApplyOrderCheckResult = edmApplyOrder.getEdmApplyOrderCheckResult();
+            if (!MyStrUtil.isEmptyOrNull(edmApplyOrderCheckResult.getDataUsersDescription())){
+                edmApplyOrderCheckResult.setDataUsersDescription(edmApplyOrderCheckResult.getDataUsersDescription().replaceAll("\r\n", "<br>"));
+            }
+        }
+
         // 将数据放到模型中
         model.addAttribute("edmApplyOrder", edmApplyOrder);
         logger.info(edmApplyOrder.toString());

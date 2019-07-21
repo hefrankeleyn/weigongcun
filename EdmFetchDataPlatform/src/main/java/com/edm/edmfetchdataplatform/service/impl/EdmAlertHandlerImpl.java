@@ -120,10 +120,10 @@ public class EdmAlertHandlerImpl implements EdmAlertHandler {
                     // 实际的用户量
                     actualUserNum += edmTaskResult.getFileLineNum();
                     if (edmCondition.getLimitNum() > edmTaskResult.getFileLineNum()) {
-                        userDesc.append("目标用户" + i + " 未提取到足量用户，比预期少提取了"
+                        userDesc.append("目标用户" + (i+1) + " 未提取到足量用户，比预期少提取了"
                                 + (edmCondition.getLimitNum() - edmTaskResult.getFileLineNum()) + ";\r\n");
                     } else {
-                        userDesc.append("目标用户" + i + " 提取的数据量与预期的一致" + ";\r\n");
+                        userDesc.append("目标用户" + (i+1) + " 提取的数据量与预期的一致" + ";\r\n");
                     }
                     edmTaskResultList.add(edmTaskResult);
                 }

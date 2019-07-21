@@ -11,6 +11,9 @@ table tr .userCondition,
 table tr .bianhao,
 table tr .applyDate,
 table tr .sendProvinces,
-table tr .messageContext{
+table tr .messageContext,
+table tr .dataCodes,
+table tr .dataUsersDescription
+{
     text-align: left;
 }

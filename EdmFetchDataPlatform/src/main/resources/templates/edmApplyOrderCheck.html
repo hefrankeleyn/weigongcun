@@ -137,7 +137,8 @@
             <td></td>
         </tr>
         <tr id="capacityGroupFirstTr" class="table-secondary capacityGroupTr">
-            <td rowspan="2"><span>能力组<br><span th:text="*{edmApplyOrderCheckResult.secondCheckerUserName}">葛兴羽</span></span><br></td>
+            <td rowspan="2"><span>能力组<br><span
+                    th:text="*{edmApplyOrderCheckResult.secondCheckerUserName}">葛兴羽</span></span><br></td>
             <td>排期结果</td>
             <td>内容复审</td>
             <td></td>
@@ -149,7 +150,8 @@
             <td></td>
         </tr>
         <tr id="customerServerGroupFirstTr" class="table-secondary customerServerGroupTr">
-            <td rowspan="2"><span>客服组<br><span th:text="*{edmApplyOrderCheckResult.thirdCheckerUserName}">梁南</span></span><br></td>
+            <td rowspan="2"><span>客服组<br><span
+                    th:text="*{edmApplyOrderCheckResult.thirdCheckerUserName}">梁南</span></span><br></td>
             <td>排期确认</td>
             <td>群发方案确认</td>
             <td></td>
@@ -172,8 +174,19 @@
             <td rowspan="2"><span class="sendEmailSpan">发申请人，<br>由申请人执行群发任务</span></td>
         </tr>
         <tr id="shujuGroupSecondTr" class="table-secondary shujuGroupTr">
-            <td><a href="#" th:text="*{edmApplyOrderCheckResult.dataCodes}"></a></td>
-            <td th:text="*{edmApplyOrderCheckResult.dataUsersDescription}"></td>
+            <td class="dataCodes">
+                <span th:unless="*{#lists.isEmpty(edmApplyOrderCheckResult.dataCodeArray)}"
+                      th:each="dataCode,rowStatus : *{edmApplyOrderCheckResult.dataCodeArray}">
+                    <a href="#" th:text="'目标用户'+${rowStatus.count}+': '+${dataCode}"></a><br>
+                </span>
+            </td>
+            <td class="dataUsersDescription">
+                <span th:utext="*{edmApplyOrderCheckResult.dataUsersDescription!=null && #strings.length(edmApplyOrderCheckResult.dataUsersDescription)>50}?*{#strings.substring(edmApplyOrderCheckResult.dataUsersDescription, 0, 50)}:*{edmApplyOrderCheckResult.dataUsersDescription}"></span>
+                <span th:if="*{edmApplyOrderCheckResult.dataUsersDescription!=null && #strings.length(edmApplyOrderCheckResult.dataUsersDescription)>50}">
+                    <button data-toggle="popover" title="用户属性说明" class="btn btn-link py-0 px-0"
+                            th:data-content="*{edmApplyOrderCheckResult.dataUsersDescription}" data-html="true">查看全文</button>
+                </span>
+            </td>
             <td th:text="*{edmApplyOrderCheckResult.actualUserNum}"></td>
         </tr>
         <tr id="endTr" class="table-secondary endTr">

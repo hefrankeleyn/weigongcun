@@ -173,6 +173,10 @@ $(document).ready(function () {
             var tr = $(".container table .shujuGroupTr");
             removeTableTrClass(tr, "table-secondary");
             addTableTrClass(tr, "table-success");
+
+            var tr = $(".container table .endTr");
+            removeTableTrClass(tr, "table-secondary");
+            addTableTrClass(tr, "table-success");
         }
     }
 
