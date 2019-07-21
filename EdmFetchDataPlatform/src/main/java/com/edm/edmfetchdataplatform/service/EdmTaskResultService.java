@@ -1,6 +1,7 @@
 package com.edm.edmfetchdataplatform.service;
 
 import com.edm.edmfetchdataplatform.domain.EdmTaskResult;
+import com.edm.edmfetchdataplatform.domain.translate.DataCodeOfEdmApplyOrder;
 
 import java.util.List;
 
@@ -70,4 +71,12 @@ public interface EdmTaskResultService {
      * @return
      */
     EdmTaskResult findEdmTaskResultByDataCode(String dataCode);
+
+    /**
+     * 根据oid和数据编码获取 DataCodeOfEdmApplyOrder
+     * @param oid
+     * @param dataCode
+     * @return
+     */
+    DataCodeOfEdmApplyOrder findDataCodeOfEdmApplyOrderByOidAndDataCode(String oid, String dataCode);
 }

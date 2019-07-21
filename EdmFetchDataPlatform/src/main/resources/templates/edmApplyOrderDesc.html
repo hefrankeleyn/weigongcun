@@ -170,7 +170,8 @@
                 <!--                <a href="#" th:text="*{edmApplyOrderCheckResult.dataCodes}"></a>-->
                 <span th:unless="*{#lists.isEmpty(edmApplyOrderCheckResult.dataCodeArray)}"
                       th:each="dataCode,rowStatus : *{edmApplyOrderCheckResult.dataCodeArray}">
-                    <a href="#" th:text="'目标用户'+${rowStatus.count}+': '+${dataCode}"></a><br>
+                    <a th:href="@{/edmTaskResultController/findDataCodeOfEdmApplyOrderByDataCode/{oid}(oid=${edmApplyOrder.getOid()},dataCode=${dataCode})}"
+                       th:text="'目标用户'+${rowStatus.count}+': '+${dataCode}"></a><br>
                 </span>
             </td>
             <td class="dataUsersDescription">

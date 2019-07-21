@@ -3,9 +3,11 @@ package com.edm.edmfetchdataplatform.service.impl;
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrder;
 import com.edm.edmfetchdataplatform.domain.EdmCondition;
 import com.edm.edmfetchdataplatform.domain.EdmTaskResult;
+import com.edm.edmfetchdataplatform.domain.translate.DataCodeOfEdmApplyOrder;
 import com.edm.edmfetchdataplatform.mapper.EdmTaskResultMapper;
 import com.edm.edmfetchdataplatform.service.EdmApplyOrderService;
 import com.edm.edmfetchdataplatform.service.EdmTaskResultService;
+import com.edm.edmfetchdataplatform.tools.MyStrUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -160,16 +162,36 @@ public class EdmTaskResultServiceImpl implements EdmTaskResultService {
 
     /**
      * 根据数据编码查询EdmTaskResult
+     *
      * @param dataCode
      * @return
      */
     @Override
     public EdmTaskResult findEdmTaskResultByDataCode(String dataCode) {
-        if (dataCode!=null && !dataCode.trim().equals("")){
+        if (dataCode != null && !dataCode.trim().equals("")) {
             EdmTaskResult edmTaskResult = edmTaskResultMapper.findEdmTaskResultByDataCode(dataCode);
-            if (edmTaskResult!=null){
+            if (edmTaskResult != null) {
                 return edmTaskResult;
             }
+        }
+        return null;
+    }
+
+    /**
+     * 根据oid和dataCode 查询 DataCodeOfEdmApplyOrder
+     *
+     * @param oid
+     * @param dataCode
+     * @return
+     */
+    @Override
+    public DataCodeOfEdmApplyOrder findDataCodeOfEdmApplyOrderByOidAndDataCode(String oid, String dataCode) {
+        if (!MyStrUtil.isEmptyOrNull(oid) && !MyStrUtil.isEmptyOrNull(dataCode)) {
+            EdmApplyOrder edmApplyOrder = edmApplyOrderService.findEdmApplyOrderByOid(oid);
+            EdmTaskResult edmTaskResult = findEdmTaskResultByDataCode(dataCode);
+            DataCodeOfEdmApplyOrder dataCodeOfEdmApplyOrder =
+                    new DataCodeOfEdmApplyOrder(edmApplyOrder, edmTaskResult);
+            return dataCodeOfEdmApplyOrder;
         }
         return null;
     }

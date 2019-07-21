@@ -3,11 +3,13 @@ package com.edm.edmfetchdataplatform.controller;
 import com.edm.edmfetchdataplatform.domain.EdmTaskResult;
 import com.edm.edmfetchdataplatform.domain.ResponseResult;
 import com.edm.edmfetchdataplatform.domain.status.ResultStatus;
+import com.edm.edmfetchdataplatform.domain.translate.DataCodeOfEdmApplyOrder;
 import com.edm.edmfetchdataplatform.service.EdmTaskResultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -66,6 +68,21 @@ public class EdmTaskResultController {
         }else {
             return new ResponseResult(ResultStatus.SUCCESS, "数据编码存在");
         }
+    }
+
+    /**
+     * 根据数据编码和oid查询对应的分省数据信息
+     * @param oid
+     * @param dataCode
+     * @return
+     */
+    @RequestMapping(value = "/findDataCodeOfEdmApplyOrderByDataCode/{oid}", method = RequestMethod.GET)
+    public String findDataCodeOfEdmApplyOrderByDataCode(@PathVariable("oid") String oid,
+                                                        String dataCode, Model model){
+        DataCodeOfEdmApplyOrder dataCodeOfEdmApplyOrder =
+                edmTaskResultService.findDataCodeOfEdmApplyOrderByOidAndDataCode(oid, dataCode);
+        model.addAttribute("dataCodeOfEdmApplyOrder", dataCodeOfEdmApplyOrder);
+        return "dataCodeProvinceNumDesc";
     }
 
 
