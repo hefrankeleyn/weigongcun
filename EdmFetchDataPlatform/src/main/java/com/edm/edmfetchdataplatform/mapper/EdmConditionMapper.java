@@ -16,8 +16,8 @@ public interface EdmConditionMapper {
      * @param edmCondition
      */
     @Insert("INSERT INTO edm_conditions(conid,bus_type,dimensions,province_if,provincecodes,province_opt,city_if,citycodes," +
-            "city_opt,data_codes,limitnum,oid,eid) VALUES(#{conId},#{qunFaBusiness.businessType},#{dimensions},#{provinceIf},#{provinceCodes},#{provinceOpt}," +
-            "#{cityIf},#{cityCodes},#{cityOpt},#{dataCodes},#{limitNum},#{oid},#{edmer.eid})")
+            "city_opt,data_codes,limitnum,create_date,oid,eid) VALUES(#{conId},#{qunFaBusiness.businessType},#{dimensions},#{provinceIf},#{provinceCodes},#{provinceOpt}," +
+            "#{cityIf},#{cityCodes},#{cityOpt},#{dataCodes},#{limitNum},#{createDate},#{oid},#{edmer.eid})")
     void saveEdmCondition(EdmCondition edmCondition);
 
     /**
@@ -35,6 +35,7 @@ public interface EdmConditionMapper {
                       @Result(column = "city_opt", property = "cityOpt"),
                       @Result(column = "data_codes", property = "dataCodes"),
                       @Result(column = "limitnum", property = "limitNum"),
+                      @Result(column = "create_date", property = "createDate"),
                       @Result(column = "oid", property = "oid"),
                       @Result(property = "edmer", column = "eid",
                               one = @One(select = "com.edm.edmfetchdataplatform.mapper.EdmerMapper.findEdmerByEid")),
@@ -42,7 +43,8 @@ public interface EdmConditionMapper {
                                         one = @One(select = "com.edm.edmfetchdataplatform.mapper.QunFaBusinessMapper.findEnalbeQunFaBusinessByBusType"))
     })
     @Select("select conid,bus_type,dimensions,province_if,provincecodes,province_opt,city_if,citycodes," +
-            "city_opt,data_codes,limitnum,oid,eid from edm_conditions where 1=1 and oid is null and eid=#{eid}")
+            "city_opt,data_codes,limitnum,create_date,oid,eid from edm_conditions where 1=1 and oid is null and eid=#{eid} " +
+            "order by create_date")
     List<EdmCondition> findEdmConditionsByEid(@Param("eid") Integer eid);
 
 
@@ -62,6 +64,7 @@ public interface EdmConditionMapper {
             @Result(column = "city_opt", property = "cityOpt"),
             @Result(column = "data_codes", property = "dataCodes"),
             @Result(column = "limitnum", property = "limitNum"),
+            @Result(column = "create_date", property = "createDate"),
             @Result(column = "oid", property = "oid"),
             @Result(property = "edmer", column = "eid",
                     one = @One(select = "com.edm.edmfetchdataplatform.mapper.EdmerMapper.findEdmerByEid")),
@@ -69,11 +72,12 @@ public interface EdmConditionMapper {
                     one = @One(select = "com.edm.edmfetchdataplatform.mapper.QunFaBusinessMapper.findEnalbeQunFaBusinessByBusType"))
     })
     @Select({"<script>",
-            "select conid,bus_type,dimensions,province_if,provincecodes,province_opt,city_if,citycodes,city_opt,data_codes,limitnum,oid,eid ",
+            "select conid,bus_type,dimensions,province_if,provincecodes,province_opt,city_if,citycodes,city_opt,data_codes,limitnum,create_date,oid,eid ",
              "from edm_conditions where 1=1 and eid=#{eid} and conid in ",
             "<foreach item='item' index='index' collection='list' open='(' separator=',' close=')'>",
             "#{item}",
             "</foreach>",
+            " order by create_date",
             "</script>"
             })
     List<EdmCondition> findEdmConditionsByConIdsAndEid(@Param("list") Integer[] conId, @Param("eid") Integer eid);
@@ -92,6 +96,7 @@ public interface EdmConditionMapper {
             @Result(column = "city_opt", property = "cityOpt"),
             @Result(column = "data_codes", property = "dataCodes"),
             @Result(column = "limitnum", property = "limitNum"),
+            @Result(column = "create_date", property = "createDate"),
             @Result(column = "oid", property = "oid"),
             @Result(property = "edmer", column = "eid",
                     one = @One(select = "com.edm.edmfetchdataplatform.mapper.EdmerMapper.findEdmerByEid")),
@@ -99,11 +104,12 @@ public interface EdmConditionMapper {
                     one = @One(select = "com.edm.edmfetchdataplatform.mapper.QunFaBusinessMapper.findEnalbeQunFaBusinessByBusType"))
     })
     @Select({"<script>",
-            "select conid,bus_type,dimensions,province_if,provincecodes,province_opt,city_if,citycodes,city_opt,data_codes,limitnum,oid,eid ",
+            "select conid,bus_type,dimensions,province_if,provincecodes,province_opt,city_if,citycodes,city_opt,data_codes,limitnum,create_date,oid,eid ",
             "from edm_conditions where 1=1 and conid in ",
             "<foreach item='item' index='index' collection='list' open='(' separator=',' close=')'>",
             "#{item}",
             "</foreach>",
+            " order by create_date",
             "</script>"
     })
     List<EdmCondition> findEdmConditionsByConIds(@Param("list") Integer[] conId);
@@ -124,6 +130,7 @@ public interface EdmConditionMapper {
             @Result(column = "city_opt", property = "cityOpt"),
             @Result(column = "data_codes", property = "dataCodes"),
             @Result(column = "limitnum", property = "limitNum"),
+            @Result(column = "create_date", property = "createDate"),
             @Result(column = "oid", property = "oid"),
             @Result(property = "edmer", column = "eid",
                     one = @One(select = "com.edm.edmfetchdataplatform.mapper.EdmerMapper.findEdmerByEid")),
@@ -131,7 +138,7 @@ public interface EdmConditionMapper {
                     one = @One(select = "com.edm.edmfetchdataplatform.mapper.QunFaBusinessMapper.findEnalbeQunFaBusinessByBusType"))
     })
     @Select("select conid,bus_type,dimensions,province_if,provincecodes,province_opt,city_if,citycodes," +
-            "city_opt,data_codes,limitnum,oid,eid from edm_conditions where 1=1 and oid=#{oid}")
+            "city_opt,data_codes,limitnum,create_date,oid,eid from edm_conditions where 1=1 and oid=#{oid} order by create_date")
     List<EdmCondition> findEdmConditionsByOid(String oid);
 
 

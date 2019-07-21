@@ -273,6 +273,12 @@ databaseChangeLog:
                     nullable: false
                   remarks: 提取的数据量
               - column:
+                  name: create_date
+                  type: date
+                  constraints:
+                    nullable: true
+                  remarks: 提数项创建的时间
+              - column:
                   name: oid
                   type: varchar(200)
                   constraints:

@@ -5,6 +5,7 @@ import com.edm.edmfetchdataplatform.tools.MyArrayUtil;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Date;
 
 /**
  * EDM 的提数条件,用于和 页面 表单进行交互
@@ -78,6 +79,11 @@ public class EdmFetchDataCondition implements Serializable {
     private Integer limitNum;
 
     /**
+     * 创建时间
+     */
+    private Date createDate;
+
+    /**
      * 申请流转单的 id
      */
     private String oid;
@@ -104,6 +110,7 @@ public class EdmFetchDataCondition implements Serializable {
         this.dataCodes = MyArrayUtil.strToArray(edmCondition.getDataCodes());
         this.limitNum = edmCondition.getLimitNum();
         this.edmer = edmCondition.getEdmer();
+        this.createDate = edmCondition.getCreateDate();
     }
 
     public Integer getConId() {
@@ -194,6 +201,14 @@ public class EdmFetchDataCondition implements Serializable {
         this.limitNum = limitNum;
     }
 
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
     public Edmer getEdmer() {
         return edmer;
     }
@@ -224,6 +239,7 @@ public class EdmFetchDataCondition implements Serializable {
                 ", cityOpt=" + cityOpt +
                 ", dataCodes=" + Arrays.toString(dataCodes) +
                 ", limitNum=" + limitNum +
+                ", createDate=" + createDate +
                 ", oid='" + oid + '\'' +
                 ", edmer=" + edmer +
                 '}';

@@ -3,6 +3,7 @@ package com.edm.edmfetchdataplatform.domain;
 import com.edm.edmfetchdataplatform.tools.MyArrayUtil;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 提数条件
@@ -86,6 +87,11 @@ public class EdmCondition implements Serializable {
      * 不能为空
      */
     private Integer limitNum;
+
+    /**
+     * 创建时间
+     */
+    private Date createDate;
 
     /**
      * 申请流转单的 id
@@ -221,6 +227,14 @@ public class EdmCondition implements Serializable {
 
     public void setLimitNum(Integer limitNum) {
         this.limitNum = limitNum;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 
     public Edmer getEdmer() {

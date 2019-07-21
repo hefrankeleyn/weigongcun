@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -52,7 +53,9 @@ public class EdmConditionServiceImpl implements EdmConditionService {
     @Override
     @Transactional
     public void saveEdmCondition(EdmFetchDataCondition edmFetchDataCondition, Edmer edmer) {
-        edmConditionMapper.saveEdmCondition(new EdmCondition(edmFetchDataCondition, edmer));
+        EdmCondition edmCondition = new EdmCondition(edmFetchDataCondition, edmer);
+        edmCondition.setCreateDate(new Date());
+        edmConditionMapper.saveEdmCondition(edmCondition);
     }
 
     @Override
@@ -77,8 +80,6 @@ public class EdmConditionServiceImpl implements EdmConditionService {
     @Override
     public List<EdmCondition> findEdmFetchDataConditionsByEid(Integer eid) {
         List<EdmCondition> edmConditions = edmConditionMapper.findEdmConditionsByEid(eid);
-
-
         if (edmConditions == null || edmConditions.isEmpty()) {
             return null;
         } else {
