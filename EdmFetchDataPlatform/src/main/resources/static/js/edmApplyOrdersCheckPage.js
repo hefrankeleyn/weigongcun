@@ -26,6 +26,8 @@ $(document).ready(function () {
         var currentPageNum = $(".container nav #pageValue input[name='currentPageNum']").val();
         // 获取一页的记录条数
         var totalPageNum = $(".container nav #pageValue input[name='totalPageNum']").val();
+        // 总共的记录条数
+        var totalItemNum = $(".container nav #pageValue input[name='totalItemNum']").val();
 
         var pageUl = $("<ul class='pagination justify-content-center'></ul>");
 
@@ -92,7 +94,7 @@ $(document).ready(function () {
         }
 
 
-        var currentPageValue = "总共" + totalPageNum + "页";
+        var currentPageValue = "总共 " + totalPageNum + "页, " + totalItemNum + " 条数据" ;
         var currentPageSpan = $("<span class='currentPage'></span>");
         currentPageSpan.text(currentPageValue);
         var currentPageLi = $("<li class='currentPage pt-2'></li>");

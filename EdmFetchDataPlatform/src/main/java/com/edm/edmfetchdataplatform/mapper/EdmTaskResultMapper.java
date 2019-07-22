@@ -1,5 +1,6 @@
 package com.edm.edmfetchdataplatform.mapper;
 
+import com.edm.edmfetchdataplatform.base.query.DataCodeOfEdmOrderQuery;
 import com.edm.edmfetchdataplatform.domain.EdmTaskResult;
 import org.apache.ibatis.annotations.*;
 
@@ -7,6 +8,7 @@ import java.util.List;
 
 /**
  * 操作保存结果
+ *
  * @Date 2019-07-18
  * @Author lifei
  */
@@ -16,6 +18,7 @@ public interface EdmTaskResultMapper {
 
     /**
      * 保存EdmTaskResult
+     *
      * @param edmTaskResult
      */
     @Insert("INSERT INTO `edm_task_result` (`conid`,`ocid`,`user_name`,`status`,`submit_time`,`finish_time`," +
@@ -26,6 +29,7 @@ public interface EdmTaskResultMapper {
 
     /**
      * 更新EdmTaskResult
+     *
      * @param edmTaskResult
      */
     @Update("UPDATE `edm_task_result` SET `conid` = #{conId},`ocid` = #{ocId},`user_name` = #{userName}," +
@@ -37,6 +41,7 @@ public interface EdmTaskResultMapper {
 
     /**
      * 查询所有可用的数据编码
+     *
      * @return
      */
     @Select("select `task_id`,`conid`,`ocid`,`user_name`,`status`,`submit_time`,`finish_time`,`file_path`,`data_code`," +
@@ -61,6 +66,7 @@ public interface EdmTaskResultMapper {
 
     /**
      * 根据taskid 查询 EdmTaskResult
+     *
      * @param taskId
      * @return
      */
@@ -85,6 +91,7 @@ public interface EdmTaskResultMapper {
 
     /**
      * 根据ocid查询所有的EdmTaskResult 查询 EdmTaskResult
+     *
      * @param ocId
      * @return
      */
@@ -107,8 +114,66 @@ public interface EdmTaskResultMapper {
     })
     List<EdmTaskResult> findEdmTaskResultByOcId(String ocId);
 
+
+    /**
+     * 根据ocIds 查询所有可用的
+     *
+     * @param dataCodeOfEdmOrderQuery
+     * @return
+     */
+    @Select({"<script>",
+            "select count(task_id) from edm_task_result where 1=1",
+            "and status=2 ",
+            "<if test='ocIds != null'>",
+            "and ocid in ",
+            "<foreach item='item' index='index' collection='ocIds' open='(' separator=',' close=')'>",
+            "#{item}",
+            "</foreach>",
+            "</if>",
+            "</script>"})
+    Integer countEdmTaskResultByOcIds(DataCodeOfEdmOrderQuery dataCodeOfEdmOrderQuery);
+
+
+    /**
+     * 根据ocIds 查询所有可用的
+     *
+     * @param dataCodeOfEdmOrderQuery
+     * @return
+     */
+    @Select({"<script>",
+            "select `task_id`,`conid`,`ocid`,`user_name`,`status`,`submit_time`,`finish_time`,`file_path`,`data_code`, " +
+                    "`filelinenum`,`topic`,`business_type`,`provincenumsinfo` ",
+            "from edm_task_result where 1=1",
+            "and status=2 ",
+            "<if test='dataCodeOfEdmOrderQuery.ocIds != null'>",
+            "and ocid in ",
+            "<foreach item='item' index='index' collection='dataCodeOfEdmOrderQuery.ocIds' open='(' separator=',' close=')'>",
+            "#{item}",
+            "</foreach>",
+            "</if>",
+            "order by finish_time desc ",
+            "limit #{beginItemIndex},#{pageSize} ",
+            "</script>"})
+    @Results(value = {@Result(column = "task_id", property = "taskId"),
+            @Result(column = "conid", property = "conId"),
+            @Result(column = "ocid", property = "ocId"),
+            @Result(column = "user_name", property = "userName"),
+            @Result(column = "status", property = "status"),
+            @Result(column = "submit_time", property = "submitTime"),
+            @Result(column = "finish_time", property = "finishTime"),
+            @Result(column = "file_path", property = "filePath"),
+            @Result(column = "data_code", property = "dataCode"),
+            @Result(column = "filelinenum", property = "fileLineNum"),
+            @Result(column = "topic", property = "topic"),
+            @Result(column = "business_type", property = "businessType"),
+            @Result(column = "provincenumsinfo", property = "provinceNumsInfo")
+    })
+    List<EdmTaskResult> findPageEdmTaskResultByQuery(DataCodeOfEdmOrderQuery dataCodeOfEdmOrderQuery,
+                                                     Integer beginItemIndex, Integer pageSize);
+
     /**
      * 根据 conId 查询 EdmTaskResult
+     *
      * @param conId
      * @return
      */
@@ -134,13 +199,14 @@ public interface EdmTaskResultMapper {
 
     /**
      * 根据conIds 查询所有的 EdmTaskResult
+     *
      * @param conIds
      * @return
      */
     @Select({"<script>",
             "select `task_id`,`conid`,`ocid`,`user_name`,`status`,`submit_time`,`finish_time`,`file_path`,`data_code`," +
-            "`filelinenum`,`topic`,`business_type`,`provincenumsinfo` " +
-            "from `edm_task_result` where 1=1 and `conid` in ",
+                    "`filelinenum`,`topic`,`business_type`,`provincenumsinfo` " +
+                    "from `edm_task_result` where 1=1 and `conid` in ",
             "<foreach item='item' index='index' collection='list' open='(' separator=',' close=')'>",
             "#{item}",
             "</foreach>",
@@ -165,13 +231,14 @@ public interface EdmTaskResultMapper {
 
     /**
      * 根据conIds 查询所有可用的 EdmTaskResult
+     *
      * @param conIds
      * @return
      */
     @Select({"<script>",
             "select `task_id`,`conid`,`ocid`,`user_name`,`status`,`submit_time`,`finish_time`,`file_path`,`data_code`," +
-            "`filelinenum`,`topic`,`business_type`,`provincenumsinfo` " +
-            "from `edm_task_result` where 1=1 and `status`=2 and `conid` in ",
+                    "`filelinenum`,`topic`,`business_type`,`provincenumsinfo` " +
+                    "from `edm_task_result` where 1=1 and `status`=2 and `conid` in ",
             "<foreach item='item' index='index' collection='list' open='(' separator=',' close=')'>",
             "#{item}",
             "</foreach>",
@@ -197,6 +264,7 @@ public interface EdmTaskResultMapper {
 
     /**
      * 根据数据编码查询EdmTaskResult
+     *
      * @param dataCode
      * @return
      */

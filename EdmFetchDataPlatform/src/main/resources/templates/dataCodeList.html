@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EDM</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/popper.min.js}"></script>
+    <script th:src="@{/bootstrap/js/bootstrap.js}"></script>
+    <!--    自定义的js 插件-->
+    <script th:src="@{/js/url-plugins.js}"></script>
+    <!--    自定义的js-->
+    <script th:src="@{/js/header.js}"></script>
+
+    <!--    自定义js-->
+    <script th:src="@{/js/dataCodeList.js}"></script>
+    <!--    自定义的css-->
+    <link rel="stylesheet" th:href="@{/css/page.css}">
+</head>
+
+<body>
+<div class="container" th:object="${dataCodeOfEdmApplyOrderPage}">
+    <h2 th:unless="${#lists.isEmpty(dataCodeOfEdmApplyOrderPage.getPageObjList())}">数据编码列表</h2>
+    <table class="table table-bordered table-hover" th:unless="${#lists.isEmpty(dataCodeOfEdmApplyOrderPage.getPageObjList())}">
+        <thead class="thead-light">
+        <tr>
+            <th scope="col">序号</th>
+            <th scope="col">数据编码</th>
+            <th scope="col">活动名称</th>
+            <th scope="col">申请人</th>
+            <th scope="col">生成时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="dataCodeOfOrder,rowStatus : *{pageObjList}">
+            <td th:text="${rowStatus.count}">1</td>
+            <td><a th:href="@{/edmTaskResultController/findDataCodeOfEdmApplyOrderByDataCode/{oid}(oid=${dataCodeOfOrder.oid},dataCode=${dataCodeOfOrder.dataCode})}"
+                   th:text="${dataCodeOfOrder.dataCode}"></a></td>
+            <td><a th:href="@{/edmApplyOrderController/findEdmApplyOrderByOid/{oid}(oid=${dataCodeOfOrder.getOid()})}"
+                   th:text="${dataCodeOfOrder.orderName}"></a></td>
+            <td th:text="${dataCodeOfOrder.userName}">小明</td>
+            <td th:text="${dataCodeOfOrder.dataCodeCreateDate}">2019-08-08</td>
+        </tr>
+        </tbody>
+    </table>
+    <div th:if="${#lists.isEmpty(dataCodeOfEdmApplyOrderPage.getPageObjList())}">
+        <div class="jumbotron">
+            <h1 class="display-4">列表为空</h1>
+            <p class="lead">暂时没有可用的数据编码</p>
+        </div>
+    </div>
+    <nav>
+        <ul hidden id="pageValue">
+            <input type="hidden" name="eid" th:value="${edmer.getEid()}">
+            <input type="hidden" th:name="${_csrf.getParameterName()}" th:value="${_csrf.getToken()}">
+            <input type="hidden" name="pageSize" th:value="*{pageSize}">
+            <input type="hidden" name="currentPageNum" th:value="*{currentPageNum}">
+            <input type="hidden" name="totalPageNum" th:value="*{totalPageNum}">
+            <input type="hidden" name="totalItemNum" th:value="*{totalItemNum}">
+        </ul>
+    </nav>
+</div>
+</body>
+
+</html>

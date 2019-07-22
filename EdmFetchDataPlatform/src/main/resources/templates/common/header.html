@@ -43,6 +43,9 @@
             <li class="nav-item">
                 <a class="nav-link" th:href="@{/edmApplyOrderController/findPageEdmApplyOrdersByUserRole}">待审核列表</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/edmTaskResultController/findPageCurrentUserDataCode}">数据编码列表</a>
+            </li>
         </ul>
     </div>
     <ul class="navbar-nav px-3" sec:authorize="isAuthenticated()">

@@ -45,6 +45,13 @@ public interface EdmApplyOrderService {
      */
     EdmApplyOrder findEdmApplyOrderByOid(String oid);
 
+    /**
+     * 根据OcId 查询EdmApplyOrder
+     * @param ocid
+     * @return
+     */
+    EdmApplyOrder findEdmApplyOrderByOcid(String ocid);
+
 
     /**
      * 根据邮箱查询当前用户发起的流转单
@@ -106,6 +113,16 @@ public interface EdmApplyOrderService {
      * @return
      */
     EdmPage<EdmApplyOrder> findPageEdmApplyOrdersByBEdmApplyOrderQuery(EdmApplyOrderQuery edmApplyOrderQuery);
+
+    /**
+     * 根据eid和订单状态，查询所有的EdmApplyOrder
+     * @param eid
+     * @param orderStatusArray
+     * @return
+     */
+    List<EdmApplyOrder> findEdmApplyOrderByEidAndOrderStatusArray(Integer eid, Integer[] orderStatusArray);
+
+
 
 
 

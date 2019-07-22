@@ -1,6 +1,5 @@
 $(document).ready(function () {
 
-
     // 调用初始化函数
     init();
 
@@ -15,7 +14,6 @@ $(document).ready(function () {
             initPageHtml();
         }
     }
-
     /**
      * 对分页的html进行初始化
      */
@@ -119,8 +117,6 @@ $(document).ready(function () {
 
 
     }
-
-
     /**
      * 查找一页的PageEdmApplyOrder
      */
@@ -161,7 +157,7 @@ $(document).ready(function () {
         var token = $(".container nav #pageValue input[name='_csrf']").val();
         var headers = {"X-CSRF-TOKEN": token};
         // 获取项目路径
-        var url = $.projectRootUrl() + "/edmApplyOrderController/findPageCurrentUserEdmApplyOrdersByQuery";
+        var url = $.projectRootUrl() + "/edmTaskResultController/findPageCurrentUserDataCodeByQuery";
         if (parseInt(currentPageNum) == parseInt(oldCurrentPageNum) && !selectChanged) {
             console.log("CurrentPage not change");
         }else {
@@ -169,7 +165,6 @@ $(document).ready(function () {
         }
 
     }
-
     /**
      * 分页查询 ajax
      * @param headers
@@ -199,7 +194,6 @@ $(document).ready(function () {
             }
         });
     }
-
     /**
      * 重新加载分页的html
      */
@@ -221,47 +215,37 @@ $(document).ready(function () {
     /**
      * 刷新table下面tr
      */
-    function reloadTableTrs(edmApplyOrderList) {
-        // 查看详情的url
-        var rootDescUrl = $.projectRootUrl() + "/edmApplyOrderController/findEdmApplyOrderByOid/";
-        var rootProgressUrl = $.projectRootUrl() + "/edmApplyOrderController/findEdmApplyOrderProgress/";
+    function reloadTableTrs(listObj) {
+        // 数据编码分省
+        var dataCodeDescUrl = $.projectRootUrl() + "edmTaskResultController/findDataCodeOfEdmApplyOrderByDataCode/";
+        // 订单详情
+        var orderDescUrl = $.projectRootUrl() + "/edmApplyOrderController/findEdmApplyOrderByOid//";
         var tbody = $(".container table tbody");
         // 删除所有的tr
         tbody.children("tr").remove();
         // 添加新的tr
-        for (var i=0; i<edmApplyOrderList.length; i++){
+        for (var i=0; i<listObj.length; i++){
             var tr = $("<tr></tr>")
-            var xuhaoTh = $("<th scope='row' class='xuhao'></th>").text(i+1);
-            xuhaoTh.attr("id", edmApplyOrderList[i].edmer.eid);
+            var xuhaoTh = $("<th scope='row'></th>").text(i+1);
             tr.append(xuhaoTh);
-            // 流转单的名字
-            var liuZhuanDanNameTd = $("<td class='liuzhuandan'></td>");
-            var xiangqingA = $("<a></a>").attr("href", rootDescUrl + edmApplyOrderList[i].oid);
-            xiangqingA.text(edmApplyOrderList[i].orderName);
-            liuZhuanDanNameTd.append(xiangqingA);
-            tr.append(liuZhuanDanNameTd);
-            // 申请时间
-            var applyDateTd = $("<td class='applyDate'></td>").text($.date(edmApplyOrderList[i].applyDate));
-            tr.append(applyDateTd);
+            // 数据编码
+            var dataCodeTd = $("<td></td>");
+            var dataCodeA = $("<a></a>").attr("href", dataCodeDescUrl + listObj[i].oid +"?dataCode=" + listObj[i].dataCode);
+            dataCodeA.text(listObj[i].dataCode);
+            dataCodeTd.append(dataCodeA);
+            tr.append(dataCodeTd);
+            // 活动名称
+            var orderNameTd = $("<td></td>");
+            var orderNameA = $("<a></a>").attr("href", orderDescUrl + listObj[i].oid);
+            orderNameA.text(listObj[i].orderName);
+            orderNameTd.append(orderNameA);
+            tr.append(orderNameTd);
             // 申请人
-            var applierTd = $("<td class='applier'></td>").text(edmApplyOrderList[i].edmer.username);
-            tr.append(applierTd);
-            // 状态
-            var applyStatueTd = $("<td class='applyStatue'></td>").text(edmApplyOrderList[i].orderState == 7?'流转完成':'流转中');
-            tr.append(applyStatueTd);
-
-            // 操作
-            var optionTd = $("<td class='caozuo'></td>");
-            var caoZouDiv = $("<div></div>");
-            var showDescA = $("<a class='btn btn-info btn-sm mr-1 active' role='button' aria-pressed='true'>查看详情</a>");
-            showDescA.attr("href", rootDescUrl + edmApplyOrderList[i].oid);
-            var jinDuTiaoA = $("<a class='btn btn-info btn-sm active' role='button' aria-pressed='true'>流转进度</a>");
-            jinDuTiaoA.attr("href", rootProgressUrl + edmApplyOrderList[i].oid);
-            jinDuTiaoA.attr("href", "#");
-            caoZouDiv.append(showDescA);
-            caoZouDiv.append(jinDuTiaoA);
-            optionTd.append(caoZouDiv);
-            tr.append(optionTd);
+            var userNameTd = $("<td class='applyDate'></td>").text(listObj[i].userName);
+            tr.append(userNameTd);
+            // 生成时间
+            var dataCodeCreateDateTd = $("<td class='applier'></td>").text(listObj[i].dataCodeCreateDate);
+            tr.append(dataCodeCreateDateTd);
             tbody.append(tr);
         }
     }

@@ -1,0 +1,13 @@
+/**
+分页所需的css
+ */
+.next {
+    margin-right: 300px;
+}
+.previous{
+    margin-left: 200px
+}
+
+.pagination li span:hover{
+    cursor: pointer;
+}

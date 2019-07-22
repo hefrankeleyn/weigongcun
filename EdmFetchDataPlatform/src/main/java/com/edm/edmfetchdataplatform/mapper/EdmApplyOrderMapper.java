@@ -71,6 +71,40 @@ public interface EdmApplyOrderMapper {
     })
     EdmApplyOrder findEdmApplyOrderByOid(String oid);
 
+    /**
+     * 根据ocid订单号查询EdmApplyOrder
+     *
+     * @param ocid
+     * @return
+     */
+    @Select("SELECT `oid`,`order_name`,`eid`,`apply_date`,`qunfa_type_description`,`qunfa_subject_and_context`," +
+            "`paiqi_yixiang`,`target_send_province`,`user_conditions`,`send_num`,`channel_sends`,`how_supplement`," +
+            "`message_context`,`order_state`,`ocid` FROM `edm_apply_examine_order` " +
+            "where 1=1 and ocid=#{ocid}")
+    @Results(value = {@Result(column = "oid", property = "oid"),
+            @Result(column = "order_name", property = "orderName"),
+            @Result(column = "apply_date", property = "applyDate", javaType = java.util.Date.class),
+            @Result(column = "qunfa_type_description", property = "qunFaTypeDescription"),
+            @Result(column = "qunfa_subject_and_context", property = "qunFaSubjectAndContext"),
+            @Result(column = "paiqi_yixiang", property = "paiQiYiXiang"),
+            @Result(column = "target_send_province", property = "targetSendProvince"),
+            @Result(column = "user_conditions", property = "userConditions"),
+            @Result(column = "send_num", property = "sendNum"),
+            @Result(column = "channel_sends", property = "channelSends"),
+            @Result(column = "how_supplement", property = "howSupplement"),
+            @Result(column = "message_context", property = "messageContext"),
+            @Result(column = "order_state", property = "orderState"),
+            @Result(property = "edmApplyFiles", column = "oid", javaType = List.class,
+                    many = @Many(select = "com.edm.edmfetchdataplatform.mapper.EdmApplyFileMapper.findEdmOrderFilesByOid")),
+            @Result(property = "edmConditions", column = "oid", javaType = List.class,
+                    many = @Many(select = "com.edm.edmfetchdataplatform.mapper.EdmConditionMapper.findEdmConditionsByOid")),
+            @Result(property = "edmer", column = "eid",
+                    one = @One(select = "com.edm.edmfetchdataplatform.mapper.EdmerMapper.findEdmerByEid")),
+            @Result(property = "edmApplyOrderCheckResult", column = "ocid",
+                    one = @One(select = "com.edm.edmfetchdataplatform.mapper.EdmApplyOrderCheckResultMapper.findEdmApplyOrderCheckResultByOcid"))
+    })
+    EdmApplyOrder findEdmApplyOrderByOcid(String ocid);
+
 
     /**
      * 根据用户id查询 该用户申请的流转单
@@ -105,6 +139,49 @@ public interface EdmApplyOrderMapper {
                     one = @One(select = "com.edm.edmfetchdataplatform.mapper.EdmApplyOrderCheckResultMapper.findEdmApplyOrderCheckResultByOcid"))
     })
     List<EdmApplyOrder> findEdmApplyOrdersByEid(Integer eid);
+
+    /**
+     * 根据eid和流转单的状态查询订单列表
+     * @param eid
+     * @param orderStatusArray
+     * @return
+     */
+    @Select({"<script>",
+            "SELECT `oid`,`order_name`,`eid`,`apply_date`,`qunfa_type_description`,`qunfa_subject_and_context`," +
+            "`paiqi_yixiang`,`target_send_province`,`user_conditions`,`send_num`,`channel_sends`,`how_supplement`," +
+            "`message_context`,`order_state`,`ocid` FROM `edm_apply_examine_order` " +
+            "where 1=1 and eid=#{eid} ",
+            "<if test='list != null'>",
+            "and order_state in ",
+            "<foreach item='item' index='index' collection='list' open='(' separator=',' close=')'>",
+            "#{item}",
+            "</foreach>",
+            "</if>",
+            " order by apply_date desc",
+            "</script>"})
+    @Results(value = {@Result(column = "oid", property = "oid"),
+            @Result(column = "order_name", property = "orderName"),
+            @Result(column = "apply_date", property = "applyDate", javaType = java.util.Date.class),
+            @Result(column = "qunfa_type_description", property = "qunFaTypeDescription"),
+            @Result(column = "qunfa_subject_and_context", property = "qunFaSubjectAndContext"),
+            @Result(column = "paiqi_yixiang", property = "paiQiYiXiang"),
+            @Result(column = "target_send_province", property = "targetSendProvince"),
+            @Result(column = "user_conditions", property = "userConditions"),
+            @Result(column = "send_num", property = "sendNum"),
+            @Result(column = "channel_sends", property = "channelSends"),
+            @Result(column = "how_supplement", property = "howSupplement"),
+            @Result(column = "message_context", property = "messageContext"),
+            @Result(column = "order_state", property = "orderState"),
+            @Result(property = "edmApplyFiles", column = "oid", javaType = List.class,
+                    many = @Many(select = "com.edm.edmfetchdataplatform.mapper.EdmApplyFileMapper.findEdmOrderFilesByOid")),
+            @Result(property = "edmConditions", column = "oid", javaType = List.class,
+                    many = @Many(select = "com.edm.edmfetchdataplatform.mapper.EdmConditionMapper.findEdmConditionsByOid")),
+            @Result(property = "edmer", column = "eid",
+                    one = @One(select = "com.edm.edmfetchdataplatform.mapper.EdmerMapper.findEdmerByEid")),
+            @Result(property = "edmApplyOrderCheckResult", column = "ocid",
+                    one = @One(select = "com.edm.edmfetchdataplatform.mapper.EdmApplyOrderCheckResultMapper.findEdmApplyOrderCheckResultByOcid"))
+    })
+    List<EdmApplyOrder> findEdmApplyOrdersByEidAndOrderStatus(Integer eid, @Param("list") Integer[] orderStatusArray);
 
 
     /**

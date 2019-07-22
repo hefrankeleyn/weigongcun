@@ -32,7 +32,6 @@ public class EdmApplyOrderQuery extends BaseQuery {
             getKeyValues().put("eid", this.eid);
         }
         if (this.orderStates!=null && !this.orderStates.isEmpty()){
-
             getKeyValues().put("orderStates", orderStates);
         }
         return getKeyValues();

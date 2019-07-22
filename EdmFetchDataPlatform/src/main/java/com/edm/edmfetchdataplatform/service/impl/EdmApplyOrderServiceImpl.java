@@ -11,10 +11,7 @@ import com.edm.edmfetchdataplatform.domain.translate.EdmLiuZhuanEmailParameters;
 import com.edm.edmfetchdataplatform.base.EdmPage;
 import com.edm.edmfetchdataplatform.mapper.EdmApplyOrderMapper;
 import com.edm.edmfetchdataplatform.service.*;
-import com.edm.edmfetchdataplatform.tools.MyArrayUtil;
-import com.edm.edmfetchdataplatform.tools.MyDateUtil;
-import com.edm.edmfetchdataplatform.tools.MyFileUtil;
-import com.edm.edmfetchdataplatform.tools.MyIdGenerator;
+import com.edm.edmfetchdataplatform.tools.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -221,6 +218,21 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
     }
 
     /**
+     * 根据ocid 查询EdmApplyOrder
+     *
+     * @param ocid
+     * @return
+     */
+    @Override
+    public EdmApplyOrder findEdmApplyOrderByOcid(String ocid) {
+        if (!MyStrUtil.isEmptyOrNull(ocid)) {
+            EdmApplyOrder edmApplyOrder = edmApplyOrderMapper.findEdmApplyOrderByOcid(ocid);
+            return edmApplyOrder;
+        }
+        return null;
+    }
+
+    /**
      * 根据用户邮箱查询该用户申请的流转单
      *
      * @param email
@@ -379,6 +391,22 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
     }
 
     /**
+     * 根据eid和orderStatusArray 查询 EdmApplyOrder
+     *
+     * @param eid
+     * @param orderStatusArray
+     * @return
+     */
+    @Override
+    public List<EdmApplyOrder> findEdmApplyOrderByEidAndOrderStatusArray(Integer eid, Integer[] orderStatusArray) {
+        if (eid != null && orderStatusArray != null && orderStatusArray.length > 0) {
+            List<EdmApplyOrder> edmApplyOrderList = edmApplyOrderMapper.findEdmApplyOrdersByEidAndOrderStatus(eid, orderStatusArray);
+            return edmApplyOrderList;
+        }
+        return null;
+    }
+
+    /**
      * 查询一页
      *
      * @param baseQuery
@@ -507,13 +535,13 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
             // 根据
             String[] dimensions = MyArrayUtil.strToArray(edmCondition.getDimensions());
             String[] descriptions = new String[dimensions.length];
-            for (int x=0; x<dimensions.length; x++){
+            for (int x = 0; x < dimensions.length; x++) {
                 descriptions[x] = edmTargetDescriptionService.findDescriptionByTarget(dimensions[x]);
             }
             usersDataCondition.append(MyArrayUtil.arrayToStr(descriptions));
             // 判断是否需要排除数据编码
-            if (edmCondition.getDataCodes()!=null && !edmCondition.getDataCodes().trim().equals("")){
-                usersDataCondition.append(",排除数据编码\""+edmCondition.getDataCodes()+"\"" );
+            if (edmCondition.getDataCodes() != null && !edmCondition.getDataCodes().trim().equals("")) {
+                usersDataCondition.append(",排除数据编码\"" + edmCondition.getDataCodes() + "\"");
             }
             usersDataCondition.append(", 提取 " + edmCondition.getLimitNum() + ";");
             usersDataCondition.append("\r\n");

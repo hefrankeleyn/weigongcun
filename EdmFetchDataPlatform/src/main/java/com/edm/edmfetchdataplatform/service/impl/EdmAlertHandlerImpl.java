@@ -2,6 +2,7 @@ package com.edm.edmfetchdataplatform.service.impl;
 
 import com.edm.edmfetchdataplatform.config.DataConfig;
 import com.edm.edmfetchdataplatform.domain.*;
+import com.edm.edmfetchdataplatform.domain.status.EnableOrNotStatus;
 import com.edm.edmfetchdataplatform.domain.status.ExamineProgressState;
 import com.edm.edmfetchdataplatform.domain.translate.EdmConditionOfOrder;
 import com.edm.edmfetchdataplatform.domain.translate.EdmLiuZhuanEmailParameters;
@@ -138,8 +139,18 @@ public class EdmAlertHandlerImpl implements EdmAlertHandler {
 
                 // 修改订单的状态, 修改为数据组处理完成
                 edmApplyOrder.setOrderState(ExamineProgressState.DATA_GROUP_EXAMINE_SUCCESS.getStatus());
+
                 // 修改订单的状态
                 edmApplyOrderService.updateEdmApplyOrderStatus(edmApplyOrder);
+
+                // 修改edmTaskResultList ,将其状态修改为可用
+                if (edmTaskResultList!=null && !edmTaskResultList.isEmpty()){
+                    for (EdmTaskResult oldEdmTaskResult : edmTaskResultList) {
+                        oldEdmTaskResult.setStatus(EnableOrNotStatus.enable_status.getStatus());
+                        edmTaskResultService.updateEdmTaskResult(oldEdmTaskResult);
+                    }
+                }
+
                 // 设置用于发送邮件写excel
                 edmApplyOrderCheckResult.setEdmTaskResults(edmTaskResultList);
                 // 发送邮件，通知处理完毕

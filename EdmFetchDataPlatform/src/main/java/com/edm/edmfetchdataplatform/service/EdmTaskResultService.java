@@ -1,5 +1,7 @@
 package com.edm.edmfetchdataplatform.service;
 
+import com.edm.edmfetchdataplatform.base.EdmPage;
+import com.edm.edmfetchdataplatform.base.query.DataCodeOfEdmOrderQuery;
 import com.edm.edmfetchdataplatform.domain.EdmTaskResult;
 import com.edm.edmfetchdataplatform.domain.translate.DataCodeOfEdmApplyOrder;
 
@@ -79,4 +81,18 @@ public interface EdmTaskResultService {
      * @return
      */
     DataCodeOfEdmApplyOrder findDataCodeOfEdmApplyOrderByOidAndDataCode(String oid, String dataCode);
+
+    /**
+     * 查询总的记录条数
+     * @param dataCodeOfEdmOrderQuery
+     * @return
+     */
+    Integer countEdmTaskResultByQuery(DataCodeOfEdmOrderQuery dataCodeOfEdmOrderQuery);
+
+    /**
+     * 分页查询， 查询一页数据编码
+     * @param dataCodeOfEdmOrderQuery
+     * @return
+     */
+    EdmPage<DataCodeOfEdmApplyOrder> findPageDataCodeOfEdmApplyOrderByDataCodeQuery(DataCodeOfEdmOrderQuery dataCodeOfEdmOrderQuery);
 }

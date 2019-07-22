@@ -1,8 +1,11 @@
 package com.edm.edmfetchdataplatform.service.impl;
 
+import com.edm.edmfetchdataplatform.base.EdmPage;
+import com.edm.edmfetchdataplatform.base.query.DataCodeOfEdmOrderQuery;
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrder;
 import com.edm.edmfetchdataplatform.domain.EdmCondition;
 import com.edm.edmfetchdataplatform.domain.EdmTaskResult;
+import com.edm.edmfetchdataplatform.domain.status.ExamineProgressState;
 import com.edm.edmfetchdataplatform.domain.translate.DataCodeOfEdmApplyOrder;
 import com.edm.edmfetchdataplatform.mapper.EdmTaskResultMapper;
 import com.edm.edmfetchdataplatform.service.EdmApplyOrderService;
@@ -195,4 +198,58 @@ public class EdmTaskResultServiceImpl implements EdmTaskResultService {
         }
         return null;
     }
+
+    /**
+     * 查询ocIds 中可用的EdmTaskResult记录条数
+     *
+     * @param dataCodeOfEdmOrderQuery
+     * @return
+     */
+    @Override
+    public Integer countEdmTaskResultByQuery(DataCodeOfEdmOrderQuery dataCodeOfEdmOrderQuery) {
+        return edmTaskResultMapper.countEdmTaskResultByOcIds(dataCodeOfEdmOrderQuery);
+    }
+
+    /**
+     * 分页查询数据编码列表，根据条件查询一页数据编码列表
+     *
+     * @param dataCodeOfEdmOrderQuery
+     * @return
+     */
+    @Override
+    public EdmPage<DataCodeOfEdmApplyOrder> findPageDataCodeOfEdmApplyOrderByDataCodeQuery(DataCodeOfEdmOrderQuery dataCodeOfEdmOrderQuery) {
+        // 如果eid不等于空，查询该用户下所有流转成功的流转单
+        if (dataCodeOfEdmOrderQuery.getEid() != null) {
+            Integer[] orderStatusArray = new Integer[]{ExamineProgressState.DATA_GROUP_EXAMINE_SUCCESS.getStatus(),
+                    ExamineProgressState.DATA_GROUP_EXAMINE_FAIL.getStatus()};
+            List<EdmApplyOrder> edmApplyOrderList = edmApplyOrderService.findEdmApplyOrderByEidAndOrderStatusArray(dataCodeOfEdmOrderQuery.getEid(), orderStatusArray);
+            if (edmApplyOrderList != null && !edmApplyOrderList.isEmpty()) {
+                List<String> coIds = new ArrayList<>();
+                for (int i = 0; i < edmApplyOrderList.size(); i++) {
+                    coIds.add(edmApplyOrderList.get(i).getEdmApplyOrderCheckResult().getOcId());
+                }
+                dataCodeOfEdmOrderQuery.setOcIds(coIds);
+            }
+        }
+        // 查询总的记录条数
+        int totalNum = countEdmTaskResultByQuery(dataCodeOfEdmOrderQuery);
+
+        EdmPage<DataCodeOfEdmApplyOrder> edmPage = new EdmPage<>(totalNum, dataCodeOfEdmOrderQuery.getCurrentPage(),
+                dataCodeOfEdmOrderQuery.getPageSize());
+        List<EdmTaskResult> edmTaskResults = edmTaskResultMapper.findPageEdmTaskResultByQuery(dataCodeOfEdmOrderQuery,
+                edmPage.getCurrentPageFirstItemNum(), edmPage.getPageSize());
+
+        if (edmTaskResults != null && !edmTaskResults.isEmpty()) {
+            List<DataCodeOfEdmApplyOrder> dataCodeOfEdmApplyOrderList = new ArrayList<>();
+            for (EdmTaskResult edmTaskResult : edmTaskResults) {
+                EdmApplyOrder edmApplyOrder = edmApplyOrderService.findEdmApplyOrderByOcid(edmTaskResult.getOcId());
+                dataCodeOfEdmApplyOrderList.add(new DataCodeOfEdmApplyOrder(edmApplyOrder, edmTaskResult));
+            }
+            edmPage.setPageObjList(dataCodeOfEdmApplyOrderList);
+        } else {
+            edmPage.setPageObjList(null);
+        }
+        return edmPage;
+    }
+
 }
