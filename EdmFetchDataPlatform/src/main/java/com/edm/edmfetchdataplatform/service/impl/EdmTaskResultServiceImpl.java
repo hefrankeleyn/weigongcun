@@ -243,7 +243,9 @@ public class EdmTaskResultServiceImpl implements EdmTaskResultService {
             List<DataCodeOfEdmApplyOrder> dataCodeOfEdmApplyOrderList = new ArrayList<>();
             for (EdmTaskResult edmTaskResult : edmTaskResults) {
                 EdmApplyOrder edmApplyOrder = edmApplyOrderService.findEdmApplyOrderByOcid(edmTaskResult.getOcId());
-                dataCodeOfEdmApplyOrderList.add(new DataCodeOfEdmApplyOrder(edmApplyOrder, edmTaskResult));
+                if (edmApplyOrder != null) {
+                    dataCodeOfEdmApplyOrderList.add(new DataCodeOfEdmApplyOrder(edmApplyOrder, edmTaskResult));
+                }
             }
             edmPage.setPageObjList(dataCodeOfEdmApplyOrderList);
         } else {
