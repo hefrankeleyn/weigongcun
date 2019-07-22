@@ -9,11 +9,65 @@ $(document).ready(function () {
     function init() {
         // 查看table是否存在，如果存在，对分页信息进行初始化
         var tableElement = $(".container table");
-        if (tableElement.length >0){
+        if (tableElement.length > 0) {
             // 初始化分页html
             initPageHtml();
         }
+
+        /**
+         * 监听li的点击事件
+         */
+        liActiveInit();
+        $(".container .list-group li").unbind("click", liChangeActiveEvn);
+        $(".container .list-group li").bind("click", liChangeActiveEvn);
     }
+
+    /**
+     * 对li的属性进行初始化
+     */
+    function liActiveInit() {
+        var li = $(".container .list-group #currentUserDataCode");
+        // active属性
+        if (!$(li).hasClass("active")) {
+            $(li).addClass("active");
+        }
+
+        // 对值进行初始化
+        var ifCurrentUser = $(".container nav #pageValue input[name='ifCurrentUser']");
+        if (ifCurrentUser.length == 0) {
+            var ifCurrentUserInput = $("<input type='hidden' name='ifCurrentUser' value='0'>");
+            $(".container nav #pageValue").append(ifCurrentUserInput);
+        }
+    }
+
+    /**
+     * 当点击的时候为li添加active属性
+     */
+    function liChangeActiveEvn() {
+        // 获取其他的li
+        var lis = $(this).siblings("li");
+        // 移除其他的active属性
+        $.each(lis, function (i, liElement) {
+            if ($(liElement).hasClass("active")) {
+                $(liElement).removeClass("active");
+            }
+        });
+        // 是否查当前用户的条件： 0 当前用户， 1 所有用户
+        var ifCurrentUser = $(".container nav #pageValue input[name='ifCurrentUser']");
+        if ($(this).attr("id") == "currentUserDataCode") {
+            ifCurrentUser.val(0);
+        } else {
+            ifCurrentUser.val(1);
+        }
+        // 为其添加active事件
+        if (!$(this).hasClass("active")) {
+            $(this).addClass("active");
+            // 触发点击事件重新加载页面
+            // 重新查一页数据
+            liChangeToFindPageEdmApplyOrderList();
+        }
+    }
+
     /**
      * 对分页的html进行初始化
      */
@@ -92,7 +146,7 @@ $(document).ready(function () {
         }
 
 
-        var currentPageValue = "总共 " + totalPageNum + "页, " + totalItemNum + " 条数据" ;
+        var currentPageValue = "总共 " + totalPageNum + "页, " + totalItemNum + " 条数据";
         var currentPageSpan = $("<span class='currentPage'></span>");
         currentPageSpan.text(currentPageValue);
         var currentPageLi = $("<li class='currentPage pt-2'></li>");
@@ -114,9 +168,37 @@ $(document).ready(function () {
                 $(item).bind("click", findPageEdmApplyOrderList);
             }
         });
-
-
     }
+
+    /**
+     * 点击切换要查询的用户，li点击造成的分页事件
+     */
+    function liChangeToFindPageEdmApplyOrderList() {
+        // 获取当前页码
+        var oldCurrentPageNum = $(".container nav .pagination .middlePageNum span[name='currentPageNum']").text();
+        var currentPageNum = oldCurrentPageNum;
+        // 获取 一页的条数
+        var pageSize = $(".container nav .pagination .pageSize select option:selected").attr("value");
+        // 获取 eid
+        var eid = $(".container nav #pageValue input[name='eid']").val();
+        // 拼接要使用的值
+        var dataObj = {"currentPage": currentPageNum, "pageSize": pageSize,};
+        // 获取是否使用当前用户的value
+        var ifCurrentUserValue = $(".container nav #pageValue input[name='ifCurrentUser']").val();
+        // 只有请求的为当前用户的时候，才添加eid
+        if (ifCurrentUserValue == 0) {
+            dataObj.eid = eid;
+        }
+        // ajax 参数
+        var data = JSON.stringify(dataObj);
+        // 获取 token
+        var token = $(".container nav #pageValue input[name='_csrf']").val();
+        var headers = {"X-CSRF-TOKEN": token};
+        // 获取项目路径
+        var url = $.projectRootUrl() + "/edmTaskResultController/findPageCurrentUserDataCodeByQuery";
+        ajaxFindPage(headers, data, url);
+    }
+
     /**
      * 查找一页的PageEdmApplyOrder
      */
@@ -149,10 +231,18 @@ $(document).ready(function () {
         else if ($(this)[0].tagName == "SELECT") {
             pageSize = $(this).val();
             currentPageNum = 1;
-            selectChanged=true;
+            selectChanged = true;
+        }
+        // 拼接要使用的值
+        var dataObj = {"currentPage": currentPageNum, "pageSize": pageSize,};
+        // 获取是否使用当前用户的value
+        var ifCurrentUserValue = $(".container nav #pageValue input[name='ifCurrentUser']").val();
+        // 只有请求的为当前用户的时候，才添加eid
+        if (ifCurrentUserValue == 0) {
+            dataObj.eid = eid;
         }
         // ajax 参数
-        var data = JSON.stringify({"currentPage": currentPageNum, "pageSize": pageSize, "eid": eid});
+        var data = JSON.stringify(dataObj);
         // 获取 token
         var token = $(".container nav #pageValue input[name='_csrf']").val();
         var headers = {"X-CSRF-TOKEN": token};
@@ -160,11 +250,12 @@ $(document).ready(function () {
         var url = $.projectRootUrl() + "/edmTaskResultController/findPageCurrentUserDataCodeByQuery";
         if (parseInt(currentPageNum) == parseInt(oldCurrentPageNum) && !selectChanged) {
             console.log("CurrentPage not change");
-        }else {
+        } else {
             ajaxFindPage(headers, data, url);
         }
 
     }
+
     /**
      * 分页查询 ajax
      * @param headers
@@ -194,6 +285,7 @@ $(document).ready(function () {
             }
         });
     }
+
     /**
      * 重新加载分页的html
      */
@@ -224,13 +316,13 @@ $(document).ready(function () {
         // 删除所有的tr
         tbody.children("tr").remove();
         // 添加新的tr
-        for (var i=0; i<listObj.length; i++){
+        for (var i = 0; i < listObj.length; i++) {
             var tr = $("<tr></tr>")
-            var xuhaoTh = $("<th scope='row'></th>").text(i+1);
+            var xuhaoTh = $("<th scope='row'></th>").text(i + 1);
             tr.append(xuhaoTh);
             // 数据编码
             var dataCodeTd = $("<td></td>");
-            var dataCodeA = $("<a></a>").attr("href", dataCodeDescUrl + listObj[i].oid +"?dataCode=" + listObj[i].dataCode);
+            var dataCodeA = $("<a></a>").attr("href", dataCodeDescUrl + listObj[i].oid + "?dataCode=" + listObj[i].dataCode);
             dataCodeA.text(listObj[i].dataCode);
             dataCodeTd.append(dataCodeA);
             tr.append(dataCodeTd);

@@ -20,11 +20,18 @@
     <script th:src="@{/js/dataCodeList.js}"></script>
     <!--    自定义的css-->
     <link rel="stylesheet" th:href="@{/css/page.css}">
+    <link rel="stylesheet" th:href="@{/css/dataCodeList.css}">
 </head>
 
 <body>
 <div class="container" th:object="${dataCodeOfEdmApplyOrderPage}">
     <h2 th:unless="${#lists.isEmpty(dataCodeOfEdmApplyOrderPage.getPageObjList())}">数据编码列表</h2>
+    <div class="my-2">
+        <ul class="list-group list-group-horizontal-sm">
+            <li class="list-group-item active userChangesLi" id="currentUserDataCode"><span>当前用户的数据编码</span></li>
+            <li class="list-group-item userChangesLi" id="allUserDataCode"><span>所有用户的数据编码</span></li>
+        </ul>
+    </div>
     <table class="table table-bordered table-hover" th:unless="${#lists.isEmpty(dataCodeOfEdmApplyOrderPage.getPageObjList())}">
         <thead class="thead-light">
         <tr>
@@ -61,6 +68,7 @@
             <input type="hidden" name="currentPageNum" th:value="*{currentPageNum}">
             <input type="hidden" name="totalPageNum" th:value="*{totalPageNum}">
             <input type="hidden" name="totalItemNum" th:value="*{totalItemNum}">
+            <input type="hidden" name="ifCurrentUser" value="0">
         </ul>
     </nav>
 </div>
