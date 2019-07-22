@@ -37,7 +37,7 @@
             <td class="liuzhuandan"><a th:href="@{|/edmApplyOrderController/findEdmApplyOrderByOid/${edmApplyOrder.getOid()}|}" th:text="${edmApplyOrder.getOrderName()}">沃油</a></td>
             <td class="applyDate" th:text="${#dates.format(edmApplyOrder.getApplyDate(), 'yyyy-MM-dd')}">2019-11-06</td>
             <td class="applier" th:text="${edmApplyOrder.getEdmer().getUsername()}">小梁量</td>
-            <td class="applyStatue" th:text="${edmApplyOrder.getOrderState() == 7}?'流转完成':'流转中'">状态</td>
+            <td class="applyStatue" th:text="${edmApplyOrder.getOrderState() == 7 || edmApplyOrder.getOrderState() == 9}?'流转完成':'流转中'">状态</td>
             <td class="caozuo">
                 <div>
                     <a th:href="@{|/edmApplyOrderController/findEdmApplyOrderByOid/${edmApplyOrder.getOid()}|}" class="btn btn-info btn-sm active" role="button" aria-pressed="true">查看详情</a>

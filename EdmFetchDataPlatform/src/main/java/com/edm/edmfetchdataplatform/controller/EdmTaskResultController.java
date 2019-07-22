@@ -32,33 +32,6 @@ public class EdmTaskResultController {
     private EdmerService edmerService;
 
     /**
-     * 查询所有可用的EdmTaskResult
-     * @return
-     */
-    @RequestMapping(value = "/findAllEnableTaskResult", method = RequestMethod.GET)
-    public String findAllEnableTaskResult(Model model) {
-        List<EdmTaskResult> edmTaskResults = edmTaskResultService.findAllEnableEdmTaskResults();
-        model.addAttribute("edmTaskResults", edmTaskResults);
-        return "edmTaskResultList";
-    }
-
-    /**
-     * 查询当前用户的EdmTaskResult
-     * @param authentication
-     * @param model
-     * @return
-     */
-    @RequestMapping(value = "/findCurrentUserEnableTask", method = RequestMethod.GET)
-    public String findCurrentUserEnableTask(Authentication authentication, Model model){
-        // 获取用户名的邮箱
-        String userEmail = authentication.getName();
-        List<EdmTaskResult> edmTaskResultList = edmTaskResultService.findCurrentUserEnableEdmTaskResults(userEmail);
-        model.addAttribute("edmTaskResultList", edmTaskResultList);
-        return "edmTaskResultList";
-    }
-
-
-    /**
      * 判断数据编码是否存在
      * @param dataCode
      * @return
