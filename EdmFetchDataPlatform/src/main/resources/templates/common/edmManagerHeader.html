@@ -16,11 +16,11 @@
             <span class="sr-only">(current)</span> 是用于给屏读用户使用
             <a class="nav-link" href="#">首页 <span class="sr-only">(current)</span></a>
          -->
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
+        <ul class="navbar-nav mr-auto" sec:authorize="hasAnyRole('ROLE_SHUJU','ROLE_EDM')">
+            <li class="nav-item active" sec:authorize="hasAnyRole('ROLE_SHUJU','ROLE_EDM')">
                 <a class="nav-link" th:href="@{/edmerController/registerEdmerView}">添加用户</a>
             </li>
-            <li class="nav-item active">
+            <li class="nav-item active" sec:authorize="hasAnyRole('ROLE_SHUJU','ROLE_EDM')">
                 <a class="nav-link" th:href="@{/edmerController/showAllEdmers}">管理用户</a>
             </li>
         </ul>

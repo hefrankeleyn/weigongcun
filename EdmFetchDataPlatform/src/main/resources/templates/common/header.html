@@ -20,7 +20,7 @@
             <li class="nav-item">
                 <a class="nav-link" th:href="@{/}">首页</a>
             </li>
-            <li class="nav-item dropdown">
+            <li class="nav-item dropdown" sec:authorize="hasAnyRole('ROLE_OPERATION','ROLE_SHUJU')">
                 <!-- aria-haspopup 当点击的时候出现菜单或浮动元素；
                     aria-expanded 表示展开的状态，true为展开;
                     这些是无障碍网页应用的配置项，如果不考虑屏读人群，可以不配置
@@ -28,11 +28,11 @@
                 <a class="nav-link dropdown-toggle" href="#" id="fetchData" role="button" data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">提数</a>
                 <div class="dropdown-menu" aria-labelledby="fetchData">
-                    <a class="dropdown-item"
-                       th:href="@{/edmUsableMagnitudeController/showCurrentDayEdmUsableMagnitudes}">可提取数据量展示</a>
-                    <a class="dropdown-item"
+                    <a class="dropdown-item" sec:authorize="hasAnyRole('ROLE_OPERATION','ROLE_SHUJU')"
+                       th:href="@{/edmUsableMagnitudeController/showCurrentDayEdmUsableMagnitudes}">可提取数据量查询</a>
+                    <a class="dropdown-item" sec:authorize="hasAnyRole('ROLE_OPERATION')"
                        th:href="@{/edmFetchDataConditionController/showConditionView}">申请提取EDM数据</a>
-                    <a class="dropdown-item"
+                    <a class="dropdown-item" sec:authorize="hasAnyRole('ROLE_OPERATION')"
                        th:href="@{/edmFetchDataConditionController/findUserEdmPrepareList}">待申请清单</a>
                     <!-- <div class="dropdown-divider"></div> -->
                 </div>
@@ -40,7 +40,7 @@
             <li class="nav-item">
                 <a class="nav-link" th:href="@{/edmApplyOrderController/findPageCurrentUserEdmApplyOrders}">流转单列表</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" sec:authorize="hasAnyRole('ROLE_APPLY','ROLE_CAPACITY','ROLE_CUSTOMER_SERVICE')">
                 <a class="nav-link" th:href="@{/edmApplyOrderController/findPageEdmApplyOrdersByUserRole}">待审核列表</a>
             </li>
             <li class="nav-item">

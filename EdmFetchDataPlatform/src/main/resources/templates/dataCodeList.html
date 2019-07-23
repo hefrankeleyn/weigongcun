@@ -24,6 +24,7 @@
 </head>
 
 <body>
+<nav th:replace="common/header :: header-navbar"></nav>
 <div class="container" th:object="${dataCodeOfEdmApplyOrderPage}">
     <h2 th:unless="${#lists.isEmpty(dataCodeOfEdmApplyOrderPage.getPageObjList())}">数据编码列表</h2>
     <div class="my-2">
