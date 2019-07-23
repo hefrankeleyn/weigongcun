@@ -1,6 +1,5 @@
 package com.edm.edmfetchdataplatform.service.impl;
 
-import com.edm.edmfetchdataplatform.base.BaseQuery;
 import com.edm.edmfetchdataplatform.base.query.EdmApplyOrderQuery;
 import com.edm.edmfetchdataplatform.config.DataConfig;
 import com.edm.edmfetchdataplatform.domain.*;
@@ -409,21 +408,16 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
     /**
      * 查询一页
      *
-     * @param baseQuery
+     * @param edmApplyOrderQuery
      * @return
      */
     @Override
-    public EdmPage<EdmApplyOrder> findPageEdmApplyOrdersByQuery(BaseQuery baseQuery) {
-        // 查询总的记录条数
-        Map<String, Object> keyValues = baseQuery.buildWhere();
-        Integer eid = (Integer) keyValues.get("eid");
+    public EdmPage<EdmApplyOrder> findPageEdmApplyOrdersByQuery(EdmApplyOrderQuery edmApplyOrderQuery) {
         // 查询总的条数
-        Integer totalNum = edmApplyOrderMapper.countEdmApplyOrdersByEid(eid);
-        EdmPage<EdmApplyOrder> edmPage = new EdmPage<>(totalNum, baseQuery.getCurrentPage(), baseQuery.getPageSize());
-        if (totalNum != null && totalNum > 0) {
-            List<EdmApplyOrder> edmApplyOrders = edmApplyOrderMapper.findPageEdmApplyOrdersByEid(eid, edmPage.getCurrentPageFirstItemNum(), edmPage.getPageSize());
-            edmPage.setPageObjList(edmApplyOrders);
-        }
+        Integer totalNum = edmApplyOrderMapper.countEdmApplyOrdersByEdmApplyOrderQuery(edmApplyOrderQuery);
+        EdmPage<EdmApplyOrder> edmPage = new EdmPage<>(totalNum, edmApplyOrderQuery.getCurrentPage(), edmApplyOrderQuery.getPageSize());
+        List<EdmApplyOrder> edmApplyOrders = edmApplyOrderMapper.findPageEdmApplyOrdersByEdmApplyOrderQuery(edmApplyOrderQuery, edmPage.getCurrentPageFirstItemNum(), edmPage.getPageSize());
+        edmPage.setPageObjList(edmApplyOrders);
         return edmPage;
     }
 

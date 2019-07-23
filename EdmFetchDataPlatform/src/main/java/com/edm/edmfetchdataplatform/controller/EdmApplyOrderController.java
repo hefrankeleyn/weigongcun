@@ -136,8 +136,6 @@ public class EdmApplyOrderController {
     @RequestMapping(value = "/findPageCurrentUserEdmApplyOrdersByQuery", method = RequestMethod.POST)
     @ResponseBody
     public ResponseResult findPageCurrentUserEdmApplyOrdersByQuery(@RequestBody EdmApplyOrderQuery edmApplyOrderQuery) {
-        // 获取用户名的邮箱
-        Integer eid = edmApplyOrderQuery.getEid();
         EdmPage<EdmApplyOrder> pageEdmApplyOrders = edmApplyOrderService.findPageEdmApplyOrdersByQuery(edmApplyOrderQuery);
         return new ResponseResult(ResultStatus.SUCCESS, pageEdmApplyOrders);
     }

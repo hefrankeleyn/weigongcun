@@ -126,8 +126,13 @@ $(document).ready(function () {
      */
     function findPageEdmApplyOrderList() {
         // 获取当前页码
-        var oldCurrentPageNum = $(".container nav .pagination .middlePageNum span[name='currentPageNum']").text();
-        var currentPageNum = oldCurrentPageNum;
+        var currentPageNumElement = $(".container nav .pagination .middlePageNum span[name='currentPageNum']");
+        var oldCurrentPageNum=1;
+        var currentPageNum=1;
+        if (currentPageNumElement.length >0){
+            oldCurrentPageNum = currentPageNumElement.text();
+            currentPageNum= oldCurrentPageNum;
+        }
         // 获取 一页的条数
         var pageSize = $(".container nav .pagination .pageSize select option:selected").attr("value");
         // 获取 eid
@@ -211,7 +216,8 @@ $(document).ready(function () {
         $(".container nav #pageValue input[name='currentPageNum']").val(edmPage.currentPageNum);
         // 修改一页的记录条数
         $(".container nav #pageValue input[name='totalPageNum']").val(edmPage.totalPageNum);
-
+        // 修改一页的记录条数
+        $(".container nav #pageValue input[name='totalItemNum']").val(edmPage.totalItemNum);
         // 移除就得分页html
         $(".container nav .pagination").remove();
         // 重新添加分页的标签

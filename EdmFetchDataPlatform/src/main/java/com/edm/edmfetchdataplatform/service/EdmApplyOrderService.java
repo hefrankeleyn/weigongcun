@@ -1,6 +1,5 @@
 package com.edm.edmfetchdataplatform.service;
 
-import com.edm.edmfetchdataplatform.base.BaseQuery;
 import com.edm.edmfetchdataplatform.base.query.EdmApplyOrderQuery;
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrder;
 import com.edm.edmfetchdataplatform.base.EdmPage;
@@ -70,10 +69,10 @@ public interface EdmApplyOrderService {
 
     /**
      * 查询一页 EdmApplyOrder
-     * @param baseQuery
+     * @param edmApplyOrderQuery
      * @return
      */
-    EdmPage<EdmApplyOrder> findPageEdmApplyOrdersByQuery(BaseQuery baseQuery);
+    EdmPage<EdmApplyOrder> findPageEdmApplyOrdersByQuery(EdmApplyOrderQuery edmApplyOrderQuery);
 
     /**
      * 查询邮箱用户的 一页EdmApplyOrder

@@ -25,6 +25,18 @@
 <nav th:replace="common/header :: header-navbar"></nav>
 <div class="container" th:object="${pageEdmApplyOrders}">
     <h2 th:unless="${#lists.isEmpty(pageEdmApplyOrders.getPageObjList())}">群发流转单列表</h2>
+    <div class="my-2">
+        <ul class="list-group list-group-horizontal-sm">
+            <li class="list-group-item active userChangesLi" id="currentUserEdmOrder"><span>当前用户</span></li>
+            <li class="list-group-item userChangesLi" id="allUserEdmOrder"><span>所有用户</span></li>
+        </ul>
+        <ul class="list-group list-group-horizontal-sm mt-1">
+            <li class="list-group-item active userChangesLi" id="orderAll"><span>全部</span></li>
+            <li class="list-group-item userChangesLi" id="orderDuring"><span>流转中</span></li>
+            <li class="list-group-item userChangesLi" id="orderSuccess"><span>流转成功</span></li>
+            <li class="list-group-item userChangesLi" id="orderFail"><span>流转失败</span></li>
+        </ul>
+    </div>
     <table style="table-layout:fixed" class="table table-bordered table-hover table-striped table-condensed"
            th:unless="${#lists.isEmpty(pageEdmApplyOrders.getPageObjList())}">
         <thead>

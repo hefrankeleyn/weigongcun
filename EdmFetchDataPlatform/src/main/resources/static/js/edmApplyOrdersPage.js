@@ -10,9 +10,94 @@ $(document).ready(function () {
     function init() {
         // 查看table是否存在，如果存在，对分页信息进行初始化
         var tableElement = $(".container table");
-        if (tableElement.length >0){
+        if (tableElement.length > 0) {
             // 初始化分页html
             initPageHtml();
+        }
+        /**
+         * 监听li的点击事件
+         */
+        liActiveInit();
+        $(".container .list-group li").unbind("click", liChangeActiveEvn);
+        $(".container .list-group li").bind("click", liChangeActiveEvn);
+    }
+
+    /**
+     * 对li的属性进行初始化
+     */
+    function liActiveInit() {
+        var li = $(".container .list-group #currentUserEdmOrder");
+        // active属性
+        if (!$(li).hasClass("active")) {
+            $(li).addClass("active");
+        }
+        // 对值进行初始化
+        var ifCurrentUser = $(".container nav #pageValue input[name='ifCurrentUser']");
+        if (ifCurrentUser.length == 0) {
+            var ifCurrentUserInput = $("<input type='hidden' name='ifCurrentUser' value='0'>");
+            $(".container nav #pageValue").append(ifCurrentUserInput);
+        }
+
+        // 为全部全部添加初始化
+        var li = $(".container .list-group #orderAll");
+        // active属性
+        if (!$(li).hasClass("active")) {
+            $(li).addClass("active");
+        }
+        // 对值进行初始化
+        var orderStatusElement = $(".container nav #pageValue input[name='orderStatus']");
+        if (orderStatusElement.length == 0) {
+            var orderStatusInput = $("<input type='hidden' name='orderStatus' value='-1'>");
+            $(".container nav #pageValue").append(orderStatusInput);
+        }
+
+    }
+
+    /**
+     * 当点击的时候为li添加active属性
+     */
+    function liChangeActiveEvn() {
+        // 获取其他的li
+        var lis = $(this).siblings("li");
+        // 移除其他的active属性
+        $.each(lis, function (i, liElement) {
+            if ($(liElement).hasClass("active")) {
+                $(liElement).removeClass("active");
+            }
+        });
+        // 是否查当前用户的条件： 0 当前用户， 1 所有用户
+        var ifCurrentUser = $(".container nav #pageValue input[name='ifCurrentUser']");
+        // 修改状态
+        var orderStatusElement = $(".container nav #pageValue input[name='orderStatus']");
+        // 当前用户
+        if ($(this).attr("id") == "currentUserEdmOrder") {
+            ifCurrentUser.val(0);
+        }
+        // 所有用户
+        else if ($(this).attr("id") == "allUserEdmOrder") {
+            ifCurrentUser.val(1);
+        }
+        // 查询所有order
+        else if ($(this).attr("id") == "orderAll") {
+            orderStatusElement.val(0);
+        }
+        // 流转中order
+        else if ($(this).attr("id") == "orderDuring") {
+            orderStatusElement.val(1);
+        }
+        // 流转成功
+        else if ($(this).attr("id") == "orderSuccess") {
+            orderStatusElement.val(2);
+        }
+        // 流转失败
+        else if ($(this).attr("id") == "orderFail") {
+            orderStatusElement.val(3);
+        }
+
+        // 为其添加active事件
+        if (!$(this).hasClass("active")) {
+            $(this).addClass("active");
+            changeLiActiveToFindPageEdmApplyOrderList();
         }
     }
 
@@ -94,7 +179,7 @@ $(document).ready(function () {
         }
 
 
-        var currentPageValue = "总共 " + totalPageNum + "页, " + totalItemNum + " 条数据" ;
+        var currentPageValue = "总共 " + totalPageNum + "页, " + totalItemNum + " 条数据";
         var currentPageSpan = $("<span class='currentPage'></span>");
         currentPageSpan.text(currentPageValue);
         var currentPageLi = $("<li class='currentPage pt-2'></li>");
@@ -126,12 +211,22 @@ $(document).ready(function () {
      */
     function findPageEdmApplyOrderList() {
         // 获取当前页码
-        var oldCurrentPageNum = $(".container nav .pagination .middlePageNum span[name='currentPageNum']").text();
-        var currentPageNum = oldCurrentPageNum;
+        var currentPageNumElement = $(".container nav .pagination .middlePageNum span[name='currentPageNum']");
+        var oldCurrentPageNum=1;
+        var currentPageNum=1;
+        if (currentPageNumElement.length >0){
+            oldCurrentPageNum = currentPageNumElement.text();
+            currentPageNum= oldCurrentPageNum;
+        }
+
         // 获取 一页的条数
         var pageSize = $(".container nav .pagination .pageSize select option:selected").attr("value");
         // 获取 eid
         var eid = $(".container nav #pageValue input[name='eid']").val();
+        // 用户的状态： 0 当前用户， 1 所有用户
+        var ifCurrentUserValue = $(".container nav #pageValue input[name='ifCurrentUser']").val();
+        // order的状态： 0 全部order 1 流转中 2 流转成功  3 流转失败
+        var orderStatusValue = $(".container nav #pageValue input[name='orderStatus']").val();
         // selected 是否改变
         var selectChanged = false;
         // 判断点击的是否为上一页
@@ -153,10 +248,28 @@ $(document).ready(function () {
         else if ($(this)[0].tagName == "SELECT") {
             pageSize = $(this).val();
             currentPageNum = 1;
-            selectChanged=true;
+            selectChanged = true;
         }
+        var dataObj = {"currentPage": currentPageNum, "pageSize": pageSize};
+        // 当前用户
+        if (ifCurrentUserValue == 0){
+            dataObj.eid=eid;
+        }
+        // 流转中
+        if (orderStatusValue==1){
+            dataObj.orderStates=[0, 2, 4, 6];
+        }
+        // 流转成功
+        else if (orderStatusValue == 2){
+            dataObj.orderStates=[7, 9];
+        }
+        // 流转失败
+        else if (orderStatusValue == 3){
+            dataObj.orderStates=[1, 3, 5, 8];
+        }
+
         // ajax 参数
-        var data = JSON.stringify({"currentPage": currentPageNum, "pageSize": pageSize, "eid": eid});
+        var data = JSON.stringify(dataObj);
         // 获取 token
         var token = $(".container nav #pageValue input[name='_csrf']").val();
         var headers = {"X-CSRF-TOKEN": token};
@@ -164,9 +277,85 @@ $(document).ready(function () {
         var url = $.projectRootUrl() + "/edmApplyOrderController/findPageCurrentUserEdmApplyOrdersByQuery";
         if (parseInt(currentPageNum) == parseInt(oldCurrentPageNum) && !selectChanged) {
             console.log("CurrentPage not change");
-        }else {
+        } else {
             ajaxFindPage(headers, data, url);
         }
+
+    }
+
+    /**
+     * 改变了点击li的时候
+     * 查找一页的PageEdmApplyOrder
+     */
+    function changeLiActiveToFindPageEdmApplyOrderList() {
+        // 获取当前页码
+        var currentPageNumElement = $(".container nav .pagination .middlePageNum span[name='currentPageNum']");
+        var oldCurrentPageNum=1;
+        var currentPageNum=1;
+        if (currentPageNumElement.length >0){
+            oldCurrentPageNum = currentPageNumElement.text();
+            currentPageNum= oldCurrentPageNum;
+        }
+        // 获取 一页的条数
+        var pageSize = $(".container nav .pagination .pageSize select option:selected").attr("value");
+        // 获取 eid
+        var eid = $(".container nav #pageValue input[name='eid']").val();
+        // 用户的状态： 0 当前用户， 1 所有用户
+        var ifCurrentUserValue = $(".container nav #pageValue input[name='ifCurrentUser']").val();
+        // order的状态： 0 全部order 1 流转中 2 流转成功  3 流转失败
+        var orderStatusValue = $(".container nav #pageValue input[name='orderStatus']").val();
+
+
+        // selected 是否改变
+        var selectChanged = false;
+        // 判断点击的是否为上一页
+        if ($(this).hasClass("previous")) {
+            // 获取当前页码
+            currentPageNum = parseInt(currentPageNum) - 1;
+        }
+        // 判断点击的是否为下一页
+        else if ($(this).hasClass("next")) {
+            // 获取当前页码
+            currentPageNum = parseInt(currentPageNum) + 1;
+        }
+        // 判断是否点击为中间页码
+        else if ($(this).hasClass("middlePageNum")) {
+            // 获取当前页码的值
+            currentPageNum = $(this).children("span").text();
+        }
+        // 判断点击为一页多少条
+        else if ($(this)[0].tagName == "SELECT") {
+            pageSize = $(this).val();
+            currentPageNum = 1;
+            selectChanged = true;
+        }
+        var dataObj = {"currentPage": currentPageNum, "pageSize": pageSize};
+        // 当前用户
+        if (ifCurrentUserValue == 0){
+            dataObj.eid=eid;
+        }
+        // 流转中
+        if (orderStatusValue==1){
+            dataObj.orderStates=[0, 2, 4, 6];
+        }
+        // 流转成功
+        else if (orderStatusValue == 2){
+            dataObj.orderStates=[7, 9];
+        }
+        // 流转失败
+        else if (orderStatusValue == 3){
+            dataObj.orderStates=[1, 3, 5, 8];
+        }
+
+        // ajax 参数
+        var data = JSON.stringify(dataObj);
+        // 获取 token
+        var token = $(".container nav #pageValue input[name='_csrf']").val();
+        var headers = {"X-CSRF-TOKEN": token};
+        // 获取项目路径
+        var url = $.projectRootUrl() + "/edmApplyOrderController/findPageCurrentUserEdmApplyOrdersByQuery";
+
+        ajaxFindPage(headers, data, url);
 
     }
 
@@ -211,7 +400,8 @@ $(document).ready(function () {
         $(".container nav #pageValue input[name='currentPageNum']").val(edmPage.currentPageNum);
         // 修改一页的记录条数
         $(".container nav #pageValue input[name='totalPageNum']").val(edmPage.totalPageNum);
-
+        // 修改一页的记录条数
+        $(".container nav #pageValue input[name='totalItemNum']").val(edmPage.totalItemNum);
         // 移除就得分页html
         $(".container nav .pagination").remove();
         // 重新添加分页的标签
@@ -229,9 +419,9 @@ $(document).ready(function () {
         // 删除所有的tr
         tbody.children("tr").remove();
         // 添加新的tr
-        for (var i=0; i<edmApplyOrderList.length; i++){
+        for (var i = 0; i < edmApplyOrderList.length; i++) {
             var tr = $("<tr></tr>")
-            var xuhaoTh = $("<th scope='row' class='xuhao'></th>").text(i+1);
+            var xuhaoTh = $("<th scope='row' class='xuhao'></th>").text(i + 1);
             xuhaoTh.attr("id", edmApplyOrderList[i].edmer.eid);
             tr.append(xuhaoTh);
             // 流转单的名字
@@ -247,7 +437,7 @@ $(document).ready(function () {
             var applierTd = $("<td class='applier'></td>").text(edmApplyOrderList[i].edmer.username);
             tr.append(applierTd);
             // 状态
-            var applyStatueTd = $("<td class='applyStatue'></td>").text(edmApplyOrderList[i].orderState == 7?'流转完成':'流转中');
+            var applyStatueTd = $("<td class='applyStatue'></td>").text(edmApplyOrderList[i].orderState == 7 ? '流转完成' : '流转中');
             tr.append(applyStatueTd);
 
             // 操作

@@ -21,3 +21,12 @@
 .pagination li span:hover{
     cursor: pointer;
 }
+
+/*
+  当数据移动到上面的时候光标变成小手
+*/
+
+.container .list-group li:hover {
+    cursor: pointer;
+}
+
