@@ -6,11 +6,16 @@ import com.edm.edmfetchdataplatform.domain.Role;
 import com.edm.edmfetchdataplatform.domain.status.EdmRolesParamter;
 import com.edm.edmfetchdataplatform.domain.status.ResultStatus;
 import com.edm.edmfetchdataplatform.service.EdmerService;
+import com.edm.edmfetchdataplatform.tools.MyStrUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -70,6 +75,23 @@ public class EdmerController {
         return "manager/edmerRoleSetting";
     }
 
+
+    /**
+     * 展示修改权限页面
+     *
+     * @return
+     */
+    @RequestMapping(value = "/currentUserDetailView", method = RequestMethod.GET)
+    public String currentUserDetailView(Authentication authentication, Model model) {
+        String email = authentication.getName();
+        Edmer edmer = edmerService.findEdmerByEmail(email);
+        model.addAttribute("edmer", edmer);
+        return "manager/edmerReSetPassword";
+    }
+
+
+
+
     /**
      * 修改Edmer 的权限
      *
@@ -107,5 +129,41 @@ public class EdmerController {
         } catch (RuntimeException e) {
             return new ResponseResult(ResultStatus.FAIL, null);
         }
+    }
+
+    /**
+     * 对比密码，是否与旧密码匹配
+     * @param eid
+     * @param oldPassword
+     * @return
+     */
+    @RequestMapping(value = "/comparePassword", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseResult comparePassword(Integer eid, String oldPassword){
+        Edmer edmer = edmerService.findEdmerByEid(eid);
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        boolean matches = bCryptPasswordEncoder.matches(oldPassword,edmer.getPassword());
+        if (matches){
+            return new ResponseResult(ResultStatus.SUCCESS, "和原有密码一致");
+        }else {
+            return new ResponseResult(ResultStatus.FAIL, "和原有密码不一致");
+        }
+    }
+
+    /**
+     * 修改密码
+     * @param newPassword
+     * @return
+     */
+    @RequestMapping(value = "/reSetPassword", method = RequestMethod.POST)
+    public String reSetPassword(Integer eid, String newPassword, HttpServletRequest request){
+        if (!MyStrUtil.isEmptyOrNull(newPassword) && eid!=null){
+            Edmer edmer = edmerService.findEdmerByEid(eid);
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            edmer.setPassword(bCryptPasswordEncoder.encode(newPassword));
+            edmerService.updateEdmer(edmer);
+        }
+        request.getSession().invalidate();
+        return "redirect:/";
     }
 }

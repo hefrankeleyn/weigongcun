@@ -75,4 +75,10 @@ public interface EdmerService {
      * @return
      */
     List<String> findEdmerEmailsListByRoles(List<String> roleNames);
+
+    /**
+     * 修改 edmer
+     * @param edmer
+     */
+    void updateEdmer(Edmer edmer);
 }

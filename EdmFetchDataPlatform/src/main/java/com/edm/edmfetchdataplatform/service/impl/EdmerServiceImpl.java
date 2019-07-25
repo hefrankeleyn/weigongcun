@@ -11,6 +11,7 @@ import com.edm.edmfetchdataplatform.service.EdmerService;
 import com.edm.edmfetchdataplatform.service.RoleService;
 import com.edm.edmfetchdataplatform.tools.MyPasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -183,6 +184,17 @@ public class EdmerServiceImpl implements EdmerService {
                 }
             }
             return emails;
+        }
+    }
+
+    /**
+     * 修改 edmer
+     * @param edmer
+     */
+    @Override
+    public void updateEdmer(Edmer edmer) {
+        if (edmer != null && edmer.getEid()!=null) {
+            edmerMapper.updateEdmer(edmer);
         }
     }
 

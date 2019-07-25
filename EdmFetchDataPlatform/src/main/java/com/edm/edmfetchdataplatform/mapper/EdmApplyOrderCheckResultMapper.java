@@ -92,7 +92,7 @@ public interface EdmApplyOrderCheckResultMapper {
             "`update_time` = #{updateTime},",
             "</if>",
             "</set>",
-            "WHERE `oid` = #{oid};",
+            "WHERE `oid` = #{oid}",
             "</script>"})
     void updateEdmApplyOrderCheckResult(EdmApplyOrderCheckResult edmApplyOrderCheckResult);
 

@@ -116,6 +116,7 @@ $(document).ready(function () {
         // 获取 token
         var token = $("input[name='_csrf']").val();
         var headers = {"X-CSRF-TOKEN": token}
+        console.log("token: " + token);
         $.ajax({
             type: "POST",
             url: url,

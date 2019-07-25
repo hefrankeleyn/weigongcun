@@ -8,6 +8,34 @@ import java.util.List;
 @Mapper
 public interface EdmerMapper {
 
+
+    /**
+     * 修改edmer
+     * @param edmer
+     */
+    @Update({"<script>",
+            "UPDATE `edmers` ",
+            "<set>",
+            "<if test='username != null'>",
+            "`username` = #{username},",
+            "</if>",
+            "<if test='password != null'>",
+            "`password` = #{password},",
+            "</if>",
+            "<if test='email != null'>",
+            "`email` = #{email},",
+            "</if>",
+            "<if test='department != null'>",
+            "`department` = #{department},",
+            "</if>",
+            "<if test='level != null'>",
+            "`level` = #{level},",
+            "</if>",
+            "</set>",
+            "WHERE `eid` = #{eid}",
+            "</script>"})
+    void updateEdmer(Edmer edmer);
+
     /**
      * 根据 eid 查询 Edmer
      * @param eid

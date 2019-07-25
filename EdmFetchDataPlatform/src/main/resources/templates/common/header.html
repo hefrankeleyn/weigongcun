@@ -51,7 +51,8 @@
     <ul class="navbar-nav px-3" sec:authorize="isAuthenticated()">
         <li class="nav-item text-success">
             <!-- 访问认证细节 -->
-            欢迎登陆：<span sec:authentication="name">User</span>
+<!--            欢迎登陆：<span sec:authentication="name">User</span>-->
+            欢迎登陆：<span><a th:href="@{/edmerController/currentUserDetailView}" th:text="${#authentication.name}">User</a></span>
         </li>
     </ul>
     <!--        spring security 在开启 csrf 防护的情况下, /logout 必须以post的方式提交-->
