@@ -21,6 +21,61 @@ $(document).ready(function () {
         // 对全选按钮添加监听事件
         $("thead th #allCids").unbind("click", allCidsButtonEvent);
         $("thead th #allCids").bind("click", allCidsButtonEvent);
+
+        // 为删除按钮添加监听事件
+        $(".container table .deleteContition").unbind("click", deleteCurrentTr);
+        $(".container table .deleteContition").bind("click", deleteCurrentTr);
+    }
+
+    /**
+     * 删除当前的tr
+     */
+    function deleteCurrentTr() {
+        // 获取当前的conid
+        var currentTr = $(this).parent("div").parent("td").parent("tr");
+        var conIdInput = currentTr.children("td")
+            .children(".custom-checkbox")
+            .children("input[name='conId']");
+        var conIdValue = conIdInput.attr("id");
+        // 将值转化为sjon格式
+        var data = {"conId": conIdValue};
+        var url = $.projectRootUrl() + "/edmFetchDataConditionController/deleteConditionByConid";
+        // 获取 token
+        var token = $("input[name='_csrf']").val();
+        var headers = {"X-CSRF-TOKEN": token};
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: data,
+            headers: headers,
+            success: function (response) {
+                var status = response.status;
+                // 0 代表成功， 1 代表失败
+                if (status == 0) {
+                    currentTr.remove();
+                    // 判断table的tbody是否为空，如果是清空，并添加提示
+                    judgeTrIsEmptyRemoveTheadAddDiv();
+                }
+            }
+        });
+    }
+
+
+    /**
+     * 判断tr是否为空，如果为空删除thead
+     */
+    function judgeTrIsEmptyRemoveTheadAddDiv() {
+        var tBodyTrs = $(".container table tbody").children("tr");
+        if (tBodyTrs.length == 0) {
+            $(".container").remove();
+            var showConditionViewUrl = $.projectRootUrl() + "/edmFetchDataConditionController/showConditionView";
+            var showConditionA = $("<a class='btn btn-lg btn-primary' role='button'>添加提数申请项</a>")
+                .attr("href", showConditionViewUrl);
+            var jumbotronDiv = $("<div class='jumbotron'></div>").append("<h1 class='display-4'>列表为空</h1>")
+                .append("<p class='lead'>暂时没有待申请项</p>").append(showConditionA);
+            $("<div class='container'></div>").append(jumbotronDiv).appendTo($("body"));
+        }
     }
 
 
@@ -102,13 +157,13 @@ $(document).ready(function () {
     /**
      * 检查是否全部的按钮都被选中
      */
-    function checkIfAllChecked(){
+    function checkIfAllChecked() {
         var checkboxs = $("tbody td .custom-control-input:checkbox");
         var checkboxsOk = $("tbody td .custom-control-input:checkbox:checked");
-        if(checkboxs.length == checkboxsOk.length){
-            $("thead th #allCids").prop("checked",true);
-        }else{
-            $("thead th #allCids").prop("checked",false);
+        if (checkboxs.length == checkboxsOk.length) {
+            $("thead th #allCids").prop("checked", true);
+        } else {
+            $("thead th #allCids").prop("checked", false);
         }
 
     }
@@ -119,7 +174,7 @@ $(document).ready(function () {
      */
     function removeInputFromForm(value) {
         var childInput = $("#edmApplyForm").children("input[value='" + value + "']");
-        if ($(childInput).length>0) {
+        if ($(childInput).length > 0) {
             $(childInput).remove();
         }
     }

@@ -31,7 +31,7 @@
                     <a class="dropdown-item" sec:authorize="hasAnyRole('ROLE_OPERATION','ROLE_SHUJU')"
                        th:href="@{/edmUsableMagnitudeController/showCurrentDayEdmUsableMagnitudes}">可提取数据量查询</a>
                     <a class="dropdown-item" sec:authorize="hasAnyRole('ROLE_OPERATION')"
-                       th:href="@{/edmFetchDataConditionController/showConditionView}">申请提取EDM数据</a>
+                       th:href="@{/edmFetchDataConditionController/showConditionView}">添加提数申请项</a>
                     <a class="dropdown-item" sec:authorize="hasAnyRole('ROLE_OPERATION')"
                        th:href="@{/edmFetchDataConditionController/findUserEdmPrepareList}">待申请清单</a>
                     <!-- <div class="dropdown-divider"></div> -->

@@ -168,4 +168,16 @@ public class EdmFetchDataConditionController {
         return "edmApplyOrderSubmitSuccess";
     }
 
+    /**
+     * 删除EdmCondition 根据 conId
+     * @param conId
+     * @return
+     */
+    @RequestMapping(value = "/deleteConditionByConid", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseResult deleteConditionByConid(Integer conId){
+        edmConditionService.deleteEdmConditionByConId(conId);
+        return new ResponseResult(ResultStatus.SUCCESS, "删除成功");
+    }
+
 }

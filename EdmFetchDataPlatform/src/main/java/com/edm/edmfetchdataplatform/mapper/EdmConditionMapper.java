@@ -153,4 +153,11 @@ public interface EdmConditionMapper {
             "citycodes = #{cityCodes},city_opt = #{cityOpt},data_codes = #{dataCodes},limitnum = #{limitNum},oid = #{oid} " +
             "WHERE conid = #{conId}")
     void updateEdmConditionByConId(EdmCondition edmCondition);
+
+    /**
+     * 删除edm_conditions 根据 conId
+     * @param conId
+     */
+    @Delete("DELETE FROM `edm_conditions` WHERE conid=#{conId}")
+    void deleteEdmConditionByConId(Integer conId);
 }

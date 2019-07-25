@@ -52,4 +52,11 @@ public interface EdmConditionService {
      * @return
      */
     List<EdmCondition> findEdmConditionsByOid(String oid);
+
+
+    /**
+     * 根据 conId 删除 EdmCondition
+     * @param conId
+     */
+    void deleteEdmConditionByConId(Integer conId);
 }

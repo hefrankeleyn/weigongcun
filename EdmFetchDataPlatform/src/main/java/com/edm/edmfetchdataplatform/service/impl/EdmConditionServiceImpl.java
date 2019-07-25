@@ -189,5 +189,17 @@ public class EdmConditionServiceImpl implements EdmConditionService {
         return edmConditions;
     }
 
+    /**
+     * 根据 conId 删除EdmCondition
+     *
+     * @param conId
+     */
+    @Override
+    public void deleteEdmConditionByConId(Integer conId) {
+        if (conId != null) {
+            edmConditionMapper.deleteEdmConditionByConId(conId);
+        }
+    }
+
 
 }

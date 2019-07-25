@@ -11,7 +11,8 @@
     <script th:src="@{/js/jquery.min.js}"></script>
     <script th:src="@{/js/popper.min.js}"></script>
     <script th:src="@{/bootstrap/js/bootstrap.js}"></script>
-
+    <!--    自定义的js 插件-->
+    <script th:src="@{/js/url-plugins.js}"></script>
     <!--    自定义的js-->
     <script th:src="@{/js/header.js}"></script>
     <script th:src="@{/js/edmPrepareList.js}"></script>
@@ -20,8 +21,10 @@
 <body>
 <nav th:replace="common/header :: header-navbar"></nav>
 <div class="container">
-    <div th:if="${#lists.isEmpty(edmConditions)}">
-        <h2>待申请清单为空~</h2>
+    <div class="jumbotron" th:if="${#lists.isEmpty(edmConditions)}">
+        <h1 class="display-4">列表为空</h1>
+        <p class="lead">暂时没有待申请项</p>
+        <a class="btn btn-lg btn-primary" th:href="@{/edmFetchDataConditionController/showConditionView}" role="button">添加提数申请项</a>
     </div>
     <div class="m-1" th:unless="${#lists.isEmpty(edmConditions)}">
         <form th:action="@{/edmFetchDataConditionController/showApplyView}" method="post" id="edmApplyForm">
@@ -70,8 +73,8 @@
             <td th:text="${edmCondition.getLimitNum()}">1000</td>
             <td>
                 <div>
-                    <button type="button" class="btn btn-sm btn-danger" disabled>删除</button>
-                    <button type="button" class="btn btn-sm btn-danger" disabled>修改</button>
+                    <button type="button" class="btn btn-danger deleteContition">删除</button>
+<!--                    <button type="button" class="btn btn-sm btn-danger" disabled>修改</button>-->
                 </div>
             </td>
         </tr>
