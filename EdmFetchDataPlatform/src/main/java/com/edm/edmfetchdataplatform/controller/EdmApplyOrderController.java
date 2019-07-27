@@ -6,6 +6,7 @@ import com.edm.edmfetchdataplatform.domain.EdmApplyOrder;
 import com.edm.edmfetchdataplatform.domain.EdmApplyOrderCheckResult;
 import com.edm.edmfetchdataplatform.domain.Edmer;
 import com.edm.edmfetchdataplatform.domain.ResponseResult;
+import com.edm.edmfetchdataplatform.domain.status.ExamineProgressState;
 import com.edm.edmfetchdataplatform.domain.status.ExamineProgressStateFactory;
 import com.edm.edmfetchdataplatform.domain.status.ResultStatus;
 import com.edm.edmfetchdataplatform.service.DownLoadFileService;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -97,7 +99,7 @@ public class EdmApplyOrderController {
         EdmApplyOrderQuery edmApplyOrderQuery = new EdmApplyOrderQuery();
         edmApplyOrderQuery.setOrderStates(orderStatus);
         // 查询一页数据
-        EdmPage<EdmApplyOrder> pageEdmApplyOrders = edmApplyOrderService.findPageEdmApplyOrdersByBEdmApplyOrderQuery(edmApplyOrderQuery);
+        EdmPage<EdmApplyOrder> pageEdmApplyOrders = edmApplyOrderService.findPageEdmApplyOrdersByEdmApplyOrderQuery(edmApplyOrderQuery);
         model.addAttribute("pageEdmApplyOrders", pageEdmApplyOrders);
         model.addAttribute("edmer", edmer);
         return "edmApplyOrderCheckPageList";
@@ -120,7 +122,7 @@ public class EdmApplyOrderController {
         // 初始化查询条件
         edmApplyOrderQuery.setOrderStates(orderStatus);
         // 查询一页数据
-        EdmPage<EdmApplyOrder> pageEdmApplyOrders = edmApplyOrderService.findPageEdmApplyOrdersByBEdmApplyOrderQuery(edmApplyOrderQuery);
+        EdmPage<EdmApplyOrder> pageEdmApplyOrders = edmApplyOrderService.findPageEdmApplyOrdersByEdmApplyOrderQuery(edmApplyOrderQuery);
 
         return new ResponseResult(ResultStatus.SUCCESS, pageEdmApplyOrders);
     }
@@ -221,6 +223,55 @@ public class EdmApplyOrderController {
 
         model.addAttribute("edmApplyOrder", edmApplyOrder);
         return "edmProgressBar";
+    }
+
+    /**
+     * 分页查询审核完成的列表
+     * 查询所有待执行提取数据列表（已经审批完成）
+     * @param authentication
+     * @return
+     */
+    @RequestMapping(value = "/findPageEdmPreExecutorList", method = RequestMethod.GET)
+    public String findPageEdmPreExecutorList(Authentication authentication, Model model){
+        // 查询当前用户所有待执行提数操作的列表
+        String email = authentication.getName();
+        Edmer edmer = edmerService.findEdmerByEmail(email);
+        // 添加审核成功状态，以及正在处理状态审核成功的状态
+        List<Integer> orderStatusList = new ArrayList<>();
+        orderStatusList.add(ExamineProgressState.SERVICES_GROUP_EXAMINE_SUCCESS.getStatus());
+        orderStatusList.add(ExamineProgressState.EXECUTE_DURING.getStatus());
+        EdmApplyOrderQuery edmApplyOrderQuery = new EdmApplyOrderQuery();
+        edmApplyOrderQuery.setEid(edmer.getEid());
+        edmApplyOrderQuery.setOrderStates(orderStatusList);
+        EdmPage<EdmApplyOrder> pageEdmApplyOrders = edmApplyOrderService.findPageEdmApplyOrdersByEdmApplyOrderQuery(edmApplyOrderQuery);
+        model.addAttribute("pageEdmApplyOrders", pageEdmApplyOrders);
+        model.addAttribute("edmer", edmer);
+        return "edmPreExecuteList";
+    }
+
+    /**
+     * 分页查询， 查询一页审核完成的列表（审批完成，准备提数）
+     * @param edmApplyOrderQuery
+     * @return
+     */
+    @RequestMapping(value = "/findPageEdmPreExecutorListByQuery", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseResult findPageEdmPreExecutorListByQuery(@RequestBody EdmApplyOrderQuery edmApplyOrderQuery){
+        // 查询一页数据
+        EdmPage<EdmApplyOrder> pageEdmApplyOrders = edmApplyOrderService.findPageEdmApplyOrdersByEdmApplyOrderQuery(edmApplyOrderQuery);
+        return new ResponseResult(ResultStatus.SUCCESS, pageEdmApplyOrders);
+    }
+
+    /**
+     * 执行提数操作
+     * @param oid
+     * @return
+     */
+    @RequestMapping(value = "/executeTiShuOption", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseResult executeTiShuOption(String oid){
+        edmApplyOrderService.executeFetchDataOption(oid);
+        return new ResponseResult(ResultStatus.SUCCESS, "提数操作开始执行");
     }
 
 

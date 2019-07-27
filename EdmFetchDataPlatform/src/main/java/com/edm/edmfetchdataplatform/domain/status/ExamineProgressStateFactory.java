@@ -32,6 +32,8 @@ public class ExamineProgressStateFactory {
             return ExamineProgressState.DATA_GROUP_EXAMINE_FAIL;
         }else if (ExamineProgressState.ORDER_SUCCESS.getStatus() == state){
             return ExamineProgressState.ORDER_SUCCESS;
+        }else if (ExamineProgressState.EXECUTE_DURING.getStatus() == state){
+            return ExamineProgressState.EXECUTE_DURING;
         }else {
             return ExamineProgressState.READY_EXAMINE;
         }

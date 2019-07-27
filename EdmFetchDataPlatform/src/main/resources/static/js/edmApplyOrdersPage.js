@@ -415,6 +415,8 @@ $(document).ready(function () {
         // 查看详情的url
         var rootDescUrl = $.projectRootUrl() + "/edmApplyOrderController/findEdmApplyOrderByOid/";
         var rootProgressUrl = $.projectRootUrl() + "/edmApplyOrderController/findEdmApplyOrderProgress/";
+        // 判断table 是否存在，如果不存在创建table
+        createTableIfNoteExists();
         var tbody = $(".container table tbody");
         // 删除所有的tr
         tbody.children("tr").remove();
@@ -437,7 +439,13 @@ $(document).ready(function () {
             var applierTd = $("<td class='applier'></td>").text(edmApplyOrderList[i].edmer.username);
             tr.append(applierTd);
             // 状态
-            var applyStatueTd = $("<td class='applyStatue'></td>").text(edmApplyOrderList[i].orderState == 7 ? '流转完成' : '流转中');
+            var applyStatueTd = $("<td class='applyStatue'></td>");
+            var orderStateValue = edmApplyOrderList[i].orderState;
+            if(orderStateValue==7 || orderStateValue == 9){
+                applyStatueTd.text('流转完成');
+            }else{
+                applyStatueTd.text('流转中');
+            }
             tr.append(applyStatueTd);
 
             // 操作
@@ -453,6 +461,34 @@ $(document).ready(function () {
             optionTd.append(caoZouDiv);
             tr.append(optionTd);
             tbody.append(tr);
+        }
+    }
+
+    /**
+     * 创建table
+     */
+    function createTableIfNoteExists() {
+        if($(".container table").length==0){
+            // 判断 jumbotron 是否存在
+            if ($(".container .jumbotron").length>0){
+                $(".container .jumbotron").remove();
+            }
+            var hElement = $("<h2></h2>").text("群发流转单列表");
+            $(".container").prepend(hElement);
+            // 创建table
+            var tableElement = $("<table style='table-layout:fixed' class='table table-bordered table-hover table-striped table-condensed'></table>");
+            var theadElement = $("<thead></thead>");
+            var theadOfTrElement = $("<tr></tr>").append("<th scope='col' class='xuhao' style='width: 8%;'>序号</th>")
+                .append("<th scope='col' class='liuzhuandan'>流转单名称</th>")
+                .append("<th scope='col' class='applyDate' style='width: 11%;'>申请时间</th>")
+                .append("<th scope='col' class='applier' style='width: 10%;'>申请人</th>")
+                .append("<th scope='col' class='applyStatue' style='width: 10%;'>状态</th>")
+                .append("<th scope='col' class='caozuo' style='width: 18%;'>操作</th>");
+            theadElement.append(theadOfTrElement);
+            tableElement.append(theadElement);
+            var tbodyElement = $("<tbody></tbody>");
+            tableElement.append(tbodyElement);
+            $(".container .filterUl").after(tableElement);
         }
     }
 

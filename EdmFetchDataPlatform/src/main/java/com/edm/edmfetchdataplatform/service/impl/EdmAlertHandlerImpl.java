@@ -144,8 +144,11 @@ public class EdmAlertHandlerImpl implements EdmAlertHandler {
                 edmApplyOrderService.updateEdmApplyOrderStatus(edmApplyOrder);
 
                 // 修改edmTaskResultList ,将其状态修改为可用
-                if (edmTaskResultList!=null && !edmTaskResultList.isEmpty()){
-                    for (EdmTaskResult oldEdmTaskResult : edmTaskResultList) {
+                if (dataCodeList!=null && !dataCodeList.isEmpty()){
+                    EdmTaskResult oldEdmTaskResult = null;
+                    for (String edmTaskDataCode : dataCodeList) {
+                        // 根据datacode 查询 EdmTaskResult
+                        oldEdmTaskResult = edmTaskResultService.findEdmTaskResultByDataCode(edmTaskDataCode);
                         oldEdmTaskResult.setStatus(EnableOrNotStatus.enable_status.getStatus());
                         edmTaskResultService.updateEdmTaskResult(oldEdmTaskResult);
                     }

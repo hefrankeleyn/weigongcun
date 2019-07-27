@@ -111,7 +111,8 @@ public interface EdmApplyOrderService {
      * @param edmApplyOrderQuery
      * @return
      */
-    EdmPage<EdmApplyOrder> findPageEdmApplyOrdersByBEdmApplyOrderQuery(EdmApplyOrderQuery edmApplyOrderQuery);
+    EdmPage<EdmApplyOrder> findPageEdmApplyOrdersByEdmApplyOrderQuery(EdmApplyOrderQuery edmApplyOrderQuery);
+
 
     /**
      * 根据eid和订单状态，查询所有的EdmApplyOrder
@@ -122,6 +123,15 @@ public interface EdmApplyOrderService {
     List<EdmApplyOrder> findEdmApplyOrderByEidAndOrderStatusArray(Integer eid, Integer[] orderStatusArray);
 
 
+    /**
+     * 执行提数操作
+     * @description
+     * 1、根据oid查询OrderState；
+     * 2、判断OrderState是否审核完成；
+     * 3、如果审核完成将状态修改为提取中；
+     * 4、进行提数操作
+     */
+    void executeFetchDataOption(String oid);
 
 
 

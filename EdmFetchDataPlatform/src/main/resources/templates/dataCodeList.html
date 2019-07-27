@@ -27,13 +27,14 @@
 <nav th:replace="common/header :: header-navbar"></nav>
 <div class="container" th:object="${dataCodeOfEdmApplyOrderPage}">
     <h2 th:unless="${#lists.isEmpty(dataCodeOfEdmApplyOrderPage.getPageObjList())}">数据编码列表</h2>
-    <div class="my-2">
+    <div class="my-2 filterUl">
         <ul class="list-group list-group-horizontal-sm">
             <li class="list-group-item active userChangesLi" id="currentUserDataCode"><span>当前用户的数据编码</span></li>
             <li class="list-group-item userChangesLi" id="allUserDataCode"><span>所有用户的数据编码</span></li>
         </ul>
     </div>
-    <table class="table table-bordered table-hover" th:unless="${#lists.isEmpty(dataCodeOfEdmApplyOrderPage.getPageObjList())}">
+    <table class="table table-bordered table-hover"
+           th:unless="${#lists.isEmpty(dataCodeOfEdmApplyOrderPage.getPageObjList())}">
         <thead class="thead-light">
         <tr>
             <th scope="col">序号</th>
@@ -46,7 +47,8 @@
         <tbody>
         <tr th:each="dataCodeOfOrder,rowStatus : *{pageObjList}">
             <td th:text="${rowStatus.count}">1</td>
-            <td><a th:href="@{/edmTaskResultController/findDataCodeOfEdmApplyOrderByDataCode/{oid}(oid=${dataCodeOfOrder.oid},dataCode=${dataCodeOfOrder.dataCode})}"
+            <td>
+                <a th:href="@{/edmTaskResultController/findDataCodeOfEdmApplyOrderByDataCode/{oid}(oid=${dataCodeOfOrder.oid},dataCode=${dataCodeOfOrder.dataCode})}"
                    th:text="${dataCodeOfOrder.dataCode}"></a></td>
             <td><a th:href="@{/edmApplyOrderController/findEdmApplyOrderByOid/{oid}(oid=${dataCodeOfOrder.getOid()})}"
                    th:text="${dataCodeOfOrder.orderName}"></a></td>
@@ -55,11 +57,9 @@
         </tr>
         </tbody>
     </table>
-    <div th:if="${#lists.isEmpty(dataCodeOfEdmApplyOrderPage.getPageObjList())}">
-        <div class="jumbotron">
-            <h1 class="display-4">列表为空</h1>
-            <p class="lead">暂时没有可用的数据编码</p>
-        </div>
+    <div class="jumbotron" th:if="${#lists.isEmpty(dataCodeOfEdmApplyOrderPage.getPageObjList())}">
+        <h1 class="display-4">列表为空</h1>
+        <p class="lead">暂时没有可用的数据编码</p>
     </div>
     <nav>
         <ul hidden id="pageValue">

@@ -66,6 +66,9 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
     @Autowired
     private StompSendEmailService stompSendEmailService;
 
+    @Autowired
+    private EdmAlertService edmAlertService;
+
 
     /**
      * 对申请的订单进行初始化
@@ -377,7 +380,7 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
      * @return
      */
     @Override
-    public EdmPage<EdmApplyOrder> findPageEdmApplyOrdersByBEdmApplyOrderQuery(EdmApplyOrderQuery edmApplyOrderQuery) {
+    public EdmPage<EdmApplyOrder> findPageEdmApplyOrdersByEdmApplyOrderQuery(EdmApplyOrderQuery edmApplyOrderQuery) {
         // 查询总的记录条数
         Integer totalNum = countEdmApplyOrderByBEdmApplyOrderQuery(edmApplyOrderQuery);
         // 查询一页数据
@@ -403,6 +406,28 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
             return edmApplyOrderList;
         }
         return null;
+    }
+
+    /**
+     * 执行提数操作
+     *
+     * @param oid
+     * @description 1、根据oid查询OrderState；
+     * 2、判断OrderState是否审核完成；
+     * 3、如果审核完成将状态修改为提取中；
+     * 4、进行提数操作
+     */
+    @Override
+    public void executeFetchDataOption(String oid) {
+        if (!MyStrUtil.isEmptyOrNull(oid)) {
+            EdmApplyOrder edmApplyOrder = findEdmApplyOrderByOid(oid);
+            if (edmApplyOrder.getOrderState() == ExamineProgressState.SERVICES_GROUP_EXAMINE_SUCCESS.getStatus()){
+                edmApplyOrder.setOrderState(ExamineProgressState.EXECUTE_DURING.getStatus());
+                updateEdmApplyOrderStatus(edmApplyOrder);
+                // 将该订单发送到消息队列，进行处理
+                edmAlertService.sendEdmApplyOrder(edmApplyOrder);
+            }
+        }
     }
 
     /**

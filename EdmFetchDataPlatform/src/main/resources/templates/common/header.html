@@ -43,6 +43,9 @@
             <li class="nav-item" sec:authorize="hasAnyRole('ROLE_APPLY','ROLE_CAPACITY','ROLE_CUSTOMER_SERVICE')">
                 <a class="nav-link" th:href="@{/edmApplyOrderController/findPageEdmApplyOrdersByUserRole}">待审核列表</a>
             </li>
+            <li class="nav-item" sec:authorize="hasAnyRole('ROLE_OPERATION','ROLE_SHUJU')">
+                <a class="nav-link" th:href="@{/edmApplyOrderController/findPageEdmPreExecutorList}">待提取列表</a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" th:href="@{/edmTaskResultController/findPageCurrentUserDataCode}">数据编码列表</a>
             </li>

@@ -17,6 +17,7 @@ public enum  ExamineProgressState {
     DATA_GROUP_EXAMINE_SUCCESS(7, "数据组处理完成"),
     DATA_GROUP_EXAMINE_FAIL(8, "数据组处理失败"),
     ORDER_SUCCESS(9, "流转单处理完毕，结束流转"),
+    EXECUTE_DURING(10,"提取操作执行中");
     ;
 
 

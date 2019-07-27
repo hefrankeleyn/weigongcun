@@ -37,9 +37,6 @@ public class EdmApplyOrderCheckResultServiceImpl implements EdmApplyOrderCheckRe
     @Autowired
     private EdmerService edmerService;
 
-    @Autowired
-    private EdmAlertService edmAlertService;
-
     /**
      * 用于开启一个线程发送邮件，并发送STOMP消息
      */
@@ -145,12 +142,6 @@ public class EdmApplyOrderCheckResultServiceImpl implements EdmApplyOrderCheckRe
             edmLiuZhuanEmailParameters.setGroupName(currentEdmer.getDepartment());
 //            // 发邮件
             stompSendEmailService.sendEmailWithRunnerAndSTOMPMessage(currentLoginUserEmail, edmLiuZhuanEmailParameters);
-
-            // 当流转单的状态为： 客服组审核成功的时候，将流转单对应的申请项作为消息发送到
-            if (edmApplyOrder.getOrderState() == ExamineProgressState.SERVICES_GROUP_EXAMINE_SUCCESS.getStatus()) {
-                // 将该订单发送到消息队列，进行处理
-                edmAlertService.sendEdmApplyOrder(edmApplyOrder);
-            }
         }
 
     }

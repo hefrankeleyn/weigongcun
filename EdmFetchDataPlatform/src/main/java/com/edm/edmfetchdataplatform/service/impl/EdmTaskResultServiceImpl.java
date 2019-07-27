@@ -55,7 +55,7 @@ public class EdmTaskResultServiceImpl implements EdmTaskResultService {
     @Override
     @Transactional
     public void updateEdmTaskResult(EdmTaskResult edmTaskResult) {
-        if (edmTaskResult != null) {
+        if (edmTaskResult != null && edmTaskResult.getTaskId()!=null) {
             edmTaskResultMapper.updateEdmTaskResultByTaskId(edmTaskResult);
         }
     }

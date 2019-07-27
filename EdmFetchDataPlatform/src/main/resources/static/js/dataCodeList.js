@@ -187,7 +187,7 @@ $(document).ready(function () {
         // 获取 eid
         var eid = $(".container nav #pageValue input[name='eid']").val();
         // 拼接要使用的值
-        var dataObj = {"currentPage": currentPageNum, "pageSize": pageSize,};
+        var dataObj = {"currentPage": currentPageNum, "pageSize": pageSize};
         // 获取是否使用当前用户的value
         var ifCurrentUserValue = $(".container nav #pageValue input[name='ifCurrentUser']").val();
         // 只有请求的为当前用户的时候，才添加eid
@@ -321,9 +321,11 @@ $(document).ready(function () {
      */
     function reloadTableTrs(listObj) {
         // 数据编码分省
-        var dataCodeDescUrl = $.projectRootUrl() + "edmTaskResultController/findDataCodeOfEdmApplyOrderByDataCode/";
+        var dataCodeDescUrl = $.projectRootUrl() + "/edmTaskResultController/findDataCodeOfEdmApplyOrderByDataCode/";
         // 订单详情
-        var orderDescUrl = $.projectRootUrl() + "/edmApplyOrderController/findEdmApplyOrderByOid//";
+        var orderDescUrl = $.projectRootUrl() + "/edmApplyOrderController/findEdmApplyOrderByOid/";
+        // 判断table是否存在，如果不存在就创建一个table
+        createTableIfNoteExists();
         var tbody = $(".container table tbody");
         // 删除所有的tr
         tbody.children("tr").remove();
@@ -351,6 +353,34 @@ $(document).ready(function () {
             var dataCodeCreateDateTd = $("<td class='applier'></td>").text(listObj[i].dataCodeCreateDate);
             tr.append(dataCodeCreateDateTd);
             tbody.append(tr);
+        }
+    }
+
+
+    /**
+     * 创建table
+     */
+    function createTableIfNoteExists() {
+        if($(".container table").length==0){
+            // 判断 jumbotron 是否存在
+            if ($(".container .jumbotron").length>0){
+                $(".container .jumbotron").remove();
+            }
+            var hElement = $("<h2></h2>").text("数据编码列表");
+            $(".container").prepend(hElement);
+            // 创建table
+            var tableElement = $("<table class='table table-bordered table-hover'></table>");
+            var theadElement = $("<thead class='thead-light'>></thead>");
+            var theadOfTrElement = $("<tr></tr>").append("<th scope='col'>序号</th>")
+                .append("<th scope='col'>数据编码</th>")
+                .append("<th scope='col'>活动名称</th>")
+                .append("<th scope='col'>申请人</th>")
+                .append("<th scope='col'>生成时间</th>");
+            theadElement.append(theadOfTrElement);
+            tableElement.append(theadElement);
+            var tbodyElement = $("<tbody></tbody>");
+            tableElement.append(tbodyElement);
+            $(".container .filterUl").after(tableElement);
         }
     }
 

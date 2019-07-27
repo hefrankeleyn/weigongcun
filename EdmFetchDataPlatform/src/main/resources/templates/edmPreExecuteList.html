@@ -17,33 +17,21 @@
     <script th:src="@{/js/url-plugins.js}"></script>
     <script th:src="@{/js/date-plugin.js}"></script>
     <!--    自定义的css-->
-    <link rel="stylesheet" th:href="@{/css/edmApplyOrdersPage.css}">
+    <link rel="stylesheet" th:href="@{/css/edmPreExecuteList.css}">
     <!--    自定义js-->
-    <script th:src="@{/js/edmApplyOrdersPage.js}"></script>
+    <script th:src="@{/js/edmPreExecuteList.js}"></script>
 </head>
 <body>
 <nav th:replace="common/header :: header-navbar"></nav>
 <div class="container" th:object="${pageEdmApplyOrders}">
-    <h2 th:unless="${#lists.isEmpty(pageEdmApplyOrders.getPageObjList())}">群发流转单列表</h2>
-    <div class="my-2 filterUl">
-        <ul class="list-group list-group-horizontal-sm">
-            <li class="list-group-item active userChangesLi" id="currentUserEdmOrder"><span>当前用户</span></li>
-            <li class="list-group-item userChangesLi" id="allUserEdmOrder"><span>所有用户</span></li>
-        </ul>
-        <ul class="list-group list-group-horizontal-sm mt-1">
-            <li class="list-group-item active userChangesLi" id="orderAll"><span>全部</span></li>
-            <li class="list-group-item userChangesLi" id="orderDuring"><span>流转中</span></li>
-            <li class="list-group-item userChangesLi" id="orderSuccess"><span>流转成功</span></li>
-            <li class="list-group-item userChangesLi" id="orderFail"><span>流转失败</span></li>
-        </ul>
-    </div>
+    <h2 th:unless="${#lists.isEmpty(pageEdmApplyOrders.getPageObjList())}">审核完成，等待执行提数列表</h2>
     <table style="table-layout:fixed" class="table table-bordered table-hover table-striped table-condensed"
            th:unless="${#lists.isEmpty(pageEdmApplyOrders.getPageObjList())}">
         <thead>
         <tr>
             <th scope="col" class="xuhao" style="width: 8%;">序号</th>
             <th scope="col" class="liuzhuandan">流转单名称</th>
-            <th scope="col" class="applyDate" style="width: 11%;">申请时间</th>
+            <th scope="col" class="paiQiResult" style="width: 13%;">排期时间</th>
             <th scope="col" class="applier" style="width: 10%;">申请人</th>
             <th scope="col" class="applyStatue" style="width: 10%;">状态</th>
             <th scope="col" class="caozuo" style="width: 18%;">操作</th>
@@ -55,27 +43,26 @@
                 th:text="${edmApplyOrderStatus.count}">1
             </th>
             <td class="liuzhuandan"><a
-                    th:href="@{|/edmApplyOrderController/findEdmApplyOrderByOid/${edmApplyOrder.getOid()}|}"
+                    th:href="@{|/edmApplyOrderController/findCheckEdmApplyOrderByOid/${edmApplyOrder.getOid()}|}"
                     th:text="${edmApplyOrder.getOrderName()}">沃油</a></td>
-            <td class="applyDate" th:text="${#dates.format(edmApplyOrder.getApplyDate(), 'yyyy-MM-dd')}">2019-11-06</td>
+            <td class="paiQiResult" th:text="${edmApplyOrder.getEdmApplyOrderCheckResult().paiQiResult}">2019-11-06</td>
             <td class="applier" th:text="${edmApplyOrder.getEdmer().getUsername()}">小梁量</td>
-            <td class="applyStatue"
-                th:text="${edmApplyOrder.getOrderState() == 7 || edmApplyOrder.getOrderState() == 9}?'流转完成':'流转中'">状态
-            </td>
+            <td class="applyStatue" th:text="${edmApplyOrder.getOrderState() == 6}?'审批完成':'提取中'">状态</td>
             <td class="caozuo">
                 <div>
-                    <a th:href="@{|/edmApplyOrderController/findEdmApplyOrderByOid/${edmApplyOrder.getOid()}|}"
-                       class="btn btn-info btn-sm active" role="button" aria-pressed="true">查看详情</a>
-                    <a th:href="@{|/edmApplyOrderController/findEdmApplyOrderProgress/${edmApplyOrder.getOid()}|}"
-                       class="btn btn-info btn-sm active" role="button" aria-pressed="true">流转进度</a>
+                    <input type="hidden" name="oid" th:value="${edmApplyOrder.oid}">
+                    <button th:if="${edmApplyOrder.orderState==6}" type="button" class="btn btn-success btn-sm executeTiShu" aria-pressed="true">开始提数</button>
+                    <button th:if="${edmApplyOrder.orderState==10}" type="button" class="btn btn-secondary executeTiShu btn-sm" disabled="true">提取中...</button>
                 </div>
             </td>
         </tr>
         </tbody>
     </table>
-    <div class="jumbotron emptyListDive" th:if="${#lists.isEmpty(pageEdmApplyOrders.getPageObjList())}">
-        <h1 class="display-4">列表为空</h1>
-        <p class="lead">当前用户没有发起“群发流转单”</p>
+    <div th:if="${#lists.isEmpty(pageEdmApplyOrders.getPageObjList())}">
+        <div class="jumbotron">
+            <h1 class="display-4">列表为空</h1>
+            <p class="lead">流转单可能还在审核中，暂时没有待提数列表</p>
+        </div>
     </div>
     <nav>
         <ul hidden id="pageValue">

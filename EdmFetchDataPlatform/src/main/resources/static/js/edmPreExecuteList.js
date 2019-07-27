@@ -1,6 +1,4 @@
 $(document).ready(function () {
-
-
     // 调用初始化函数
     init();
 
@@ -10,10 +8,14 @@ $(document).ready(function () {
     function init() {
         // 查看table是否存在，如果存在，对分页信息进行初始化
         var tableElement = $(".container table");
-        if (tableElement.length >0){
+        if (tableElement.length > 0) {
             // 初始化分页html
             initPageHtml();
         }
+
+        // 监听所有的 executeTiShu 类
+        $(".container table .executeTiShu").unbind("click", ajaxExecuteTiShu);
+        $(".container table .executeTiShu").bind("click", ajaxExecuteTiShu);
     }
 
     /**
@@ -94,7 +96,7 @@ $(document).ready(function () {
         }
 
 
-        var currentPageValue = "总共 " + totalPageNum + "页, " + totalItemNum + " 条数据" ;
+        var currentPageValue = "总共 " + totalPageNum + "页, " + totalItemNum + " 条数据";
         var currentPageSpan = $("<span class='currentPage'></span>");
         currentPageSpan.text(currentPageValue);
         var currentPageLi = $("<li class='currentPage pt-2'></li>");
@@ -127,11 +129,11 @@ $(document).ready(function () {
     function findPageEdmApplyOrderList() {
         // 获取当前页码
         var currentPageNumElement = $(".container nav .pagination .middlePageNum span[name='currentPageNum']");
-        var oldCurrentPageNum=1;
-        var currentPageNum=1;
-        if (currentPageNumElement.length >0){
+        var oldCurrentPageNum = 1;
+        var currentPageNum = 1;
+        if (currentPageNumElement.length > 0) {
             oldCurrentPageNum = currentPageNumElement.text();
-            currentPageNum= oldCurrentPageNum;
+            currentPageNum = oldCurrentPageNum;
         }
         // 获取 一页的条数
         var pageSize = $(".container nav .pagination .pageSize select option:selected").attr("value");
@@ -158,18 +160,24 @@ $(document).ready(function () {
         else if ($(this)[0].tagName == "SELECT") {
             pageSize = $(this).val();
             currentPageNum = 1;
-            selectChanged=true;
+            selectChanged = true;
         }
+        var orderStates = [6, 10];
         // ajax 参数
-        var data = JSON.stringify({"currentPage": currentPageNum, "pageSize": pageSize});
+        var data = JSON.stringify({
+            "currentPage": currentPageNum,
+            "pageSize": pageSize,
+            "eid": eid,
+            "orderStates": orderStates
+        });
         // 获取 token
         var token = $(".container nav #pageValue input[name='_csrf']").val();
         var headers = {"X-CSRF-TOKEN": token};
         // 获取项目路径
-        var url = $.projectRootUrl() + "/edmApplyOrderController/findPageEdmApplyOrdersByUserRoleAndQuery";
+        var url = $.projectRootUrl() + "/edmApplyOrderController/findPageEdmPreExecutorListByQuery";
         if (parseInt(currentPageNum) == parseInt(oldCurrentPageNum) && !selectChanged) {
             console.log("CurrentPage not change");
-        }else {
+        } else {
             ajaxFindPage(headers, data, url);
         }
 
@@ -230,14 +238,15 @@ $(document).ready(function () {
     function reloadTableTrs(edmApplyOrderList) {
         // 查看详情的url
         var rootDescUrl = $.projectRootUrl() + "/edmApplyOrderController/findCheckEdmApplyOrderByOid/";
-        var rootProgressUrl = $.projectRootUrl() + "/edmApplyOrderController/findEdmApplyOrderProgress/";
+        // 提数操作
+
         var tbody = $(".container table tbody");
         // 删除所有的tr
         tbody.children("tr").remove();
         // 添加新的tr
-        for (var i=0; i<edmApplyOrderList.length; i++){
+        for (var i = 0; i < edmApplyOrderList.length; i++) {
             var tr = $("<tr></tr>")
-            var xuhaoTh = $("<th scope='row' class='xuhao'></th>").text(i+1);
+            var xuhaoTh = $("<th scope='row' class='xuhao'></th>").text(i + 1);
             xuhaoTh.attr("id", edmApplyOrderList[i].edmer.eid);
             tr.append(xuhaoTh);
             // 流转单的名字
@@ -247,36 +256,92 @@ $(document).ready(function () {
             liuZhuanDanNameTd.append(xiangqingA);
             tr.append(liuZhuanDanNameTd);
             // 申请时间
-            var applyDateTd = $("<td class='applyDate'></td>").text($.date(edmApplyOrderList[i].applyDate));
+            var applyDateTd = $("<td class='paiQiResult'></td>").text($.date(edmApplyOrderList[i].edmApplyOrderCheckResult.paiQiResult));
             tr.append(applyDateTd);
             // 申请人
             var applierTd = $("<td class='applier'></td>").text(edmApplyOrderList[i].edmer.username);
             tr.append(applierTd);
             // 状态
-            var applyStatueTd = $("<td class='applyStatue'></td>");
-            var orderStateValue = edmApplyOrderList[i].orderState;
-            if(orderStateValue==7 || orderStateValue == 9){
-                applyStatueTd.text('流转完成');
-            }else{
-                applyStatueTd.text('流转中');
-            }
+            var applyStatueTd = $("<td class='applyStatue'></td>").text(edmApplyOrderList[i].orderState == 6 ? '审批完成' : '提取中');
             tr.append(applyStatueTd);
 
             // 操作
             var optionTd = $("<td class='caozuo'></td>");
             var caoZouDiv = $("<div></div>");
-            var showDescA = $("<a class='btn btn-info btn-sm mr-1 active' role='button' aria-pressed='true'>审核</a>");
-            showDescA.attr("href", rootDescUrl + edmApplyOrderList[i].oid);
-            var jinDuTiaoA = $("<a class='btn btn-info btn-sm active' role='button' aria-pressed='true'>流转进度</a>");
-            jinDuTiaoA.attr("href", rootProgressUrl + edmApplyOrderList[i].oid);
-            jinDuTiaoA.attr("href", "#");
-            caoZouDiv.append(showDescA);
-            caoZouDiv.append(jinDuTiaoA);
+            var oidInput = $("<input type='hidden' name='oid'>").attr("value", edmApplyOrderList[i].oid);
+            caoZouDiv.append(oidInput);
+            if (edmApplyOrderList[i].orderState == 6) {
+                var tishuOptButton = $("<button class='btn btn-success btn-sm mr-1 executeTiShu' type='button' aria-pressed='true'>开始提数</button>");
+                caoZouDiv.append(tishuOptButton);
+                tishuOptButton.unbind("click", ajaxExecuteTiShu);
+                tishuOptButton.bind("click", ajaxExecuteTiShu);
+            }else {
+                var tishuDuringButton = $("<button class='btn btn-secondary btn-sm mr-1 executeTiShu' type='button' aria-pressed='true' disabled>提取中...</button>");
+                caoZouDiv.append(tishuDuringButton);
+            }
             optionTd.append(caoZouDiv);
             tr.append(optionTd);
             tbody.append(tr);
         }
-
-
     }
+
+    /**
+     * 发起ajax，发起执行提数操作
+     * @param oid
+     */
+    function ajaxExecuteTiShu() {
+        var oid = $(this).siblings("input[name='oid']").val();
+        var currentTr = $(this).parent("div").parent("td").parent("tr");
+        // 修改text
+        $(this).text("提取中...");
+        // 修改颜色的类
+        if ($(this).hasClass("btn-success")){
+            $(this).removeClass("btn-success");
+            $(this).addClass("btn-secondary")
+        }
+        // 将按钮值为不可用
+        $(this).prop("disabled", true);
+        // ajax 参数
+        var data = {
+            "oid": oid
+        };
+        // 获取 token
+        var token = $(".container nav #pageValue input[name='_csrf']").val();
+        var headers = {"X-CSRF-TOKEN": token};
+        // 获取项目路径
+        var url = $.projectRootUrl() + "/edmApplyOrderController/executeTiShuOption";
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: data,
+            headers: headers,
+            success: function (response) {
+                // 结果的状态
+                var status = response.status;
+                if (status == 0) {
+                    //  删除当前tr
+                    currentTr.remove();
+                    // 判断当前table下是否存在tr
+                    judgeTrIsEmptyRemoveTheadAddDiv();
+                } else {
+                    console.error("Ajax Exception: " + url);
+                }
+            }
+        });
+    }
+
+    /**
+     * 判断tr是否为空，如果为空删除thead
+     */
+    function judgeTrIsEmptyRemoveTheadAddDiv() {
+        var tBodyTrs = $(".container table tbody").children("tr");
+        if (tBodyTrs.length == 0) {
+            $(".container").remove();
+            var jumbotronDiv = $("<div class='jumbotron'></div>").append("<h1 class='display-4'>列表为空</h1>")
+                .append("<p class='lead'>流转单可能还在审核中，暂时没有待提数列表</p>");
+            $("<div class='container'></div>").append(jumbotronDiv).appendTo($("body"));
+        }
+    }
+
+
 });
