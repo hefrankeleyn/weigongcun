@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>EDM 错误!</title>
+    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.css}">
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/popper.min.js}"></script>
+    <script th:src="@{/bootstrap/js/bootstrap.js}"></script>
+</head>
+<body>
+<div class="container">
+    <div class="jumbotron bg-danger">
+        <h1 class="display-4">异常出现了</h1>
+        <p class="lead font-weight-bolder">似乎有异常出现了，快记录下来，联系数据组(shuju@wo.cn)</p>
+        <hr class="my-4">
+        <p>这里似乎有异常，当发起请求：<span th:text="${path}"></span></p>
+        <p th:text="${'Details: ' + message}"></p>
+    </div>
+</div>
+</body>
+</html>

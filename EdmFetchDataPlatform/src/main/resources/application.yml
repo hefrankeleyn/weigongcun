@@ -16,15 +16,16 @@ spring:
           auth: true
           starttls:
             enable: true
-  # rabbitmq 配置
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
-#    rabbitmq 的消息确认
-#    publisher-returns: true
-#    publisher-confirms: true
+
+
+# 自己定义的配置， 公用配合
+hefself:
+  data:
+    mailserver-host: smtp.wo.cn
+    mailserver-port: 25
+    mailserver-username: shuju@wo.cn
+    # 该密码为授权码(使用非wo邮箱时)
+    mailserver-password: shu@ju#2019
 ---
 spring:
   profiles: development
@@ -48,14 +49,48 @@ spring:
   # 开发环境下将缓存关闭
   thymeleaf:
     cache: false
+  # rabbitmq 配置
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+#    rabbitmq 的消息确认
+#    publisher-returns: true
+#    publisher-confirms: true
+
+# 自己定义的配置， 开发环境使用
+hefself:
+  data:
+    edm-upload-filepath: /Users/lifei/Documents/servers/edm_upload_files
+    rabbitmq-relay-host: localhost
+    rabbitmq-relay-port: 61613
+    rabbitmq-client-login: guest
+    rabbitmq-client-passcode: guest
+
 ---
 spring:
   profiles: production
   datasource:
-    url: jdbc:mysql://172.16.11.4:3306/edm_db?useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE
-    username: hive
-    password: Passw0rd
+    url: jdbc:mysql://172.16.11.52:3306/edm_db?useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE
+    username: edm
+    password: edmpass
 #    driver-class-name: com.mysql.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: none
+  # rabbitmq 配置
+  rabbitmq:
+    host: 172.16.11.53
+    port: 5672
+    username: edmUser
+    password: edmUser
+
+# 自己定义的配置，生产环境使用
+hefself:
+  data:
+    edm-upload-filepath: /data0/dev/data/edm_project/edm_upload_files
+    rabbitmq-relay-host: 172.16.11.53
+    rabbitmq-relay-port: 61613
+    rabbitmq-client-login: edmUser
+    rabbitmq-client-passcode: edmUser

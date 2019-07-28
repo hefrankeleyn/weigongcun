@@ -1,30 +1,26 @@
 package com.edm.edmfetchdataplatform.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 
 /**
  * @Date 2019-06-20
  * @Author lifei
  */
 @Configuration
-@PropertySource("classpath:app_data.properties")
 public class DataConfig {
 
-    @Autowired
-    private Environment environment;
-
+    @Value("${hefself.data.edm-upload-filepath}")
     private String upLoadPath;
 
+    @Value("${hefself.data.mailserver-username}")
     private String emailFrom;
 
     public String getUpLoadPath() {
-        return environment.getProperty("edm.upload.filepath");
+        return upLoadPath;
     }
 
     public String getEmailFrom() {
-        return environment.getProperty("mailserver.username");
+        return emailFrom;
     }
 }

@@ -2,7 +2,6 @@ package com.edm.edmfetchdataplatform.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
@@ -19,22 +18,21 @@ import java.util.logging.Logger;
  */
 @Configuration
 @EnableWebSocketMessageBroker // 表明这个配置类不仅配置了WebSocket， 还配置了基于代理的STOMP消息
-@PropertySource("classpath:app_data.properties")
 public class WebSocketStompConfig implements WebSocketMessageBrokerConfigurer {
 
     // 日志对象
     private static Logger logger = Logger.getLogger("com.edm.edmfetchdataplatform.config.WebSocketStompConfig");
 
-    @Value("${rabbitmq.relay.host}")
+    @Value("${hefself.data.rabbitmq-relay-host}")
     private String relayHost;
 
-    @Value("${rabbitmq.relay.port}")
+    @Value("${hefself.data.rabbitmq-relay-port}")
     private int relayPort;
 
-    @Value("${rabbitmq.client.login}")
+    @Value("${hefself.data.rabbitmq-client-login}")
     private String clientLogin;
 
-    @Value("${rabbitmq.client.passcode}")
+    @Value("${hefself.data.rabbitmq-client-passcode}")
     private String clientPasscode;
     /**
      * 注册端点

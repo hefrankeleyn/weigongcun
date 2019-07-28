@@ -537,7 +537,7 @@ public class EdmApplyOrderServiceImpl implements EdmApplyOrderService {
             qunfaProvinceAndCityConditions.append("目标用户" + (i + 1) + ": ");
 
             if (excludeIf(edmCondition.getProvinceIf()) && excludeIf(edmCondition.getCityIf())) {
-                qunfaProvinceAndCityConditions.append("全国。");
+                qunfaProvinceAndCityConditions.append("全国");
             } else {
                 // 判断省份 和城市
                 setQunFaProvinceAndCityValue(edmCondition.getProvinceOpt(), edmCondition.getCityOpt(),
