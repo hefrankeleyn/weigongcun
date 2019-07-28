@@ -46,7 +46,8 @@ body {
     border-radius: .25rem;
     transition: all .1s ease-in-out;
 }
-
+/*
+不再使用 placeholder样式，不兼容
 .form-label-group input::-webkit-input-placeholder {
     color: transparent;
 }
@@ -77,7 +78,7 @@ body {
     padding-bottom: .25rem;
     font-size: 12px;
     color: #777;
-}
+}*/
 
 /* Fallback for Edge
 -------------------------------------------------- */
