@@ -1,0 +1,16 @@
+spring:
+  # 关闭艺术字
+  main:
+    banner-mode: "off"
+
+hive:
+  url: jdbc:hive2://172.16.11.25:10000/default
+  driver-class-name: org.apache.hive.jdbc.HiveDriver
+  type: com.alibaba.druid.pool.DruidDataSource
+  username: aimcpro
+  password: aimcpro@CUWO
+
+# 自己定义的配置，生产环境使用
+hefself:
+  data:
+    hive-input-datapath: /data0/womail_tmpfile/edm_output_data
