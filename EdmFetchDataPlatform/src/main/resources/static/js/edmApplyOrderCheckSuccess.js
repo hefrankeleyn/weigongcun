@@ -6,7 +6,7 @@ $(document).ready(function () {
      */
     function init() {
         // 对响应页面的text进行初始化
-        addText("正在发送邮件...", "审核已经提交，正在发送邮件", "bg-warning");
+        addText("邮件已经发送...", "审核已经提交，邮件已经发送", "bg-warning");
         // 连接 topic/sendemailfeed 端点
         listenMessage();
     }
@@ -49,8 +49,8 @@ $(document).ready(function () {
          * 服务端使用 SimpMessagingTemplate 发送消息，消息将被路由到一个独特的目的地上
          * 注意，这个目的地使用了User作为前缀
          */
-        stomp.connect("guest", "guest", function(){
-            stomp.subscribe("/user/queue/sendemailfeed", changeLeadAndHeadText);
+        stomp.connect($.myDataConfig.rabbitmq_username, $.myDataConfig.rabbitmq_password, function(){
+            stomp.subscribe("/user/topic/sendemailfeed", changeLeadAndHeadText);
         });
     }
 

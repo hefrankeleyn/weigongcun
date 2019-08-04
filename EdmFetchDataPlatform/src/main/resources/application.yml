@@ -26,11 +26,17 @@ hefself:
     mailserver-username: shuju@wo.cn
     # 该密码为授权码(使用非wo邮箱时)
     mailserver-password: shu@ju#2019
+    liquibase:
+      changeLog: "classpath:db/changelog/db.changelog-master.yaml"
+      defaultSchema: "edm_db"
+      dropFirst: false
+
 ---
 spring:
   profiles: development
   datasource:
-    url: jdbc:mysql://localhost:3306/edm_db?useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE
+#    url: jdbc:mysql://localhost:3306/edm_db?useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE
+    jdbc-url: jdbc:mysql://localhost:3306/edm_db?useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE
     username: edm
     password: edmpass
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -42,7 +48,7 @@ spring:
        - classpath:sql/edm_roles.sql
        - classpath:sql/edmer_role_relation.sql
        - classpath:sql/qunfa_business.sql
-#    initialization-mode: always
+    initialization-mode: always
   jpa:
     hibernate:
       ddl-auto: none
@@ -53,8 +59,8 @@ spring:
   rabbitmq:
     host: localhost
     port: 5672
-    username: guest
-    password: guest
+    username: edmUser
+    password: edmUser
 #    rabbitmq 的消息确认
 #    publisher-returns: true
 #    publisher-confirms: true
@@ -65,17 +71,62 @@ hefself:
     edm-upload-filepath: /Users/lifei/Documents/servers/edm_upload_files
     rabbitmq-relay-host: localhost
     rabbitmq-relay-port: 61613
-    rabbitmq-client-login: guest
-    rabbitmq-client-passcode: guest
+    rabbitmq-client-login: edmUser
+    rabbitmq-client-passcode: edmUser
+
+---
+spring:
+  profiles: qa_env
+  datasource:
+#    url: jdbc:mysql://localhost:3306/edm_db?useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE
+    jdbc-url: jdbc:mysql://localhost:3306/edm_db?useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE
+    username: edm
+    password: edmpass
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 自动加载sql文件
+    schema:
+      - classpath:sql/edm_zone.sql
+      - classpath:sql/edm_target_description.sql
+      - classpath:sql/edmers.sql
+      - classpath:sql/edm_roles.sql
+      - classpath:sql/edmer_role_relation.sql
+      - classpath:sql/qunfa_business.sql
+  #    initialization-mode: always
+  jpa:
+    hibernate:
+      ddl-auto: none
+  # 开发环境下将缓存关闭
+  thymeleaf:
+    cache: false
+  # rabbitmq 配置
+  rabbitmq:
+    host: 192.168.199.10
+    port: 5672
+    username: edmUser
+    password: edmUser
+#    rabbitmq 的消息确认
+    publisher-returns: true
+    publisher-confirms: true
+
+# 自己定义的配置， 开发环境使用
+hefself:
+  data:
+    edm-upload-filepath: /Users/lifei/Documents/servers/edm_upload_files
+    rabbitmq-relay-host: 192.168.199.10
+    rabbitmq-relay-port: 61613
+    rabbitmq-client-login: edmUser
+    rabbitmq-client-passcode: edmUser
 
 ---
 spring:
   profiles: production
   datasource:
-    url: jdbc:mysql://172.16.11.52:3306/edm_db?useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE
+#    url: jdbc:mysql://172.16.11.52:3306/edm_db?useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE
+    jdbc-url: jdbc:mysql://172.16.11.52:3306/edm_db?useUnicode=true&characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=TRUE
     username: edm
     password: edmpass
 #    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
       ddl-auto: none
@@ -86,6 +137,14 @@ spring:
     username: edmUser
     password: edmUser
 
+hive:
+  url: jdbc:hive2://172.16.11.25:10000/default
+  driver-class-name: org.apache.hive.jdbc.HiveDriver
+  type: com.alibaba.druid.pool.DruidDataSource
+  username: aimcpro
+  password: aimcpro@CUWO
+
+
 # 自己定义的配置，生产环境使用
 hefself:
   data:
@@ -94,3 +153,5 @@ hefself:
     rabbitmq-relay-port: 61613
     rabbitmq-client-login: edmUser
     rabbitmq-client-passcode: edmUser
+    hive-input-datapath: /data0/womail_tmpfile/edm_output_data
+

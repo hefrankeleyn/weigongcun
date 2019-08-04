@@ -8,13 +8,17 @@ import com.edm.edmfetchdataplatform.domain.translate.EdmConditionOfOrder;
 import com.edm.edmfetchdataplatform.service.HiveService;
 import com.edm.edmfetchdataplatform.tools.MyArrayUtil;
 import com.edm.edmfetchdataplatform.tools.MyDateUtil;
-import com.edm.edmfetchdataplatform.tools.MyStrUtil;
+import com.edm.edmfetchdataplatform.tools.MyFileUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.Map;
-import java.util.Random;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 import java.util.logging.Logger;
 
 /**
@@ -24,10 +28,18 @@ import java.util.logging.Logger;
  * @Author lifei
  */
 @Service
-@Profile({"qa_env","development"})
-public class HiveServiceImpl implements HiveService {
+@Profile("production")
+public class HiveProduceServiceImpl implements HiveService {
 
     private static Logger logger = Logger.getLogger("com.edm.edmfetchdataplatform.service.impl.HiveServiceImpl");
+
+    @Autowired
+    @Qualifier("hiveJdbcTemplate")
+    private JdbcTemplate hiveJdbcTemplate;
+
+
+    @Value("${hefself.data.hive-input-datapath}")
+    private String hiveOutputPath;
 
     /**
      * 根据 EdmCondition 中的条件，提取数据，并将数据生成数据编码
@@ -48,88 +60,101 @@ public class HiveServiceImpl implements HiveService {
      */
     @Override
     public EdmTaskResult optHiveFetchEdmTaskResult(EdmConditionOfOrder edmConditionOfOrder) {
-
         EdmTaskResult edmTaskResult = new EdmTaskResult();
-        // 任务开始的时间
-        edmTaskResult.setSubmitTime(new Date());
-        // 临时表表名
-        String year_month_day = MyDateUtil.toDateStr(new Date());
-        Random random = new Random();
-        String tempTableName = "tmp.temp_qunfa_tishu_" + year_month_day + "_" + random.nextInt(1000);
+        try {
+            // 任务开始的时间
+            edmTaskResult.setSubmitTime(new Date());
+            // 临时表表名
+            String year_month_day = MyDateUtil.toDateStr(new Date());
+            Random random = new Random();
+            String tempTableName = "tmp.temp_qunfa_tishu_" + year_month_day + "_" + random.nextInt(1000);
 
-        //  如果临时表存在删除临时表
-        String deleteTempTableSql = deleteTempTableSql(tempTableName);
-        // @TODO 连接hive执行删除操作
-        logger.info(deleteTempTableSql);
+            //  如果临时表存在删除临时表
+            String deleteTempTableSql = deleteTempTableSql(tempTableName);
+            // @TODO 连接hive执行删除操作
+            logger.info(deleteTempTableSql);
+            hiveJdbcTemplate.execute(deleteTempTableSql);
+            // 创建临时表
+            // @TODO 连接hive, 执行创建临时表操作
+            String createTempTableSql = createTempTableSql(tempTableName);
+            logger.info(createTempTableSql);
+            hiveJdbcTemplate.execute(createTempTableSql);
+            // @TODO 将EdmCondition解析成SQL语句， 连接hive， 执行查询语句，将查出的数据存放到临时表中,排除当前的黑名单用户
+            String selectDataSql = createSqlByEdmCondition(edmConditionOfOrder, tempTableName);
+            logger.info(selectDataSql);
+            hiveJdbcTemplate.execute(selectDataSql);
 
-        // 创建临时表
-        // @TODO 连接hive, 执行创建临时表操作
-        String createTempTableSql = createTempTableSql(tempTableName);
-        logger.info(createTempTableSql);
-        // @TODO 将EdmCondition解析成SQL语句， 连接hive， 执行查询语句，将查出的数据存放到临时表中,排除当前的黑名单用户
-        String selectDataSql = createSqlByEdmCondition(edmConditionOfOrder, tempTableName);
-        logger.info(selectDataSql);
+            // @TODO 执行hive查询， 查询临时表数据，将数据存放到特定目录下的一个文件中
+            String selectUserAndMailroot = selectUserDeviceAndMailroot(tempTableName);
+            logger.info(selectUserAndMailroot);
+            // 将临时表的数据写入到text文件中
+            String dataFilePath = tempTableName + "_" + year_month_day + ".txt";
+            MyFileUtil.createPathIfNotExists(hiveOutputPath);
+            String inputDataToFile = "hive -e '" + selectDataSql + ";'>"+dataFilePath+ File.separator + dataFilePath;
+            Runtime.getRuntime().exec(inputDataToFile);
 
-        // @TODO 执行hive查询， 查询临时表数据，将数据存放到特定目录下的一个文件中
-        String selectUserAndMailroot = selectUserDeviceAndMailroot(tempTableName);
-        logger.info(selectUserAndMailroot);
-        // 将临时表的数据写入到text文件中
-        String dataFilePath = tempTableName + "_" + year_month_day + ".txt";
-
-
-        // @TODO 查询该临时表各省份的数据量
-        String selectProNum = selectProvinceNums(tempTableName);
-        logger.info(selectProNum);
-        // 将text文件传到服务器特定的目录上
-        Map<String, Integer> provinceNums = edmTaskResult.getProvinceNums();
-        // 测试例子
-        provinceNums.put("100", 1000);
-        provinceNums.put("200", 1500);
-        provinceNums.put("311", 10000);
-
-
-        // @TODO 执行hive查询， 临时表总的数据量
-        String selectTotalNum = selectTotalNum(tempTableName);
-        logger.info(selectTotalNum);
-        // 查询实际的数据量
-        Integer fileLineNum = 0;
-        // 测试
-        fileLineNum = 12500;
-
-        // 生成一个数据编码
-        // 当前时间，精准到时分秒
-        String yearMonthDayHourMinuteSecond = MyDateUtil.currentDatetimeStr();
-        String datacode = edmConditionOfOrder.getQunFaBusiness().getBusinessType() + ":" + yearMonthDayHourMinuteSecond + random.nextInt(100) + random.nextInt(100);
-
-        // 任务结束时间
-        edmTaskResult.setConId(edmConditionOfOrder.getConId());
-        edmTaskResult.setFinishTime(new Date());
-        edmTaskResult.setBusinessType(edmConditionOfOrder.getQunFaBusiness().getBusinessName());
-        edmTaskResult.setDataCode(datacode);
-        edmTaskResult.setFileLineNum(fileLineNum);
-        edmTaskResult.setProvinceNums(provinceNums);
-        edmTaskResult.setStatus(EnableOrNotStatus.disable_status.getStatus());
-        edmTaskResult.setFilePath(dataFilePath);
-        edmTaskResult.setTopic(edmConditionOfOrder.getOrderName());
-        edmTaskResult.setUserName(edmConditionOfOrder.getEdmer().getUsername());
-
-        // @TODO 将临时表数据添加到提取历史记录表中
-        String createHistoryTableSql = createHistoryTableIfNotExists();
-        logger.info(createHistoryTableSql);
-        String insertToHistoryTable = insertToHistoryTable(tempTableName, year_month_day.substring(0, 6), year_month_day, edmConditionOfOrder.getQunFaBusiness().getBusinessType(), datacode);
-        logger.info(insertToHistoryTable);
-
-        // @TODO 更新可发数据库，将临时表中的数据从可发数据库中排除
-        String[] dimensions = MyArrayUtil.strToArray(edmConditionOfOrder.getDimensions());
-        if (dimensions != null && dimensions.length > 0) {
-            for (String dimension : dimensions) {
-                String overwriteHistoryTable = overwriteEnableTableData(tempTableName, dimension);
-                logger.info(overwriteHistoryTable);
+            // @TODO 查询该临时表各省份的数据量
+            Map<String, Integer> provinceNums = edmTaskResult.getProvinceNums();
+            String selectProNum = selectProvinceNums(tempTableName);
+            logger.info(selectProNum);
+            List<Map<String, Object>> proNums = hiveJdbcTemplate.queryForList(selectProNum);
+            if (proNums!=null){
+                Iterator<Map<String, Object>> iterator = proNums.iterator();
+                while (iterator.hasNext()){
+                    Map<String, Object> next = iterator.next();
+                    provinceNums.put((String)next.get("key"), (Integer) next.get("value"));
+                }
             }
-        }
+            // @TODO 执行hive查询， 临时表总的数据量
+            String selectTotalNum = selectTotalNum(tempTableName);
+            logger.info(selectTotalNum);
+            Integer totalNum = hiveJdbcTemplate.queryForObject(selectTotalNum, Integer.class);
+            // 查询实际的数据量
+            Integer fileLineNum = 0;
+            if (totalNum!=null){
+                fileLineNum= totalNum;
+            }
 
-        return edmTaskResult;
+            // 生成一个数据编码
+            // 当前时间，精准到时分秒
+            String yearMonthDayHourMinuteSecond = MyDateUtil.currentDatetimeStr();
+            String datacode = edmConditionOfOrder.getQunFaBusiness().getBusinessType() + ":" + yearMonthDayHourMinuteSecond + random.nextInt(100) + random.nextInt(100);
+
+            // 任务结束时间
+            edmTaskResult.setConId(edmConditionOfOrder.getConId());
+            edmTaskResult.setFinishTime(new Date());
+            edmTaskResult.setBusinessType(edmConditionOfOrder.getQunFaBusiness().getBusinessName());
+            edmTaskResult.setDataCode(datacode);
+            edmTaskResult.setFileLineNum(fileLineNum);
+            edmTaskResult.setProvinceNums(provinceNums);
+            edmTaskResult.setStatus(EnableOrNotStatus.disable_status.getStatus());
+            edmTaskResult.setFilePath(dataFilePath);
+            edmTaskResult.setTopic(edmConditionOfOrder.getOrderName());
+            edmTaskResult.setUserName(edmConditionOfOrder.getEdmer().getUsername());
+
+            // @TODO 将临时表数据添加到提取历史记录表中
+            String createHistoryTableSql = createHistoryTableIfNotExists();
+            logger.info(createHistoryTableSql);
+            hiveJdbcTemplate.execute(createHistoryTableSql);
+            String insertToHistoryTable = insertToHistoryTable(tempTableName, year_month_day.substring(0, 6), year_month_day, edmConditionOfOrder.getQunFaBusiness().getBusinessType(), datacode);
+            logger.info(insertToHistoryTable);
+            hiveJdbcTemplate.execute(insertToHistoryTable);
+
+            // @TODO 更新可发数据库，将临时表中的数据从可发数据库中排除
+            String[] dimensions = MyArrayUtil.strToArray(edmConditionOfOrder.getDimensions());
+            if (dimensions != null && dimensions.length > 0) {
+                for (String dimension : dimensions) {
+                    String overwriteHistoryTable = overwriteEnableTableData(tempTableName, dimension);
+                    logger.info(overwriteHistoryTable);
+                    hiveJdbcTemplate.execute(overwriteHistoryTable);
+                }
+            }
+            return edmTaskResult;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
+
 
     /**
      * 拼接复写原始表特定分区的数据
@@ -361,12 +386,12 @@ public class HiveServiceImpl implements HiveService {
         String[] dataCodeArray = MyArrayUtil.strToArray(edmConditionOfOrder.getDataCodes());
         if (dataCodeArray != null && dataCodeArray.length > 0) {
             for (int x = 0; x < dataCodeArray.length; x++) {
-               // 获取数据编码的month， 获取数据编码的月份，
+                // 获取数据编码的month， 获取数据编码的月份，
                 sb.append("union ");
                 sb.append("select split(user_device,',')[0] user_device from dw.dw_user_sendrecords_new where 1=1 " +
-                        "and month='"+dataCodeArray[x].substring(2, 8)+"' " +
-                        "and day='"+dataCodeArray[x].substring(2, 10)+"' " +
-                        "and datacode in ('"+dataCodeArray[x]+"') ");
+                        "and month='" + dataCodeArray[x].substring(2, 8) + "' " +
+                        "and day='" + dataCodeArray[x].substring(2, 10) + "' " +
+                        "and datacode in ('" + dataCodeArray[x] + "') ");
             }
         }
         sb.append(")t2 ");

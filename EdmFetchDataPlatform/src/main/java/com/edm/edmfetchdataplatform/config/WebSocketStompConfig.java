@@ -41,6 +41,9 @@ public class WebSocketStompConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/websocketRabbitmq").withSockJS();
+
+        //  生产环境，解决浏览器跨域
+//        registry.addEndpoint("/websocketRabbitmq").setAllowedOrigins("*").withSockJS();
     }
 
     /**
@@ -52,6 +55,7 @@ public class WebSocketStompConfig implements WebSocketMessageBrokerConfigurer {
 
         logger.info("relayHost: " + relayHost + " , relayPort: " + relayPort);
 
+//        registry.enableSimpleBroker("/topic", "/queue");
         // 第一行， 启用 STOMP的中级代理
         registry.enableStompBrokerRelay("/topic", "/queue", "/amq/queue")
                 .setRelayHost(this.relayHost)

@@ -50,6 +50,17 @@ public class MyFileUtil {
         return filePath;
     }
 
+    /**
+     * 创建路径，如果不存在
+     * @param pathStr
+     */
+    public static void createPathIfNotExists(String pathStr){
+        File file = new File(pathStr);
+        if (!file.exists()) {
+            boolean mkdirs = file.mkdirs();
+        }
+    }
+
 
     /**
      * 根据rootpath创建一个唯一的子目录并和根目录拼接到一块

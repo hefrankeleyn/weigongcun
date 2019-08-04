@@ -679,3 +679,6 @@ databaseChangeLog:
         - sql:
             dbms: mysql
             sql: ALTER TABLE qunfa_business CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
+        - sql:
+            dbms: mysql
+            sql: ALTER TABLE edm_task_result CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci

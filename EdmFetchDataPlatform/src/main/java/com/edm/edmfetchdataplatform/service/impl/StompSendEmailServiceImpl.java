@@ -42,11 +42,11 @@ public class StompSendEmailServiceImpl implements StompSendEmailService {
                 edmSendEmailService.sendThymeleafEmail(edmLiuZhuanEmailParameters);
                 // 发布主题消息
                 simpMessageSendingOperations.convertAndSendToUser(currentLoginUserEmail,
-                        "/queue/sendemailfeed",
+                        "/topic/sendemailfeed",
                         new ResponseResult(ResultStatus.SUCCESS, "邮件发送成功"));
             } catch (RuntimeException e) {
                 simpMessageSendingOperations.convertAndSendToUser(currentLoginUserEmail,
-                        "/queue/sendemailfeed",
+                        "/topic/sendemailfeed",
                         new ResponseResult(ResultStatus.FAIL, "邮件发送失败"));
             }
 
