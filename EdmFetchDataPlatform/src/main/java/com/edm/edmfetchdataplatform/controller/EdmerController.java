@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * @Date 2019-06-23
@@ -25,6 +26,9 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/edmerController")
 public class EdmerController {
+
+
+    private static Logger logger = Logger.getLogger("com.edm.edmfetchdataplatform.controller.EdmerController");
 
     @Autowired
     private EdmerService edmerService;
@@ -102,9 +106,11 @@ public class EdmerController {
     @ResponseBody
     public ResponseResult updateEdmerRoles(@RequestBody EdmRolesParamter edmRolesParamter) {
         try {
+            logger.info(edmRolesParamter.toString());
             List<Role> roles = edmerService.updateEdmerRoles(edmRolesParamter.getEid(), edmRolesParamter.getRids());
             return new ResponseResult(ResultStatus.SUCCESS, roles);
         } catch (RuntimeException e) {
+            logger.warning(e.toString());
             return new ResponseResult(ResultStatus.FAIL, null);
         }
     }
@@ -123,10 +129,10 @@ public class EdmerController {
             if (edmerList == null || edmerList.isEmpty()) {
                 return new ResponseResult(ResultStatus.FAIL, null);
             } else {
-
                 return new ResponseResult(ResultStatus.SUCCESS, edmerList);
             }
         } catch (RuntimeException e) {
+            logger.info(e.toString());
             return new ResponseResult(ResultStatus.FAIL, null);
         }
     }
