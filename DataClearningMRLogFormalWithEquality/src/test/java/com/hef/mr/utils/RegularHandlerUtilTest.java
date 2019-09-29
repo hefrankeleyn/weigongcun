@@ -53,4 +53,10 @@ public class RegularHandlerUtilTest {
             System.out.println(s);
         }
     }
+
+    @Test
+    public void removeSomeStrTest(){
+        String st="\"aa\"";
+        System.out.println(st);
+    }
 }

@@ -62,6 +62,8 @@ public class RegularHandlerUtil {
                     // 将key值去除空格，并变成小写
                     String temp_key = spKeys.get(sp_i).trim().toLowerCase();
                     String temp_value = spValues.substring(begin_index, end_index);
+                    // 去除行首和行尾的",之后再去除空格
+                    temp_value=trimStr(temp_value, "\"");
                     reKeyValues.put(temp_key, temp_value);
                 }
             }
@@ -70,5 +72,21 @@ public class RegularHandlerUtil {
 
         }
         return reKeyValues;
+    }
+
+    /**
+     * 移除行尾和行尾特定的字符，并去除行首和行尾空格
+     * @param originStr
+     * @param removeStr
+     * @return
+     */
+    private static String trimStr(String originStr, String removeStr){
+        if (originStr.startsWith(removeStr)){
+            originStr=originStr.substring(removeStr.length());
+        }
+        if (originStr.endsWith(removeStr)){
+            originStr=originStr.substring(0, originStr.length()-removeStr.length());
+        }
+        return originStr.trim();
     }
 }
