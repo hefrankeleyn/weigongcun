@@ -24,11 +24,12 @@ public class RegularHandlerUtil {
                                                               String regularExpression,
                                                               String keyValueSplitRegularExpression) {
 //        System.out.println(line);
-        Map<String, String> reKeyValues = new HashMap<>();
+        Map<String, String> reKeyValues = null;
         Pattern compile = Pattern.compile(regularExpression);
         Matcher matcher = compile.matcher(line);
         // 查询是否匹配上
         if (matcher.matches()) {
+            reKeyValues = new HashMap<>();
             String[] keys = keyNames.split(",");
             int matchCount = matcher.groupCount();
             for (int i = 1; i < matchCount; i++) {
@@ -67,9 +68,6 @@ public class RegularHandlerUtil {
                     reKeyValues.put(temp_key, temp_value);
                 }
             }
-        } else {
-            logger.warning("Don't match: " + line);
-
         }
         return reKeyValues;
     }

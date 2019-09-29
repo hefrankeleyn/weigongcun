@@ -44,10 +44,7 @@ public class DataCleaningLogWithEqualityMapper extends Mapper<LongWritable, Text
                 splitRegularExpression);
         String new_line = KeyCompareValueToLineUtil.keysCompareValuesToStr(logKeyNames.split(","), reMapResult);
         if (new_line != null && !new_line.trim().equals("")) {
-            context.getCounter("dataLine", "not empty null").increment(1);
             context.write(new Text(new_line), NullWritable.get());
-        } else {
-            context.getCounter("dataLine", "null line").increment(1);
         }
     }
 }

@@ -15,15 +15,19 @@ public class KeyCompareValueToLineUtil {
      * @return
      */
     public static String keysCompareValuesToStr(String[] keys, Map<String, String> kv){
-        StringBuilder sb = new StringBuilder();
-        for (int i=0; i<keys.length; i++){
-            if (kv.containsKey(keys[i].toLowerCase().trim())){
-                sb.append(kv.get(keys[i].toLowerCase().trim()));
+        if (kv!=null && !kv.isEmpty()){
+            StringBuilder sb = new StringBuilder();
+            for (int i=0; i<keys.length; i++){
+                if (kv.containsKey(keys[i].toLowerCase().trim())){
+                    sb.append(kv.get(keys[i].toLowerCase().trim()));
+                }
+                if (i<keys.length-1){
+                    sb.append("\t");
+                }
             }
-            if (i<keys.length-1){
-                sb.append("\t");
-            }
+            return sb.toString();
+        }else {
+            return null;
         }
-        return sb.toString();
     }
 }
