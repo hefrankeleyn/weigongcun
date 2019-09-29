@@ -3,6 +3,7 @@ package com.hef.mr.mapper;
 import com.hef.mr.utils.DataCleaningPropertiesUtil;
 import com.hef.mr.utils.KeyCompareValueToLineUtil;
 import com.hef.mr.utils.RegularHandlerUtil;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
@@ -18,6 +19,7 @@ import java.util.Map;
  */
 public class DataCleaningLogWithEqualityMapper extends Mapper<LongWritable, Text, Text, NullWritable> {
 
+
     /**
      * 清洗日志
      *
@@ -29,13 +31,18 @@ public class DataCleaningLogWithEqualityMapper extends Mapper<LongWritable, Text
      */
     @Override
     protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, Text, NullWritable>.Context context) throws IOException, InterruptedException {
+        Configuration configuration = context.getConfiguration();
         // 拿到一行数据，将其转换为String
         String line = value.toString();
-        String lineReString = DataCleaningPropertiesUtil.getValueByName("PMAILLogRegularExpression");
-        String splitReString = DataCleaningPropertiesUtil.getValueByName("PMAILSplitRegularExpression");
-        String keyNames = DataCleaningPropertiesUtil.getValueByName("PMAILLogKeyNames");
-        Map<String, String> reMapResult = RegularHandlerUtil.reHandleLogWithEquality(line, keyNames, lineReString, splitReString);
-        String new_line = KeyCompareValueToLineUtil.keysCompareValuesToStr(keyNames.split(","), reMapResult);
+        String logRegularExpression = configuration.get("logRegularExpression");
+        String splitRegularExpression = configuration.get("splitRegularExpression");
+        String logKeyNames = configuration.get("logKeyNames");
+        Map<String, String> reMapResult = RegularHandlerUtil.reHandleLogWithEquality(
+                line,
+                logKeyNames,
+                logRegularExpression,
+                splitRegularExpression);
+        String new_line = KeyCompareValueToLineUtil.keysCompareValuesToStr(logKeyNames.split(","), reMapResult);
         if (new_line != null && !new_line.trim().equals("")) {
             context.getCounter("dataLine", "not empty null").increment(1);
             context.write(new Text(new_line), NullWritable.get());

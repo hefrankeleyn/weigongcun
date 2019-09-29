@@ -15,7 +15,7 @@ public class RegularHandlerUtilTest {
 
     @Test
     public void proUtilTest(){
-        String lineReString = DataCleaningPropertiesUtil.getValueByName("PMAILLogRegularExpression");
+        String lineReString = DataCleaningPropertiesUtil.getValueByName("PMAIL_LOGREGULAREXPRESSION");
         System.out.println(lineReString);
     }
 
@@ -25,9 +25,9 @@ public class RegularHandlerUtilTest {
     @Test
     public void reTestLine(){
         String line = "20190823000032#3855428496 pmail retr 0 10.199.82.120 user=\"18608047501@wo.cn\" levelID=0 ID=417";
-        String lineReString = DataCleaningPropertiesUtil.getValueByName("PMAILLogRegularExpression");
-        String splitReString = DataCleaningPropertiesUtil.getValueByName("PMAILSplitRegularExpression");
-        String keyNames = DataCleaningPropertiesUtil.getValueByName("PMAILLogKeyNames");
+        String lineReString = DataCleaningPropertiesUtil.getValueByName("PMAIL_LOGREGULAREXPRESSION");
+        String splitReString = DataCleaningPropertiesUtil.getValueByName("PMAIL_SPLITREGULAREXPRESSION");
+        String keyNames = DataCleaningPropertiesUtil.getValueByName("PMAIL_LOGKEYNAMES");
         Map<String, String> reMapResult = RegularHandlerUtil.reHandleLogWithEquality(line, keyNames, lineReString ,splitReString);
         for (Map.Entry<String, String> kv: reMapResult.entrySet()) {
             System.out.println(kv.getKey() +" : " + kv.getValue());
