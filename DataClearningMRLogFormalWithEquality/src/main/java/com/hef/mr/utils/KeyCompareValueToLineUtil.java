@@ -16,7 +16,7 @@ public class KeyCompareValueToLineUtil {
      */
     public static String keysCompareValuesToStr(String[] keys, Map<String, String> kv){
         if (kv!=null && !kv.isEmpty()){
-            StringBuilder sb = new StringBuilder();
+            StringBuffer sb = new StringBuffer();
             for (int i=0; i<keys.length; i++){
                 if (kv.containsKey(keys[i].toLowerCase().trim())){
                     sb.append(kv.get(keys[i].toLowerCase().trim()));
