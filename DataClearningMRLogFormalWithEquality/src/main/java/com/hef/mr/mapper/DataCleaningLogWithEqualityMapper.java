@@ -37,8 +37,10 @@ public class DataCleaningLogWithEqualityMapper extends Mapper<LongWritable, Text
         String logRegularExpression = configuration.get("logRegularExpression");
         String splitRegularExpression = configuration.get("splitRegularExpression");
         String logKeyNames = configuration.get("logKeyNames");
+        String businessName = configuration.get("businessName");
         Map<String, String> reMapResult = RegularHandlerUtil.reHandleLogWithEquality(
                 line,
+                businessName,
                 logKeyNames,
                 logRegularExpression,
                 splitRegularExpression);

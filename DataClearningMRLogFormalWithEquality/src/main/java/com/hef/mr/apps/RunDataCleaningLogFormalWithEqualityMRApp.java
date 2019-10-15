@@ -31,6 +31,7 @@ public class RunDataCleaningLogFormalWithEqualityMRApp {
         }
         try {
             DataCleanBusiness dataCleanBusiness = new DataCleanBusiness(args[0], args[1], args[2]);
+            System.out.println(dataCleanBusiness.toString());
             /*
              *  设置参数，使其在map中获取到
              */
@@ -42,6 +43,7 @@ public class RunDataCleaningLogFormalWithEqualityMRApp {
             configuration.set("logRegularExpression", logRegularExpression);
             configuration.set("splitRegularExpression", splitRegularExpression);
             configuration.set("logKeyNames", logKeyNames);
+            configuration.set("businessName",businessName);
 
 
             Job job = Job.getInstance(configuration);
@@ -53,7 +55,7 @@ public class RunDataCleaningLogFormalWithEqualityMRApp {
             job.setOutputKeyClass(Text.class);
             // 设置mr 输出的类型
             job.setOutputValueClass(NullWritable.class);
-
+            job.setJobName("RunDataCleaningLogFormalWithEqualityMRApp");
             // 指定要处理的数据所在的位置
             FileInputFormat.addInputPath(job, new Path(dataCleanBusiness.getHdfsInputPath()));
             FileOutputFormat.setOutputPath(job, new Path(dataCleanBusiness.getHdfsOutPutPath()));
@@ -61,13 +63,7 @@ public class RunDataCleaningLogFormalWithEqualityMRApp {
             // 向 yarm 集群提交这个job
             boolean res = job.waitForCompletion(true);
             System.exit(res ? 0 : 1);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
+        } catch (IOException|InterruptedException|ClassNotFoundException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }

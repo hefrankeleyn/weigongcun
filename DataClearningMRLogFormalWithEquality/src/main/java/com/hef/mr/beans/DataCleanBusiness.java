@@ -46,4 +46,13 @@ public class DataCleanBusiness implements Serializable {
     public void setHdfsOutPutPath(String hdfsOutPutPath) {
         this.hdfsOutPutPath = hdfsOutPutPath;
     }
+
+    @Override
+    public String toString() {
+        return "DataCleanBusiness{" +
+                "businessName='" + businessName + '\'' +
+                ", hdfsInputPath='" + hdfsInputPath + '\'' +
+                ", hdfsOutPutPath='" + hdfsOutPutPath + '\'' +
+                '}';
+    }
 }

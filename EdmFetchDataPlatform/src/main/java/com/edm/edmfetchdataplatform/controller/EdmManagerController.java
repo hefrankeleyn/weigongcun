@@ -20,4 +20,13 @@ public class EdmManagerController {
     public String  managerIndexView(){
         return "manager/manager";
     }
+
+    /**
+     * 临时测试
+     * @return
+     */
+    @RequestMapping(value = "/faceTest")
+    public String faceTest(){
+        return "manager/video";
+    }
 }
